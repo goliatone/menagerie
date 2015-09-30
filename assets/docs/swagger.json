@@ -1,181 +1,245 @@
 {
-  "swagger" : "2.0",
-  "info" : {
-    "description" : "Manage your things with the thang",
-    "version" : "1.0.0",
-    "title" : "Managerie API"
-  },
-  "host" : "localhost:1337",
-  "basePath" : "/api",
-  "schemes" : [ "http" ],
-  "produces" : [ "application/json" ],
-  "paths" : {
-    "/device" : {
-      "get" : {
-        "tags" : [ "Estimates" ],
-        "summary" : "Device",
-        "description" : "The Price Estimates endpoint returns an estimated price range\nfor each product offered at a given location. The price estimate is\nprovided as a formatted string with the full price range and the localized\ncurrency symbol.<br><br>The response also includes low and high estimates,\nand the [ISO 4217](http://en.wikipedia.org/wiki/ISO_4217) currency code for\nsituations requiring currency conversion. When surge is active for a particular\nproduct, its surge_multiplier will be greater than 1, but the price estimate\nalready factors in this multiplier.\n",
-        "parameters" : [ {
-          "name" : "start_latitude",
-          "in" : "query",
-          "description" : "Latitude component of start location.",
-          "required" : false,
-          "type" : "number",
-          "format" : "double"
-        }, {
-          "name" : "start_longitude",
-          "in" : "query",
-          "description" : "Longitude component of start location.",
-          "required" : false,
-          "type" : "number",
-          "format" : "double"
-        }, {
-          "name" : "end_latitude",
-          "in" : "query",
-          "description" : "Latitude component of end location.",
-          "required" : false,
-          "type" : "number",
-          "format" : "double"
-        }, {
-          "name" : "end_longitude",
-          "in" : "query",
-          "description" : "Longitude component of end location.",
-          "required" : false,
-          "type" : "number",
-          "format" : "double"
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "An array of price estimates by product",
-            "schema" : {
-              "type" : "array",
-              "items" : {
-                "$ref" : "#/definitions/Device"
-              }
-            }
-          },
-          "default" : {
-            "description" : "Unexpected error",
-            "schema" : {
-              "$ref" : "#/definitions/Error"
-            }
-          }
-        }
-      }
+    "swagger": "2.0",
+    "info": {
+        "description": "Manage your things with the thang",
+        "version": "1.0.0",
+        "title": "Managerie API"
     },
-    "/deviceType" : {
-      "get" : {
-        "tags" : [ "Device Types" ],
-        "summary" : "Device Types",
-        "description" : "The Products endpoint returns information about the *Uber* products\noffered at a given location. The response includes the display name\nand other details about each product, and lists the products in the\nproper display order.\n",
-        "parameters" : [ {
-          "name" : "latitude",
-          "in" : "query",
-          "description" : "Latitude component of location.",
-          "required" : false,
-          "type" : "number",
-          "format" : "double"
-        }, {
-          "name" : "longitude",
-          "in" : "query",
-          "description" : "Longitude component of location.",
-          "required" : false,
-          "type" : "number",
-          "format" : "double"
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "An array of products",
-            "schema" : {
-              "type" : "array",
-              "items" : {
-                "$ref" : "#/definitions/DeviceType"
-              }
+    "host": "localhost:1337",
+    "basePath": "/api",
+    "schemes": [
+        "http"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/device": {
+            "post": {
+                "tags": [
+                    "Device"
+                ],
+                "summary": "Device",
+                "description": "The Device endpoint returns a list of listed devices",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "query",
+                        "description": "Device UUID.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Natural key for the device.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Device status.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "Description",
+                        "in": "query",
+                        "description": "Device description.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An array of devices",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Device"
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Device"
+                ],
+                "summary": "Device",
+                "description": "The Device endpoint returns a list of listed devices",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "query",
+                        "description": "Device UUID.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Natural key for the device.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Device status.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "Description",
+                        "in": "query",
+                        "description": "Device description.",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An array of devices",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Device"
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
             }
-          },
-          "default" : {
-            "description" : "Unexpected error",
-            "schema" : {
-              "$ref" : "#/definitions/Error"
+        },
+        "/deviceType": {
+            "get": {
+                "tags": [
+                    "Device Types"
+                ],
+                "summary": "Device Types",
+                "description": "Different types of Devices",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Device name.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "description": "Device type description.",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An array of device types",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/DeviceType"
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
             }
-          }
         }
-      }
+    },
+    "definitions": {
+        "DeviceType": {
+            "type": "object",
+            "properties": {
+                "uuid": {
+                    "type": "string",
+                    "description": "Unique identifier representing a specific product for a given latitude & longitude. For example, uberX in San Francisco will have a different product_id than uberX in Los Angeles."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description of product."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Display name of product."
+                },
+                "location": {
+                    "type": "string",
+                    "description": "Capacity of product. For example, 4 people."
+                },
+                "metadata": {
+                    "type": "string",
+                    "description": "Image URL representing the product."
+                }
+            }
+        },
+        "Device": {
+            "type": "object",
+            "properties": {
+                "uuid": {
+                    "type": "string",
+                    "description": "Unique identifier representing a specific device"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "[ISO 4217](http://en.wikipedia.org/wiki/ISO_4217) currency code."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Display name of product."
+                },
+                "estimate": {
+                    "type": "string",
+                    "description": "Formatted string of estimate in local currency of the start location. Estimate could be a range, a single number (flat rate) or \"Metered\" for TAXI."
+                },
+                "low_estimate": {
+                    "type": "number",
+                    "description": "Lower bound of the estimated price."
+                },
+                "high_estimate": {
+                    "type": "number",
+                    "description": "Upper bound of the estimated price."
+                },
+                "surge_multiplier": {
+                    "type": "number",
+                    "description": "Expected surge multiplier. Surge is active if surge_multiplier is greater than 1. Price estimate already factors in the surge multiplier."
+                }
+            }
+        },
+        "Error": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "fields": {
+                    "type": "string"
+                }
+            }
+        }
     }
-  },
-  "definitions" : {
-    "DeviceType" : {
-      "type" : "object",
-      "properties" : {
-        "uuid" : {
-          "type" : "string",
-          "description" : "Unique identifier representing a specific product for a given latitude & longitude. For example, uberX in San Francisco will have a different product_id than uberX in Los Angeles."
-        },
-        "description" : {
-          "type" : "string",
-          "description" : "Description of product."
-        },
-        "name" : {
-          "type" : "string",
-          "description" : "Display name of product."
-        },
-        "location" : {
-          "type" : "string",
-          "description" : "Capacity of product. For example, 4 people."
-        },
-        "metadata" : {
-          "type" : "string",
-          "description" : "Image URL representing the product."
-        }
-      }
-    },
-    "Device" : {
-      "type" : "object",
-      "properties" : {
-        "product_id" : {
-          "type" : "string",
-          "description" : "Unique identifier representing a specific product for a given latitude & longitude. For example, uberX in San Francisco will have a different product_id than uberX in Los Angeles"
-        },
-        "currency_code" : {
-          "type" : "string",
-          "description" : "[ISO 4217](http://en.wikipedia.org/wiki/ISO_4217) currency code."
-        },
-        "display_name" : {
-          "type" : "string",
-          "description" : "Display name of product."
-        },
-        "estimate" : {
-          "type" : "string",
-          "description" : "Formatted string of estimate in local currency of the start location. Estimate could be a range, a single number (flat rate) or \"Metered\" for TAXI."
-        },
-        "low_estimate" : {
-          "type" : "number",
-          "description" : "Lower bound of the estimated price."
-        },
-        "high_estimate" : {
-          "type" : "number",
-          "description" : "Upper bound of the estimated price."
-        },
-        "surge_multiplier" : {
-          "type" : "number",
-          "description" : "Expected surge multiplier. Surge is active if surge_multiplier is greater than 1. Price estimate already factors in the surge multiplier."
-        }
-      }
-    },
-    "Error" : {
-      "type" : "object",
-      "properties" : {
-        "code" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "message" : {
-          "type" : "string"
-        },
-        "fields" : {
-          "type" : "string"
-        }
-      }
-    }
-  }
 }
