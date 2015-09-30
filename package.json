@@ -22,7 +22,8 @@
     "rc": "~1.0.1",
     "sails": "~0.12.0-rc3",
     "sails-disk": "~0.10.7",
-    "localtunnel": "^1.7.0"
+    "localtunnel": "^1.7.0",
+    "sails-crudface": "^0.2.4"
   },
   "scripts": {
     "debug": "node debug app.js",
