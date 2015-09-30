@@ -1,0 +1,1 @@
+module.exports = require("sails-crudface").init(module,__dirname) ;
