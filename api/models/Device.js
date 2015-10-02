@@ -6,12 +6,12 @@
 */
 
 module.exports = {
-
+    autoPK: true,
     attributes: {
         uuid: {
             type: 'string',
-            primaryKey: true,
-            required: true
+            // primaryKey: true,
+            // required: true
         },
         name: {
             type: 'string'
@@ -22,7 +22,7 @@ module.exports = {
         status: {
             type: 'string'
         },
-        type:{
+        type: {
             model:'deviceType'
         },
         location: {
