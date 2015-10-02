@@ -43,7 +43,7 @@ module.exports = {
             },
             form:{
                 action: '/api/device',
-                method:'post'
+                method:'POST'
             }
         };
 
