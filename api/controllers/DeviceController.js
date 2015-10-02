@@ -10,26 +10,22 @@ var actionUtil = require('../../node_modules/sails/lib/hooks/blueprints/actionUt
 
 
 module.exports = {
-    create: function(req, res){
-        var id = req.param('id');
-
-        var locals = {
-            resource: {
-                uuid: uuid().toUpperCase()
-            }
-        };
-        res.view('device/new',locals);
-    },
     show: function(req, res){
         var id = req.param('id'),
-            locals = {};
+            locals = {
+                action:'show',
+                form:{
+                    action: '/api/device/' + id,
+                    method:'PUT'
+                }
+            };
 
         if(id) {
             locals.id = id;
             Device.findOne({id:id})
             .populate('location', 'deviceType', 'configuration')
             .then(function(device){
-                locals.resource = device;
+                locals.record = device;
                 console.log('JSON', JSON.stringify(locals));
                 res.view(locals);
             }).catch(function(err){
@@ -41,11 +37,12 @@ module.exports = {
     new: function(req, res){
 
         var locals = {
+            action: 'new',
             record:{
                 uuid: uuid().toUpperCase()
             },
             form:{
-                action: '/device/new',
+                action: '/api/device',
                 method:'post'
             }
         };
@@ -92,5 +89,19 @@ module.exports = {
 
             res.view({records:matchingRecords});
         });
+    },
+    create: function(req, res){
+        var id = req.param('id');
+
+        var locals = {
+            action:'create',
+            record: {
+                uuid: uuid().toUpperCase()
+            },
+            form:{
+
+            }
+        };
+        res.view('device/new',locals);
     }
 };
