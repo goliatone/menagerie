@@ -6,417 +6,1818 @@
         "title": "Managerie API"
     },
     "host": "localhost:1337",
-    "basePath": "/api",
+    "basePath": "/",
     "schemes": [
         "http"
+    ],
+    "consumes": [
+        "application/json"
     ],
     "produces": [
         "application/json"
     ],
     "paths": {
-        "/device": {
-            "post": {
-                "tags": [
-                    "Device"
-                ],
-                "summary": "Device",
-                "description": "The Device endpoint returns a list of listed devices",
-                "parameters": [
-                    {
-                        "name": "uuid",
-                        "in": "query",
-                        "description": "Device UUID.",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "name",
-                        "in": "query",
-                        "description": "Natural key for the device.",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "status",
-                        "in": "query",
-                        "description": "Device status.",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "Description",
-                        "in": "query",
-                        "description": "Device description.",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "An array of devices",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Device"
-                            }
-                        }
-                    },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "Device"
-                ],
-                "summary": "Device",
-                "description": "The Device endpoint returns a list of listed devices",
-                "parameters": [
-                    {
-                        "name": "uuid",
-                        "in": "query",
-                        "description": "Device UUID.",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "name",
-                        "in": "query",
-                        "description": "Natural key for the device.",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "status",
-                        "in": "query",
-                        "description": "Device status.",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "Description",
-                        "in": "query",
-                        "description": "Device description.",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "An array of devices",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Device"
-                            }
-                        }
-                    },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
-                    }
-                }
-            },
+        "/api/configuration": {
             "get": {
+                "summary": "Returns a list of configurations",
+                "description": "Finds configurations with any user defined filters applied.",
                 "tags": [
-                    "Device"
+                    "configurations"
                 ],
-                "summary": "Device",
-                "description": "The Device endpoint returns a list of listed devices",
+                "operationId": "getConfigurations",
+                "deprecated": false,
                 "parameters": [
+                    {
+                        "$ref": "#/parameters/whereParam"
+                    },
+                    {
+                        "$ref": "#/parameters/limitParam"
+                    },
+                    {
+                        "$ref": "#/parameters/skipParam"
+                    },
+                    {
+                        "$ref": "#/parameters/sortParam"
+                    },
+                    {
+                        "$ref": "#/parameters/callbackParam"
+                    },
                     {
                         "name": "uuid",
                         "in": "query",
-                        "description": "Device UUID.",
-                        "required": false,
-                        "type": "string"
+                        "type": "string",
+                        "format": "string"
                     },
                     {
                         "name": "name",
                         "in": "query",
-                        "description": "Natural key for the device.",
-                        "required": false,
-                        "type": "string"
+                        "type": "string",
+                        "format": "string"
                     },
                     {
-                        "name": "status",
+                        "name": "description",
                         "in": "query",
-                        "description": "Device status.",
-                        "required": false,
-                        "type": "string"
+                        "type": "string",
+                        "format": "string"
                     },
                     {
-                        "name": "Description",
+                        "name": "device",
                         "in": "query",
-                        "description": "Device description.",
-                        "required": false,
-                        "type": "string"
+                        "type": "string",
+                        "format": "id"
+                    },
+                    {
+                        "name": "data",
+                        "in": "query",
+                        "type": "string",
+                        "format": "json"
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "type": "integer",
+                        "format": "int64",
+                        "uniqueItems": true
+                    },
+                    {
+                        "name": "createdAt",
+                        "in": "query",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "updatedAt",
+                        "in": "query",
+                        "type": "string",
+                        "format": "date-time"
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "An array of devices",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Device"
-                            }
-                        }
+                    "400": {
+                        "$ref": "#/responses/InvalidRequest"
+                    },
+                    "403": {
+                        "$ref": "#/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/responses/ServerError"
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Configurations found",
                         "schema": {
-                            "$ref": "#/definitions/Error"
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "200"
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/configurations"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Creates a new configuration",
+                "description": "Allows the creation of a new configuration",
+                "tags": [
+                    "configurations"
+                ],
+                "operationId": "createConfiguration",
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "configuration",
+                        "in": "body",
+                        "description": "configuration to create",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/configuration"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "$ref": "#/responses/InvalidRequest"
+                    },
+                    "403": {
+                        "$ref": "#/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/responses/ServerError"
+                    },
+                    "default": {
+                        "description": "Configuration created",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "201"
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/configuration"
+                                }
+                            }
                         }
                     }
                 }
             }
         },
-        "/deviceType": {
-            "post": {
+        "/api/configuration/{id}": {
+            "get": {
+                "summary": "Returns a specific configuration",
+                "description": "Finds a specific configuration based on its id",
                 "tags": [
-                    "Device Types"
+                    "configurations"
                 ],
-                "summary": "Device Types",
-                "description": "Different types of Devices",
+                "operationId": "getConfigurationsById",
+                "deprecated": false,
                 "parameters": [
                     {
-                        "name": "name",
-                        "in": "query",
-                        "description": "Device name.",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "description",
-                        "in": "query",
-                        "description": "Device type description.",
-                        "required": false,
-                        "type": "string"
+                        "name": "id",
+                        "in": "path",
+                        "description": "id of the configuration to fetch",
+                        "required": true,
+                        "type": "string",
+                        "format": "id"
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "An array of device types",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/DeviceType"
-                            }
-                        }
+                    "400": {
+                        "$ref": "#/responses/InvalidRequest"
+                    },
+                    "403": {
+                        "$ref": "#/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/responses/ServerError"
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Configuration found",
                         "schema": {
-                            "$ref": "#/definitions/Error"
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "200"
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/configuration"
+                                }
+                            }
                         }
                     }
                 }
             },
             "put": {
+                "summary": "Updates a configuration",
+                "description": "Updates a configuration based on the id with the data sent",
                 "tags": [
-                    "Device Types"
+                    "configurations"
                 ],
-                "summary": "Device Types",
-                "description": "Different types of Devices",
+                "operationId": "updateConfiguration",
+                "deprecated": false,
                 "parameters": [
                     {
-                        "name": "name",
-                        "in": "query",
-                        "description": "Device name.",
-                        "required": false,
-                        "type": "string"
+                        "name": "id",
+                        "in": "path",
+                        "description": "id of the configuration to update",
+                        "required": true,
+                        "type": "string",
+                        "format": "id"
                     },
                     {
-                        "name": "description",
-                        "in": "query",
-                        "description": "Device type description.",
-                        "required": false,
-                        "type": "string"
+                        "name": "configuration",
+                        "in": "body",
+                        "description": "fields of configuration to update",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/configuration"
+                        }
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "An array of device types",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/DeviceType"
-                            }
-                        }
+                    "400": {
+                        "$ref": "#/responses/InvalidRequest"
+                    },
+                    "403": {
+                        "$ref": "#/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/responses/ServerError"
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Configuration updated",
                         "schema": {
-                            "$ref": "#/definitions/Error"
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "200"
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/configuration"
+                                }
+                            }
                         }
                     }
                 }
             },
-            "get": {
+            "delete": {
+                "summary": "Destroys a configuration",
+                "description": "Destroys the specified configuration",
                 "tags": [
-                    "Device Types"
+                    "configurations"
                 ],
-                "summary": "Device Types",
-                "description": "Different types of Devices",
+                "operationId": "destroyConfiguration",
+                "deprecated": false,
                 "parameters": [
                     {
-                        "name": "name",
-                        "in": "query",
-                        "description": "Device name.",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "description",
-                        "in": "query",
-                        "description": "Device type description.",
-                        "required": false,
-                        "type": "string"
+                        "name": "id",
+                        "in": "path",
+                        "description": "id of the configuration to destroy",
+                        "required": true,
+                        "type": "string",
+                        "format": "id"
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "An array of device types",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/DeviceType"
-                            }
-                        }
+                    "400": {
+                        "$ref": "#/responses/InvalidRequest"
+                    },
+                    "403": {
+                        "$ref": "#/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/responses/ServerError"
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Configuration destroyed",
                         "schema": {
-                            "$ref": "#/definitions/Error"
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "200"
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/configuration"
+                                }
+                            }
                         }
                     }
                 }
             }
         },
-        "/location": {
-            "post": {
+        "/api/device": {
+            "get": {
+                "summary": "Returns a list of devices",
+                "description": "Finds devices with any user defined filters applied.",
                 "tags": [
-                    "Location"
+                    "devices"
                 ],
-                "summary": "Locations",
-                "description": "Location listings",
+                "operationId": "getDevices",
+                "deprecated": false,
                 "parameters": [
+                    {
+                        "$ref": "#/parameters/whereParam"
+                    },
+                    {
+                        "$ref": "#/parameters/limitParam"
+                    },
+                    {
+                        "$ref": "#/parameters/skipParam"
+                    },
+                    {
+                        "$ref": "#/parameters/sortParam"
+                    },
+                    {
+                        "$ref": "#/parameters/callbackParam"
+                    },
+                    {
+                        "name": "uuid",
+                        "in": "query",
+                        "type": "string",
+                        "format": "string"
+                    },
                     {
                         "name": "name",
                         "in": "query",
-                        "description": "Location name.",
-                        "required": false,
-                        "type": "string"
+                        "type": "string",
+                        "format": "string"
                     },
                     {
                         "name": "description",
                         "in": "query",
-                        "description": "Device type description.",
-                        "required": false,
-                        "type": "string"
+                        "type": "string",
+                        "format": "string"
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "type": "string",
+                        "format": "id"
+                    },
+                    {
+                        "name": "location",
+                        "in": "query",
+                        "type": "string",
+                        "format": "id"
+                    },
+                    {
+                        "name": "configuration",
+                        "in": "query",
+                        "type": "string",
+                        "format": "id"
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "type": "integer",
+                        "format": "int64",
+                        "uniqueItems": true
+                    },
+                    {
+                        "name": "createdAt",
+                        "in": "query",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "updatedAt",
+                        "in": "query",
+                        "type": "string",
+                        "format": "date-time"
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "An array of device types",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Location"
-                            }
-                        }
+                    "400": {
+                        "$ref": "#/responses/InvalidRequest"
+                    },
+                    "403": {
+                        "$ref": "#/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/responses/ServerError"
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Devices found",
                         "schema": {
-                            "$ref": "#/definitions/Error"
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "200"
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/devices"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Creates a new device",
+                "description": "Allows the creation of a new device",
+                "tags": [
+                    "devices"
+                ],
+                "operationId": "createDevice",
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "device",
+                        "in": "body",
+                        "description": "device to create",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/device"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "$ref": "#/responses/InvalidRequest"
+                    },
+                    "403": {
+                        "$ref": "#/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/responses/ServerError"
+                    },
+                    "default": {
+                        "description": "Device created",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "201"
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/device"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/device/{id}": {
+            "get": {
+                "summary": "Returns a specific device",
+                "description": "Finds a specific device based on its id",
+                "tags": [
+                    "devices"
+                ],
+                "operationId": "getDevicesById",
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id of the device to fetch",
+                        "required": true,
+                        "type": "string",
+                        "format": "id"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "$ref": "#/responses/InvalidRequest"
+                    },
+                    "403": {
+                        "$ref": "#/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/responses/ServerError"
+                    },
+                    "default": {
+                        "description": "Device found",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "200"
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/device"
+                                }
+                            }
                         }
                     }
                 }
             },
             "put": {
+                "summary": "Updates a device",
+                "description": "Updates a device based on the id with the data sent",
                 "tags": [
-                    "Location"
+                    "devices"
                 ],
-                "summary": "Location",
-                "description": "Different types of Devices",
+                "operationId": "updateDevice",
+                "deprecated": false,
                 "parameters": [
                     {
-                        "name": "name",
-                        "in": "query",
-                        "description": "Device name.",
-                        "required": false,
-                        "type": "string"
+                        "name": "id",
+                        "in": "path",
+                        "description": "id of the device to update",
+                        "required": true,
+                        "type": "string",
+                        "format": "id"
                     },
                     {
-                        "name": "description",
-                        "in": "query",
-                        "description": "Device type description.",
-                        "required": false,
-                        "type": "string"
+                        "name": "device",
+                        "in": "body",
+                        "description": "fields of device to update",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/device"
+                        }
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "An array of device types",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Location"
-                            }
-                        }
+                    "400": {
+                        "$ref": "#/responses/InvalidRequest"
+                    },
+                    "403": {
+                        "$ref": "#/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/responses/ServerError"
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Device updated",
                         "schema": {
-                            "$ref": "#/definitions/Error"
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "200"
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/device"
+                                }
+                            }
                         }
                     }
                 }
             },
-            "get": {
+            "delete": {
+                "summary": "Destroys a device",
+                "description": "Destroys the specified device",
                 "tags": [
-                    "Location"
+                    "devices"
                 ],
-                "summary": "Location",
-                "description": "Different types of Devices",
+                "operationId": "destroyDevice",
+                "deprecated": false,
                 "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id of the device to destroy",
+                        "required": true,
+                        "type": "string",
+                        "format": "id"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "$ref": "#/responses/InvalidRequest"
+                    },
+                    "403": {
+                        "$ref": "#/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/responses/ServerError"
+                    },
+                    "default": {
+                        "description": "Device destroyed",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "200"
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/device"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/devicetype": {
+            "get": {
+                "summary": "Returns a list of devicetypes",
+                "description": "Finds devicetypes with any user defined filters applied.",
+                "tags": [
+                    "devicetypes"
+                ],
+                "operationId": "getDeviceTypes",
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/whereParam"
+                    },
+                    {
+                        "$ref": "#/parameters/limitParam"
+                    },
+                    {
+                        "$ref": "#/parameters/skipParam"
+                    },
+                    {
+                        "$ref": "#/parameters/sortParam"
+                    },
+                    {
+                        "$ref": "#/parameters/callbackParam"
+                    },
                     {
                         "name": "name",
                         "in": "query",
-                        "description": "Device name.",
-                        "required": false,
-                        "type": "string"
+                        "type": "string",
+                        "format": "string"
                     },
                     {
                         "name": "description",
                         "in": "query",
-                        "description": "Device type description.",
-                        "required": false,
-                        "type": "string"
+                        "type": "string",
+                        "format": "string"
+                    },
+                    {
+                        "name": "label",
+                        "in": "query",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    {
+                        "name": "metadata",
+                        "in": "query",
+                        "type": "string",
+                        "format": "json"
+                    },
+                    {
+                        "name": "devices",
+                        "in": "query",
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "id"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "type": "integer",
+                        "format": "int64",
+                        "uniqueItems": true
+                    },
+                    {
+                        "name": "createdAt",
+                        "in": "query",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "updatedAt",
+                        "in": "query",
+                        "type": "string",
+                        "format": "date-time"
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "An array of device types",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Location"
-                            }
-                        }
+                    "400": {
+                        "$ref": "#/responses/InvalidRequest"
+                    },
+                    "403": {
+                        "$ref": "#/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/responses/ServerError"
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "DeviceTypes found",
                         "schema": {
-                            "$ref": "#/definitions/Error"
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "200"
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/devicetypes"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Creates a new devicetype",
+                "description": "Allows the creation of a new devicetype",
+                "tags": [
+                    "devicetypes"
+                ],
+                "operationId": "createDeviceType",
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "devicetype",
+                        "in": "body",
+                        "description": "devicetype to create",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/devicetype"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "$ref": "#/responses/InvalidRequest"
+                    },
+                    "403": {
+                        "$ref": "#/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/responses/ServerError"
+                    },
+                    "default": {
+                        "description": "DeviceType created",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "201"
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/devicetype"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/devicetype/{id}": {
+            "get": {
+                "summary": "Returns a specific devicetype",
+                "description": "Finds a specific devicetype based on its id",
+                "tags": [
+                    "devicetypes"
+                ],
+                "operationId": "getDeviceTypesById",
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id of the devicetype to fetch",
+                        "required": true,
+                        "type": "string",
+                        "format": "id"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "$ref": "#/responses/InvalidRequest"
+                    },
+                    "403": {
+                        "$ref": "#/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/responses/ServerError"
+                    },
+                    "default": {
+                        "description": "DeviceType found",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "200"
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/devicetype"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Updates a devicetype",
+                "description": "Updates a devicetype based on the id with the data sent",
+                "tags": [
+                    "devicetypes"
+                ],
+                "operationId": "updateDeviceType",
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id of the devicetype to update",
+                        "required": true,
+                        "type": "string",
+                        "format": "id"
+                    },
+                    {
+                        "name": "devicetype",
+                        "in": "body",
+                        "description": "fields of devicetype to update",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/devicetype"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "$ref": "#/responses/InvalidRequest"
+                    },
+                    "403": {
+                        "$ref": "#/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/responses/ServerError"
+                    },
+                    "default": {
+                        "description": "DeviceType updated",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "200"
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/devicetype"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Destroys a devicetype",
+                "description": "Destroys the specified devicetype",
+                "tags": [
+                    "devicetypes"
+                ],
+                "operationId": "destroyDeviceType",
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id of the devicetype to destroy",
+                        "required": true,
+                        "type": "string",
+                        "format": "id"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "$ref": "#/responses/InvalidRequest"
+                    },
+                    "403": {
+                        "$ref": "#/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/responses/ServerError"
+                    },
+                    "default": {
+                        "description": "DeviceType destroyed",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "200"
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/devicetype"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/devicetype/{parentId}/devices": {
+            "get": {
+                "summary": "Gets devices for a devicetype",
+                "description": "Gets devices associated with a devicetype",
+                "tags": [
+                    "devicetypes"
+                ],
+                "operationId": "getDeviceTypeDevices",
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "parentId",
+                        "in": "path",
+                        "description": "id of the devicetype to get devices for",
+                        "required": true,
+                        "type": "string",
+                        "format": "id"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "$ref": "#/responses/InvalidRequest"
+                    },
+                    "403": {
+                        "$ref": "#/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/responses/ServerError"
+                    },
+                    "default": {
+                        "description": "devices found",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "200"
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/devices"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Adds a device to a devicetype",
+                "description": "Attaches the posted device to the specified devicetype",
+                "tags": [
+                    "devicetypes"
+                ],
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "parentId",
+                        "in": "path",
+                        "description": "id of the devicetype to add the new device to",
+                        "required": true,
+                        "type": "string",
+                        "format": "id"
+                    },
+                    {
+                        "name": "devicetype",
+                        "in": "body",
+                        "description": "fields of device to create and attach to the devicetype",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/device"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "$ref": "#/responses/InvalidRequest"
+                    },
+                    "403": {
+                        "$ref": "#/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/responses/ServerError"
+                    },
+                    "default": {
+                        "description": "device added",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "200"
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/devicetype"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/devicetype/{parentId}/devices/{id}": {
+            "post": {
+                "summary": "Adds the device to a devicetype",
+                "description": "Attaches the posted device to the specified devicetype",
+                "tags": [
+                    "devicetypes"
+                ],
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "parentId",
+                        "in": "path",
+                        "description": "id of the devicetype to add a device to",
+                        "required": true,
+                        "type": "string",
+                        "format": "id"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id of the device to associate",
+                        "required": true,
+                        "type": "string",
+                        "format": "id"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "$ref": "#/responses/InvalidRequest"
+                    },
+                    "403": {
+                        "$ref": "#/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/responses/ServerError"
+                    },
+                    "default": {
+                        "description": "device added",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "200"
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/devicetype"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Removes an device from a devicetype",
+                "description": "Removes the specified device from the specifieddevicetype",
+                "tags": [
+                    "devicetypes"
+                ],
+                "operationId": "removeDevicesFromDeviceType",
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "parentId",
+                        "in": "path",
+                        "description": "id of the devicetype to remove device from",
+                        "required": true,
+                        "type": "string",
+                        "format": "id"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id of the device to disassociate",
+                        "required": true,
+                        "type": "string",
+                        "format": "id"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "$ref": "#/responses/InvalidRequest"
+                    },
+                    "403": {
+                        "$ref": "#/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/responses/ServerError"
+                    },
+                    "default": {
+                        "description": "device removed",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "200"
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/devicetype"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/location": {
+            "get": {
+                "summary": "Returns a list of locations",
+                "description": "Finds locations with any user defined filters applied.",
+                "tags": [
+                    "locations"
+                ],
+                "operationId": "getLocations",
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/whereParam"
+                    },
+                    {
+                        "$ref": "#/parameters/limitParam"
+                    },
+                    {
+                        "$ref": "#/parameters/skipParam"
+                    },
+                    {
+                        "$ref": "#/parameters/sortParam"
+                    },
+                    {
+                        "$ref": "#/parameters/callbackParam"
+                    },
+                    {
+                        "name": "uuid",
+                        "in": "query",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    {
+                        "name": "geolocation",
+                        "in": "query"
+                    },
+                    {
+                        "name": "devices",
+                        "in": "query",
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "id"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "type": "integer",
+                        "format": "int64",
+                        "uniqueItems": true
+                    },
+                    {
+                        "name": "createdAt",
+                        "in": "query",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "updatedAt",
+                        "in": "query",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "$ref": "#/responses/InvalidRequest"
+                    },
+                    "403": {
+                        "$ref": "#/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/responses/ServerError"
+                    },
+                    "default": {
+                        "description": "Locations found",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "200"
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/locations"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Creates a new location",
+                "description": "Allows the creation of a new location",
+                "tags": [
+                    "locations"
+                ],
+                "operationId": "createLocation",
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "location",
+                        "in": "body",
+                        "description": "location to create",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/location"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "$ref": "#/responses/InvalidRequest"
+                    },
+                    "403": {
+                        "$ref": "#/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/responses/ServerError"
+                    },
+                    "default": {
+                        "description": "Location created",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "201"
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/location"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/location/{id}": {
+            "get": {
+                "summary": "Returns a specific location",
+                "description": "Finds a specific location based on its id",
+                "tags": [
+                    "locations"
+                ],
+                "operationId": "getLocationsById",
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id of the location to fetch",
+                        "required": true,
+                        "type": "string",
+                        "format": "id"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "$ref": "#/responses/InvalidRequest"
+                    },
+                    "403": {
+                        "$ref": "#/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/responses/ServerError"
+                    },
+                    "default": {
+                        "description": "Location found",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "200"
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/location"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Updates a location",
+                "description": "Updates a location based on the id with the data sent",
+                "tags": [
+                    "locations"
+                ],
+                "operationId": "updateLocation",
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id of the location to update",
+                        "required": true,
+                        "type": "string",
+                        "format": "id"
+                    },
+                    {
+                        "name": "location",
+                        "in": "body",
+                        "description": "fields of location to update",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/location"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "$ref": "#/responses/InvalidRequest"
+                    },
+                    "403": {
+                        "$ref": "#/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/responses/ServerError"
+                    },
+                    "default": {
+                        "description": "Location updated",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "200"
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/location"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Destroys a location",
+                "description": "Destroys the specified location",
+                "tags": [
+                    "locations"
+                ],
+                "operationId": "destroyLocation",
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id of the location to destroy",
+                        "required": true,
+                        "type": "string",
+                        "format": "id"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "$ref": "#/responses/InvalidRequest"
+                    },
+                    "403": {
+                        "$ref": "#/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/responses/ServerError"
+                    },
+                    "default": {
+                        "description": "Location destroyed",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "200"
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/location"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/location/{parentId}/devices": {
+            "get": {
+                "summary": "Gets devices for a location",
+                "description": "Gets devices associated with a location",
+                "tags": [
+                    "locations"
+                ],
+                "operationId": "getLocationDevices",
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "parentId",
+                        "in": "path",
+                        "description": "id of the location to get devices for",
+                        "required": true,
+                        "type": "string",
+                        "format": "id"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "$ref": "#/responses/InvalidRequest"
+                    },
+                    "403": {
+                        "$ref": "#/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/responses/ServerError"
+                    },
+                    "default": {
+                        "description": "devices found",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "200"
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/devices"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Adds a device to a location",
+                "description": "Attaches the posted device to the specified location",
+                "tags": [
+                    "locations"
+                ],
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "parentId",
+                        "in": "path",
+                        "description": "id of the location to add the new device to",
+                        "required": true,
+                        "type": "string",
+                        "format": "id"
+                    },
+                    {
+                        "name": "location",
+                        "in": "body",
+                        "description": "fields of device to create and attach to the location",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/device"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "$ref": "#/responses/InvalidRequest"
+                    },
+                    "403": {
+                        "$ref": "#/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/responses/ServerError"
+                    },
+                    "default": {
+                        "description": "device added",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "200"
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/location"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/location/{parentId}/devices/{id}": {
+            "post": {
+                "summary": "Adds the device to a location",
+                "description": "Attaches the posted device to the specified location",
+                "tags": [
+                    "locations"
+                ],
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "parentId",
+                        "in": "path",
+                        "description": "id of the location to add a device to",
+                        "required": true,
+                        "type": "string",
+                        "format": "id"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id of the device to associate",
+                        "required": true,
+                        "type": "string",
+                        "format": "id"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "$ref": "#/responses/InvalidRequest"
+                    },
+                    "403": {
+                        "$ref": "#/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/responses/ServerError"
+                    },
+                    "default": {
+                        "description": "device added",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "200"
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/location"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Removes an device from a location",
+                "description": "Removes the specified device from the specifiedlocation",
+                "tags": [
+                    "locations"
+                ],
+                "operationId": "removeDevicesFromLocation",
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "parentId",
+                        "in": "path",
+                        "description": "id of the location to remove device from",
+                        "required": true,
+                        "type": "string",
+                        "format": "id"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id of the device to disassociate",
+                        "required": true,
+                        "type": "string",
+                        "format": "id"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "$ref": "#/responses/InvalidRequest"
+                    },
+                    "403": {
+                        "$ref": "#/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/responses/ServerError"
+                    },
+                    "default": {
+                        "description": "device removed",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "200"
+                                },
+                                "error": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/location"
+                                }
+                            }
                         }
                     }
                 }
@@ -424,111 +1825,287 @@
         }
     },
     "definitions": {
-        "DeviceType": {
+        "DefaultError": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                },
+                "error": {
+                    "type": "string"
+                }
+            },
+            "example": {
+                "status": 400,
+                "error": "Invalid Phone"
+            }
+        },
+        "configuration": {
             "type": "object",
             "properties": {
                 "uuid": {
                     "type": "string",
-                    "description": "Unique identifier representing a specific product for a given latitude & longitude. For example, uberX in San Francisco will have a different product_id than uberX in Los Angeles."
-                },
-                "description": {
-                    "type": "string",
-                    "description": "Description of product."
+                    "format": "string"
                 },
                 "name": {
                     "type": "string",
-                    "description": "Display name of product."
+                    "format": "string"
+                },
+                "description": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "device": {
+                    "$ref": "#/definitions/device"
+                },
+                "data": {
+                    "type": "string",
+                    "format": "json"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "uniqueItems": true
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            },
+            "required": []
+        },
+        "configurations": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/configuration"
+            }
+        },
+        "device": {
+            "type": "object",
+            "properties": {
+                "uuid": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "name": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "description": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "status": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "type": {
+                    "$ref": "#/definitions/devicetype"
                 },
                 "location": {
+                    "$ref": "#/definitions/location"
+                },
+                "configuration": {
+                    "$ref": "#/definitions/configuration"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "uniqueItems": true
+                },
+                "createdAt": {
                     "type": "string",
-                    "description": "Capacity of product. For example, 4 people."
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            },
+            "required": []
+        },
+        "devices": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/device"
+            }
+        },
+        "devicetype": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "description": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "label": {
+                    "type": "string",
+                    "format": "string"
                 },
                 "metadata": {
                     "type": "string",
-                    "description": "Image URL representing the product."
-                }
-            }
-        },
-        "Device": {
-            "type": "object",
-            "properties": {
-                "uuid": {
-                    "type": "string",
-                    "description": "Unique identifier representing a specific device"
+                    "format": "json"
                 },
-                "name": {
-                    "type": "string",
-                    "description": "[ISO 4217](http://en.wikipedia.org/wiki/ISO_4217) currency code."
+                "devices": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/device"
+                    }
                 },
-                "description": {
-                    "type": "string",
-                    "description": "Display name of product."
-                },
-                "estimate": {
-                    "type": "string",
-                    "description": "Formatted string of estimate in local currency of the start location. Estimate could be a range, a single number (flat rate) or \"Metered\" for TAXI."
-                },
-                "low_estimate": {
-                    "type": "number",
-                    "description": "Lower bound of the estimated price."
-                },
-                "high_estimate": {
-                    "type": "number",
-                    "description": "Upper bound of the estimated price."
-                },
-                "surge_multiplier": {
-                    "type": "number",
-                    "description": "Expected surge multiplier. Surge is active if surge_multiplier is greater than 1. Price estimate already factors in the surge multiplier."
-                }
-            }
-        },
-        "Location": {
-            "type": "object",
-            "properties": {
-                "uuid": {
-                    "type": "string",
-                    "description": "Unique identifier representing a specific device"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "[ISO 4217](http://en.wikipedia.org/wiki/ISO_4217) currency code."
-                },
-                "description": {
-                    "type": "string",
-                    "description": "Display name of product."
-                },
-                "estimate": {
-                    "type": "string",
-                    "description": "Formatted string of estimate in local currency of the start location. Estimate could be a range, a single number (flat rate) or \"Metered\" for TAXI."
-                },
-                "low_estimate": {
-                    "type": "number",
-                    "description": "Lower bound of the estimated price."
-                },
-                "high_estimate": {
-                    "type": "number",
-                    "description": "Upper bound of the estimated price."
-                },
-                "surge_multiplier": {
-                    "type": "number",
-                    "description": "Expected surge multiplier. Surge is active if surge_multiplier is greater than 1. Price estimate already factors in the surge multiplier."
-                }
-            }
-        },
-        "Error": {
-            "type": "object",
-            "properties": {
-                "code": {
+                "id": {
                     "type": "integer",
-                    "format": "int32"
+                    "format": "int64",
+                    "uniqueItems": true
                 },
-                "message": {
-                    "type": "string"
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
                 },
-                "fields": {
-                    "type": "string"
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
                 }
+            },
+            "required": []
+        },
+        "devicetypes": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/devicetype"
+            }
+        },
+        "location": {
+            "type": "object",
+            "properties": {
+                "uuid": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "name": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "description": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "geolocation": {},
+                "devices": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/device"
+                    }
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "uniqueItems": true
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            },
+            "required": []
+        },
+        "locations": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/location"
             }
         }
-    }
+    },
+    "parameters": {
+        "whereParam": {
+            "name": "where",
+            "description": "JSON encode WHERE criteria objects. Example: where={\"name\":{\"contains\":\"theodore\"}}",
+            "in": "query",
+            "required": false,
+            "type": "string"
+        },
+        "limitParam": {
+            "name": "limit",
+            "description": "The maximum number of records to send back. Example: limit=100",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32",
+            "default": 20
+        },
+        "skipParam": {
+            "name": "skip",
+            "description": "The number of records to skip. Example: skip=30",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32",
+            "default": "0"
+        },
+        "sortParam": {
+            "name": "sort",
+            "description": "The sort order. Example: sort=lastName%20ASC",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "id ASC"
+        },
+        "callbackParam": {
+            "name": "callback",
+            "description": "If specified, a JSONP response will be sent (instead of JSON). This is the name of a client-side javascript function to call, to which results will be passed as the first (and only) argument. Example: ?callback=my_JSONP_data_receiver_fn",
+            "in": "query",
+            "required": false,
+            "type": "string"
+        }
+    },
+    "responses": {
+        "NotFound": {
+            "description": "Entity Not Found",
+            "schema": {
+                "$ref": "#/definitions/DefaultError"
+            }
+        },
+        "ServerError": {
+            "description": "Server Error",
+            "schema": {
+                "$ref": "#/definitions/DefaultError"
+            }
+        },
+        "Forbidden": {
+            "description": "Not Authorized",
+            "schema": {
+                "$ref": "#/definitions/DefaultError"
+            }
+        },
+        "InvalidRequest": {
+            "description": "Invalid Input",
+            "schema": {
+                "$ref": "#/definitions/DefaultError"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "configurations"
+        },
+        {
+            "name": "devices"
+        },
+        {
+            "name": "devicetypes"
+        },
+        {
+            "name": "locations"
+        }
+    ]
 }
