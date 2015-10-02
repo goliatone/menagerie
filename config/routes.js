@@ -33,8 +33,8 @@ module.exports.routes = {
   ***************************************************************************/
 
   '/': {
-    view: 'homepage'
-  }
+    view: 'dashboard'
+},
 
   /***************************************************************************
   *                                                                          *
@@ -46,4 +46,8 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
+  'GET /device': 'DeviceController.list',
+  'GET /device/new': 'DeviceController.new',
+  'GET /device/:id': 'DeviceController.show',
+  'GET /device/:id/edit': 'DeviceController.show'
 };
