@@ -1,0 +1,26 @@
+<% include ../_header.ejs %>
+
+
+<table>
+  <thead>
+    <tr>
+      <th width="400">UUID</th>
+      <th>Name</th>
+      <th width="150">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+      <% records.map(function(record){%>
+          <tr>
+              <td>
+                  <a href="/<%= nicename %>/<%= record.id %>">
+                      <%= record.uuid %>
+                  </a>
+              </td>
+              <td><%= record.name %></td>
+              <td><%= record.description %></td>
+          </tr>
+      <%});%>
+  </tbody>
+</table>
+<a href="/location/new" class="button success">Add Record</a>
