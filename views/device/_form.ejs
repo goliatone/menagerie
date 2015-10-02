@@ -1,3 +1,5 @@
+<%= form.method %> :: <%= form.action %>
+
 <form id="menagerie" action="<%= form.action %>" method="<%= form.method %>">
     <div class="row">
         <div class="large-12 columns">
@@ -43,6 +45,8 @@
             </label>
         </div>
     </div>
+    <% if(record.id){%>
     <input hidden="true" name="id" value="<%= record.id %>" />
+    <%}%>
     <button id="submit" class="success expand radius">Send</button>
 </form>
