@@ -3,53 +3,6 @@
 <div class="content">
     <div class="row">
         <h3>Device</h3>
-        <form id="menagerie" action="/api/device" method="post">
-            <div class="row">
-                <div class="large-12 columns">
-                    <label>UUID
-                        <input name="uuid" type="text" placeholder="UUID" value="<%= resource.uuid ? resource.uuid : 'UUID' %>"/>
-                    </label>
-                </div>
-                <div class="large-12 columns">
-                    <label>Name
-                        <input name="name" type="text" placeholder="Name" value="<%= resource.name ? resource.name : 'Name' %>"/>
-                    </label>
-                </div>
-                <div class="large-12 columns">
-                    <label>Description
-                        <input name="description" type="text" placeholder="Description"  value="<%= resource.description ? resource.description : 'Description' %>"/>
-                    </label>
-                </div>
-                <div class="large-12 columns">
-                    <label>Status
-                        <select name="status"  value="<%= resource.status %>">
-                            <option value="opeartive">Operative</option>
-                            <option value="offline">Off-line</option>
-                            <option value="online">On-line</option>
-                        </select>
-                    </label>
-                </div>
-                <div class="large-12 columns">
-                    <label>Type
-                        <select name="type"  value="<%= resource.type %>">
-                            <option value="1">Beacon</option>
-                            <option value="2">WAP</option>
-                            <option value="3">Router</option>
-                        </select>
-                    </label>
-                </div>
-                <div class="large-12 columns">
-                    <label>Location
-                        <select name="location"  value="<%= resource.location %>">
-                            <option value="1">NY15</option>
-                            <option value="2">NY09</option>
-                            <option value="3">LND01</option>
-                        </select>
-                    </label>
-                </div>
-            </div>
-            <input hidden="true" name="id" value="<%= resource.id %>" />
-            <button id="submit" class="success expand radius">Send</button>
-        </form>
+        <% include _form.ejs %>
     </div>
 </div>
