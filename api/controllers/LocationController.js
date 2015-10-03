@@ -126,10 +126,10 @@ module.exports = {
     find: function (req, res) {
         var Model = Location;
         console.log('Inside find..............');
-        var _uuid = req.params.id;
+        var id = req.params.id;
         console.log('Inside find.............. _uuid = ' + _uuid);
 
-        return Model.find().where({id: _uuid}).then(function (_record) {
+        return Model.find().where({id: id}).then(function (_record) {
 
             if (_record && _record.length > 0) {
                 console.log('Inside find Found .... _record = ' + JSON.stringify(_record));
