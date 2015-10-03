@@ -33,8 +33,8 @@ module.exports.routes = {
   ***************************************************************************/
 
   '/': {
-    view: 'homepage'
-  }
+    view: 'dashboard'
+},
 
   /***************************************************************************
   *                                                                          *
@@ -46,4 +46,43 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
+    'GET /device': 'DeviceController.list',
+    'GET /device/new': 'DeviceController.new',
+    'GET /device/:id': 'DeviceController.show',
+    'GET /device/:id/edit': 'DeviceController.show',
+
+
+    'get /location': {
+        controller: 'location',
+        action: 'findall',
+        //   view: 'user/list'
+    },
+    'get /location/new': {
+        controller: 'location',
+        action: 'new',
+    },
+    'get /location/find': {
+        controller: 'location',
+        action: 'showFind',
+    },
+    'get /location/reset': {
+        controller: 'location',
+        action: 'resetData',
+    },
+    'get /location/:id': {
+        controller: 'location',
+        action: 'find',
+    },
+    'post /location': {
+        controller: 'location',
+        action: 'create',
+    },
+    'put /location': {
+        controller: 'location',
+        action: 'update',
+    },
+    'delete /location': {
+        controller: 'location',
+        action: 'delete',
+    },
 };
