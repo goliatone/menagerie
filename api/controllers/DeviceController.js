@@ -172,18 +172,32 @@ var uuid = require('random-uuid-v4');
     findall: function (req, res) {
         console.log('Inside findall..............');
 
-        return Device.find().then(function (records) {
+        return Device.find()
+            .populate('location', 'deviceType')
+            .then(function (records) {
             console.log('DeviceService.findAll -- records = ' + records);
-            return res.view('device/list', {
-                status: 'OK',
-                title: 'List of records',
-                nicename: 'device',
-                records: records
-            });
+            if (req.wantsJSON) {
+                res.json(records);
+            } else {
+                res.view('device/list', {
+                    status: 'OK',
+                    title: 'List of records',
+                    nicename: 'device',
+                    records: records
+                });
+            }
         }).catch(function (err) {
             console.error('Error on DeviceService.findAll');
             console.error(err);
-            return res.view('500', {message: 'Sorry, an error occurd - ' + err});
+            if (req.wantsJSON) {
+                res.json({
+                    message: 'Sorry, an error occurd - ' + err,
+                    error: err
+                });
+            } else {
+                res.view('500', {message: 'Sorry, an error occurd - ' + err});
+            }
+
         });
     },
     /**
@@ -191,7 +205,7 @@ var uuid = require('random-uuid-v4');
      */
     new : function (req, res) {
         console.log('Inside new..............');
-        return res.view('device/new', {
+        var payload = {
             form: {
                 action: '/device',
                 method: 'POST'
@@ -205,7 +219,11 @@ var uuid = require('random-uuid-v4');
             },
             status: 'OK',
             title: 'Add a new record'
-        });
+        };
+
+        if (req.wantsJSON) res.json(payload);
+        else res.view('device/new', payload);
+
     },
     showFind: function (req, res) {
         console.log('Inside showFind..............');
