@@ -64,6 +64,7 @@
          var Model = DeviceType;
 
          return Model.update({
+             id: req.param('id'),
              uuid: req.param('uuid'),
              name: req.param('name'),
              description: req.param('description'),
@@ -74,7 +75,7 @@
              console.error('Error on LocationService.updateLocation');
              console.error(err);
 
-             return Model.find().where({uuid: req.param('uuid')}).then(function (_record) {
+             return Model.find().where({id: req.param('id')}).then(function (_record) {
                  if (_record && _record.length > 0) {
                      return res.view(Resource.getViewPath('edit'), {
                          record: _record[0],
@@ -98,7 +99,7 @@
      delete: function (req, res) {
          console.log('Inside delete..............');
          var Model = DeviceType;
-         return Model.find().where({uuid: req.param('uuid')}).then(function (_record) {
+         return Model.find().where({id: req.param('id')}).then(function (_record) {
              if (_record && _record.length > 0) {
 
                  _record[0].destroy().then(function (_record) {
@@ -126,7 +127,10 @@
          var _uuid = req.params.id;
          console.log('Inside find.............. _uuid = ' + _uuid);
 
-         return Model.find().where({id: _uuid}).then(function (_record) {
+         return Model.find()
+		 .where({id: _uuid})
+		 .populate('location')
+		 .then(function (_record) {
 
              if (_record && _record.length > 0) {
                  console.log('Inside find Found .... _record = ' + JSON.stringify(_record));
