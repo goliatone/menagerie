@@ -46,43 +46,30 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-    'GET /device': 'DeviceController.list',
+    'GET /location': 'LocationController.findall',
+    'GET /location/new': 'LocationController.new',
+    'GET /location/find': 'LocationController.showFind',
+    'GET /location/reset': 'LocationController.resetData',
+    'GET /location/:id': 'LocationController.find',
+    'POST /location': 'LocationController.create',
+    'PUT /location': 'LocationController.update',
+    'DELETE /location': 'LocationController.delete',
+
+    'GET /device': 'DeviceController.findall',
     'GET /device/new': 'DeviceController.new',
-    'GET /device/:id': 'DeviceController.show',
-    'GET /device/:id/edit': 'DeviceController.show',
+    'GET /device/find': 'DeviceController.showFind',
+    'GET /device/reset': 'DeviceController.resetData',
+    'GET /device/:id': 'DeviceController.find',
+    'POST /device': 'DeviceController.create',
+    'PUT /device': 'DeviceController.update',
+    'DELETE /device': 'DeviceController.delete',
 
-
-    'get /location': {
-        controller: 'location',
-        action: 'findall',
-        //   view: 'user/list'
-    },
-    'get /location/new': {
-        controller: 'location',
-        action: 'new',
-    },
-    'get /location/find': {
-        controller: 'location',
-        action: 'showFind',
-    },
-    'get /location/reset': {
-        controller: 'location',
-        action: 'resetData',
-    },
-    'get /location/:id': {
-        controller: 'location',
-        action: 'find',
-    },
-    'post /location': {
-        controller: 'location',
-        action: 'create',
-    },
-    'put /location': {
-        controller: 'location',
-        action: 'update',
-    },
-    'delete /location': {
-        controller: 'location',
-        action: 'delete',
-    },
+    'GET /devicetype': 'DeviceTypeController.findall',
+    'GET /devicetype/new': 'DeviceTypeController.new',
+    'GET /devicetype/find': 'DeviceTypeController.showFind',
+    'GET /devicetype/reset': 'DeviceTypeController.resetData',
+    'GET /devicetype/:id': 'DeviceTypeController.find',
+    'POST /devicetype': 'DeviceTypeController.create',
+    'PUT /devicetype': 'DeviceTypeController.update',
+    'DELETE /devicetype': 'DeviceTypeController.delete',
 };
