@@ -6,12 +6,12 @@
 */
 
 module.exports = {
-
+    autoPK: true,
     attributes: {
         uuid : {
             type: 'string'
-            /*, required: true*/,
-            // index: { unique: true, sparse: true }
+            // primaryKey: true,
+            // required: true
         },
         name : {
             type: 'string'
