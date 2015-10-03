@@ -7,78 +7,105 @@
  */
 var uuid = require('random-uuid-v4');
  module.exports = {
-    /**
-     * `DeviceController.create()`
-     */
-    create: function (req, res) {
-        console.log('Inside create..............req.params = ' + JSON.stringify(req.params.all()));
+     manage: function(req, res){
+         return Device.update({id: req.param('deviceId')},{
+             location: req.param('locationId')
+         }).then(function (_record) {
+             return res.redirect('device');
+         }).catch(function (err) {
+             console.error('Error on DeviceService.updateDevice');
+             console.error(err);
 
-        var _record = {
-            uuid: req.param('uuid'),
-            name: req.param('name'),
-            description: req.param('description'),
-            geodevice: req.param('geodevice'),
-            location: req.param('location')
-        };
+             return Device.find().where({id: req.param('deviceId')}).then(function (_record) {
+                 if (_record && _record.length > 0) {
+                     return res.view('device/edit', {
+                         record: _record[0],
+                         status: 'Error',
+                         errorType: 'validation-error',
+                         statusDescription: err,
+                         title: 'Device Details'
+                     });
+                 } else {
+                     return res.view('500', {message: 'Sorry, no Device found with uuid - ' + req.param('uuid')});
+                 }
+             }).catch(function (err) {
+                 return res.view('500', {message: 'Sorry, no Device found with uuid - ' + req.param('uuid')});
+             });
+         });
+     },
+     /**
+      * `DeviceController.create()`
+      */
+     create: function (req, res) {
+         console.log('Inside create..............req.params = ' + JSON.stringify(req.params.all()));
 
-        return Device.create(_record).then(function (_record) {
-            console.log('Device created: ' + JSON.stringify(_record));
-            return res.redirect('device');
-        }).catch(function (err) {
-            console.error('Error on DeviceService.createDevice');
-            console.error(err);
-            console.error(JSON.stringify(err));
-            return res.view('device/new', {
-                record: _record,
-                status: 'Error',
-                statusDescription: err,
-                title: 'Add a new record'
-            });
-        });
+         var _record = {
+             uuid: req.param('uuid'),
+             name: req.param('name'),
+             description: req.param('description'),
+             geodevice: req.param('geodevice'),
+             location: req.param('location')
+         };
 
-    },
-    /**
-     * `DeviceController.update()`
-     */
-    update: function (req, res) {
-        console.log('Inside update..............');
+         return Device.create(_record).then(function (_record) {
+             console.log('Device created: ' + JSON.stringify(_record));
+             return res.redirect('device');
+         }).catch(function (err) {
+             console.error('Error on DeviceService.createDevice');
+             console.error(err);
+             console.error(JSON.stringify(err));
+             return res.view('device/new', {
+                 record: _record,
+                 status: 'Error',
+                 statusDescription: err,
+                 title: 'Add a new record'
+             });
+         });
 
-        return Device.update({
-            uuid: req.param('uuid'),
-            name: req.param('name'),
-            description: req.param('description'),
-            location: req.param('location')
-        }).then(function (_record) {
-            return res.redirect('device');
-        }).catch(function (err) {
-            console.error('Error on DeviceService.updateDevice');
-            console.error(err);
+     },
+     /**
+      * `DeviceController.update()`
+      */
+      update: function (req, res) {
+          console.log('Inside update..............');
 
-            return Device.find().where({uuid: req.param('uuid')}).then(function (_record) {
-                if (_record && _record.length > 0) {
-                    return res.view('device/edit', {
-                        record: _record[0],
-                        status: 'Error',
-                        errorType: 'validation-error',
-                        statusDescription: err,
-                        title: 'Device Details'
-                    });
-                } else {
-                    return res.view('500', {message: 'Sorry, no Device found with uuid - ' + req.param('uuid')});
-                }
-            }).catch(function (err) {
-                return res.view('500', {message: 'Sorry, no Device found with uuid - ' + req.param('uuid')});
-            });
-        });
+          return Device.update({
+              id: req.param('id'),
+              uuid: req.param('uuid'),
+              name: req.param('name'),
+              description: req.param('description'),
+              location: req.param('location')
+          }).then(function (_record) {
+              return res.redirect('device');
+          }).catch(function (err) {
+              console.error('Error on DeviceService.updateDevice');
+              console.error(err);
 
-    },
-    /**
-     * `DeviceController.delete()`
-     */
-    delete: function (req, res) {
-        console.log('Inside delete..............');
+              return Device.find().where({id: req.param('id')}).then(function (_record) {
+                  if (_record && _record.length > 0) {
+                      return res.view('device/edit', {
+                          record: _record[0],
+                          status: 'Error',
+                          errorType: 'validation-error',
+                          statusDescription: err,
+                          title: 'Device Details'
+                      });
+                  } else {
+                      return res.view('500', {message: 'Sorry, no Device found with uuid - ' + req.param('uuid')});
+                  }
+              }).catch(function (err) {
+                  return res.view('500', {message: 'Sorry, no Device found with uuid - ' + req.param('uuid')});
+              });
+          });
 
-        return Device.find().where({uuid: req.param('uuid')}).then(function (_record) {
+      },
+      /**
+       * `DeviceController.delete()`
+       */
+       delete: function (req, res) {
+           console.log('Inside delete..............');
+
+        return Device.find().where({id: req.param('id')}).then(function (_record) {
             if (_record && _record.length > 0) {
 
                 _record[0].destroy().then(function (_record) {
@@ -105,7 +132,7 @@ var uuid = require('random-uuid-v4');
         var _uuid = req.params.id;
         console.log('Inside find.............. _uuid = ' + _uuid);
 
-        return Device.find().where({id: _uuid}).then(function (_record) {
+        return Device.find().where({id: id}).then(function (_record) {
 
             if (_record && _record.length > 0) {
                 console.log('Inside find Found .... _record = ' + JSON.stringify(_record));
