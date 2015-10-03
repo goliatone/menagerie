@@ -17,8 +17,7 @@
                 <input name="description" type="text" placeholder="Description"  value="<%= record.description ? record.description : 'Description' %>"/>
             </label>
         </div>
-
-        <div class="large-12 columns">
+        <!--div class="large-12 columns">
             <label>Devices
                 <select name="location"  value="<%= record.device %>">
                     <option value="1">NY15</option>
@@ -26,7 +25,7 @@
                     <option value="3">LND01</option>
                 </select>
             </label>
-        </div>
+        </div-->
     </div>
     <% if(record.id){%>
     <input hidden="true" name="id" value="<%= record.id %>" />
