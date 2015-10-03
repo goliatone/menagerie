@@ -7,11 +7,30 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 var uuid = require('random-uuid-v4');
- module.exports = {
+
+function _uppercase(str){
+    return str.charAt(0).toUpperCase() + str.slice(1, str.length);
+}
+
+function BaseController(name){
+    this.nicename = name;
+    this.baseView = this.nicename;
+    this.label = _uppercase(name);
+}
+BaseController.prototype.getViewPath = function(action){
+    return action ? this.baseView + '/' + action : this.baseView;
+};
+
+var Resource = new BaseController('location');
+
+module.exports = {
     /**
      * `LocationController.create()`
      */
     create: function (req, res) {
+
+        var Model = Location;
+
         console.log('Inside create..............req.params = ' + JSON.stringify(req.params.all()));
 
         var _record = {
@@ -22,14 +41,14 @@ var uuid = require('random-uuid-v4');
             devices: req.param('devices')
         };
 
-        return Location.create(_record).then(function (_record) {
+        return Model.create(_record).then(function (_record) {
             console.log('Location created: ' + JSON.stringify(_record));
-            return res.redirect('location');
+            return res.redirect(Resource.baseView);
         }).catch(function (err) {
             console.error('Error on LocationService.createLocation');
             console.error(err);
             console.error(JSON.stringify(err));
-            return res.view('location/new', {
+            return res.view(Resource.getViewPath('new'), {
                 record: _record,
                 status: 'Error',
                 statusDescription: err,
@@ -43,22 +62,23 @@ var uuid = require('random-uuid-v4');
      */
     update: function (req, res) {
         console.log('Inside update..............');
+        var Model = Location;
 
-        return Location.update({
+        return Model.update({
             uuid: req.param('uuid'),
             name: req.param('name'),
             description: req.param('description'),
             geolocation: req.param('geolocation'),
-            devices: req.param(devices)
+            devices: req.param('devices')
         }).then(function (_record) {
-            return res.redirect('location');
+            return res.redirect(Resource.getViewPath());
         }).catch(function (err) {
             console.error('Error on LocationService.updateLocation');
             console.error(err);
 
-            return Location.find().where({uuid: req.param('uuid')}).then(function (_record) {
+            return Model.find().where({uuid: req.param('uuid')}).then(function (_record) {
                 if (_record && _record.length > 0) {
-                    return res.view('location/edit', {
+                    return res.view(Resource.getViewPath('edit'), {
                         record: _record[0],
                         status: 'Error',
                         errorType: 'validation-error',
@@ -79,16 +99,16 @@ var uuid = require('random-uuid-v4');
      */
     delete: function (req, res) {
         console.log('Inside delete..............');
-
-        return Location.find().where({uuid: req.param('uuid')}).then(function (_record) {
+        var Model = Location;
+        return Model.find().where({uuid: req.param('uuid')}).then(function (_record) {
             if (_record && _record.length > 0) {
 
                 _record[0].destroy().then(function (_record) {
                     console.log('Deleted successfully!!! _record = ' + _record);
-                    return res.redirect('location');
+                    return res.redirect(Resource.getViewPath());
                 }).catch(function (err) {
                     console.error(err);
-                    return res.redirect('location');
+                    return res.redirect(Resource.getViewPath());
                 });
             } else {
                 return res.view('500', {message: 'Sorry, no Location found with uuid - ' + req.param('uuid')});
@@ -103,17 +123,18 @@ var uuid = require('random-uuid-v4');
      * `LocationController.find()`
      */
     find: function (req, res) {
+        var Model = Location;
         console.log('Inside find..............');
         var _uuid = req.params.id;
         console.log('Inside find.............. _uuid = ' + _uuid);
 
-        return Location.find().where({id: _uuid}).then(function (_record) {
+        return Model.find().where({id: _uuid}).then(function (_record) {
 
             if (_record && _record.length > 0) {
                 console.log('Inside find Found .... _record = ' + JSON.stringify(_record));
-                return res.view('location/edit', {
+                return res.view(Resource.getViewPath('edit'), {
                     form:{
-                        action: '/location',
+                        action: '/' + Resource.nicename,
                         method: 'PUT'
                     },
                     status: 'OK',
@@ -122,7 +143,7 @@ var uuid = require('random-uuid-v4');
                 });
             } else {
                 console.log('Inside find NOT Found .... ');
-                return res.view('location/edit', {
+                return res.view(Resource.getViewPath('edit'), {
                     status: 'Error',
                     errorType: 'not-found',
                     statusDescription: 'No record found with uuid, ' + _uuid,
@@ -131,7 +152,7 @@ var uuid = require('random-uuid-v4');
             }
         }).catch(function (err) {
             console.log('Inside find ERROR .... ');
-            return res.view('location/edit', {
+            return res.view(Resource.getViewPath('edit'), {
                 status: 'Error',
                 errorType: 'not-found',
                 statusDescription: 'No record found with uuid, ' + _uuid,
@@ -144,14 +165,15 @@ var uuid = require('random-uuid-v4');
      * `LocationController.findall()`
      */
     findall: function (req, res) {
+        var Model = Location;
         console.log('Inside findall..............');
 
-        return Location.find().then(function (records) {
+        return Model.find().then(function (records) {
             console.log('LocationService.findAll -- records = ' + records);
-            return res.view('location/list', {
+            return res.view(Resource.getViewPath('list'), {
                 status: 'OK',
                 title: 'List of records',
-                nicename: 'location',
+                nicename: Resource.nicename,
                 records: records
             });
         }).catch(function (err) {
@@ -164,10 +186,11 @@ var uuid = require('random-uuid-v4');
      * `LocationController.findall()`
      */
     new : function (req, res) {
+        var Model = Location;
         console.log('Inside new..............');
-        return res.view('location/new', {
+        return res.view(Resource.getViewPath('new'), {
             form: {
-                action: '/location',
+                action: '/' + Resource.nicename,
                 method: 'POST'
             },
             record: {
@@ -183,13 +206,13 @@ var uuid = require('random-uuid-v4');
     },
     showFind: function (req, res) {
         console.log('Inside showFind..............');
-        res.view('location/find', {
+        res.view(Resource.getViewPath('find'), {
             title: 'Search records'
         });
     },
     resetData: function (req, res) {
         LocationService.preloadData(function(_records) {
-            return res.redirect('location');
+            return res.redirect(Resource.getViewPath());
         });
     }
 
