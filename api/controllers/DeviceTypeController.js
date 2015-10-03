@@ -124,11 +124,11 @@
      find: function (req, res) {
          var Model = DeviceType;
          console.log('Inside find..............');
-         var _uuid = req.params.id;
+         var id = req.params.id;
          console.log('Inside find.............. _uuid = ' + _uuid);
 
          return Model.find()
-		 .where({id: _uuid})
+		 .where({id: id})
 		 .populate('location')
 		 .then(function (_record) {
 
