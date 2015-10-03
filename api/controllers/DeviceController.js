@@ -6,102 +6,189 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 var uuid = require('random-uuid-v4');
-var actionUtil = require('../../node_modules/sails/lib/hooks/blueprints/actionUtil');
+ module.exports = {
+    /**
+     * `DeviceController.create()`
+     */
+    create: function (req, res) {
+        console.log('Inside create..............req.params = ' + JSON.stringify(req.params.all()));
 
-
-module.exports = {
-    show: function(req, res){
-        var id = req.param('id'),
-            locals = {
-                action:'show',
-                form:{
-                    action: '/api/device/' + id,
-                    method:'PUT'
-                }
-            };
-
-        if(id) {
-            locals.id = id;
-            Device.findOne({id:id})
-            .populate('location', 'deviceType', 'configuration')
-            .then(function(device){
-                locals.record = device;
-                console.log('JSON', JSON.stringify(locals));
-                res.view(locals);
-            }).catch(function(err){
-                locals.error = err;
-                res.view(locals);
-            });
-        } else res.redirect('device', locals);
-    },
-    new: function(req, res){
-
-        var locals = {
-            action: 'new',
-            record:{
-                uuid: uuid().toUpperCase()
-            },
-            form:{
-                action: '/api/device',
-                method:'POST'
-            }
+        var _record = {
+            uuid: req.param('uuid'),
+            name: req.param('name'),
+            description: req.param('description'),
+            geodevice: req.param('geodevice'),
+            location: req.param('location')
         };
 
-        res.view(locals);
+        return Device.create(_record).then(function (_record) {
+            console.log('Device created: ' + JSON.stringify(_record));
+            return res.redirect('device');
+        }).catch(function (err) {
+            console.error('Error on DeviceService.createDevice');
+            console.error(err);
+            console.error(JSON.stringify(err));
+            return res.view('device/new', {
+                record: _record,
+                status: 'Error',
+                statusDescription: err,
+                title: 'Add a new record'
+            });
+        });
+
     },
-    list: function(req, res){
-        // Look up the model
-        var Model = Device;
+    /**
+     * `DeviceController.update()`
+     */
+    update: function (req, res) {
+        console.log('Inside update..............');
 
+        return Device.update({
+            uuid: req.param('uuid'),
+            name: req.param('name'),
+            description: req.param('description'),
+            location: req.param('location')
+        }).then(function (_record) {
+            return res.redirect('device');
+        }).catch(function (err) {
+            console.error('Error on DeviceService.updateDevice');
+            console.error(err);
 
-        // If an `id` param was specified, use the findOne blueprint action
-        // to grab the particular instance with its primary key === the value
-        // of the `id` param.   (mainly here for compatibility for 0.9, where
-        // there was no separate `findOne` action)
-        if ( actionUtil.parsePk(req) ) {
-            return require('../../node_modules/sails/lib/hooks/blueprints/actions/findOne')(req,res);
-        }
+            return Device.find().where({uuid: req.param('uuid')}).then(function (_record) {
+                if (_record && _record.length > 0) {
+                    return res.view('device/edit', {
+                        record: _record[0],
+                        status: 'Error',
+                        errorType: 'validation-error',
+                        statusDescription: err,
+                        title: 'Device Details'
+                    });
+                } else {
+                    return res.view('500', {message: 'Sorry, no Device found with uuid - ' + req.param('uuid')});
+                }
+            }).catch(function (err) {
+                return res.view('500', {message: 'Sorry, no Device found with uuid - ' + req.param('uuid')});
+            });
+        });
 
-        // Lookup for records that match the specified criteria
-        var query = Model.find()
-            .where( actionUtil.parseCriteria(req) )
-            .limit( actionUtil.parseLimit(req) )
-            .skip( actionUtil.parseSkip(req) )
-            .sort( actionUtil.parseSort(req) );
+    },
+    /**
+     * `DeviceController.delete()`
+     */
+    delete: function (req, res) {
+        console.log('Inside delete..............');
 
-        query.populate('location', 'deviceType', 'configuration');
+        return Device.find().where({uuid: req.param('uuid')}).then(function (_record) {
+            if (_record && _record.length > 0) {
 
-        // TODO: .populateEach(req.options);
-        query = actionUtil.populateEach(query, req);
-        query.exec(function found(err, matchingRecords) {
-            if (err) return res.serverError(err);
-
-            // Only `.watch()` for new instances of the model if
-            // `autoWatch` is enabled.
-            if (req._sails.hooks.pubsub && req.isSocket) {
-                Model.subscribe(req, matchingRecords);
-                if (req.options.autoWatch) { Model.watch(req); }
-                // Also subscribe to instances of all associated models
-                matchingRecords.map(function (record) {
-                    actionUtil.subscribeDeep(req, record);
+                _record[0].destroy().then(function (_record) {
+                    console.log('Deleted successfully!!! _record = ' + _record);
+                    return res.redirect('device');
+                }).catch(function (err) {
+                    console.error(err);
+                    return res.redirect('device');
                 });
-          }
+            } else {
+                return res.view('500', {message: 'Sorry, no Device found with uuid - ' + req.param('uuid')});
+            }
+        }).catch(function (err) {
+            return res.view('500', {message: 'Sorry, no Device found with uuid - ' + req.param('uuid')});
+        });
 
-            res.view({records:matchingRecords});
+
+    },
+    /**
+     * `DeviceController.find()`
+     */
+    find: function (req, res) {
+        console.log('Inside find..............');
+        var _uuid = req.params.id;
+        console.log('Inside find.............. _uuid = ' + _uuid);
+
+        return Device.find().where({id: _uuid}).then(function (_record) {
+
+            if (_record && _record.length > 0) {
+                console.log('Inside find Found .... _record = ' + JSON.stringify(_record));
+                return res.view('device/edit', {
+                    form:{
+                        action: '/device',
+                        method: 'PUT'
+                    },
+                    status: 'OK',
+                    title: 'Device Details',
+                    record: _record[0]
+                });
+            } else {
+                console.log('Inside find NOT Found .... ');
+                return res.view('device/edit', {
+                    status: 'Error',
+                    errorType: 'not-found',
+                    statusDescription: 'No record found with uuid, ' + _uuid,
+                    title: 'Device Details'
+                });
+            }
+        }).catch(function (err) {
+            console.log('Inside find ERROR .... ');
+            return res.view('device/edit', {
+                status: 'Error',
+                errorType: 'not-found',
+                statusDescription: 'No record found with uuid, ' + _uuid,
+                title: 'Device Details'
+            });
+        });
+
+    },
+    /**
+     * `DeviceController.findall()`
+     */
+    findall: function (req, res) {
+        console.log('Inside findall..............');
+
+        return Device.find().then(function (records) {
+            console.log('DeviceService.findAll -- records = ' + records);
+            return res.view('device/list', {
+                status: 'OK',
+                title: 'List of records',
+                nicename: 'device',
+                records: records
+            });
+        }).catch(function (err) {
+            console.error('Error on DeviceService.findAll');
+            console.error(err);
+            return res.view('500', {message: 'Sorry, an error occurd - ' + err});
         });
     },
-    create: function(req, res){
-        var id = req.param('id');
-
-        var locals = {
-            action:'create',
-            record: {
-                uuid: uuid().toUpperCase()
+    /**
+     * `DeviceController.findall()`
+     */
+    new : function (req, res) {
+        console.log('Inside new..............');
+        return res.view('device/new', {
+            form: {
+                action: '/device',
+                method: 'POST'
             },
-            form:{
-
-            }
-        };
-        res.view('device/new',locals);
+            record: {
+                uuid: uuid().toUpperCase(),
+                name: '',
+                description: '',
+                geodevice: '',
+                devices: ''
+            },
+            status: 'OK',
+            title: 'Add a new record'
+        });
+    },
+    showFind: function (req, res) {
+        console.log('Inside showFind..............');
+        res.view('device/find', {
+            title: 'Search records'
+        });
+    },
+    resetData: function (req, res) {
+        DeviceService.preloadData(function(_records) {
+            return res.redirect('device');
+        });
     }
+
 };
