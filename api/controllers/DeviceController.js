@@ -151,7 +151,7 @@ var uuid = require('random-uuid-v4');
                 return res.view('device/edit', {
                     status: 'Error',
                     errorType: 'not-found',
-                    statusDescription: 'No record found with uuid, ' + _uuid,
+                    statusDescription: 'No record found with uuid, ' + id,
                     title: 'Device Details'
                 });
             }
@@ -160,7 +160,7 @@ var uuid = require('random-uuid-v4');
             return res.view('device/edit', {
                 status: 'Error',
                 errorType: 'not-found',
-                statusDescription: 'No record found with uuid, ' + _uuid,
+                statusDescription: 'No record found with uuid, ' + id,
                 title: 'Device Details'
             });
         });
