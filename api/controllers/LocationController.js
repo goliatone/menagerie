@@ -65,6 +65,7 @@ module.exports = {
         var Model = Location;
 
         return Model.update({
+            id: req.param('id'),
             uuid: req.param('uuid'),
             name: req.param('name'),
             description: req.param('description'),
@@ -100,7 +101,7 @@ module.exports = {
     delete: function (req, res) {
         console.log('Inside delete..............');
         var Model = Location;
-        return Model.find().where({uuid: req.param('uuid')}).then(function (_record) {
+        return Model.find().where({id: req.param('id')}).then(function (_record) {
             if (_record && _record.length > 0) {
 
                 _record[0].destroy().then(function (_record) {
