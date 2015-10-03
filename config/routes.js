@@ -63,6 +63,7 @@ module.exports.routes = {
     'POST /device': 'DeviceController.create',
     'PUT /device': 'DeviceController.update',
     'DELETE /device': 'DeviceController.delete',
+    'GET /device/manage': 'DeviceController.manage',
 
     'GET /devicetype': 'DeviceTypeController.findall',
     'GET /devicetype/new': 'DeviceTypeController.new',
