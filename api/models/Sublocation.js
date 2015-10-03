@@ -6,9 +6,18 @@
 */
 
 module.exports = {
-
-  attributes: {
-
-  }
+    autoPK: true,
+    attributes: {
+        uuid : {
+            type: 'string'
+            // primaryKey: true,
+            // required: true
+        },
+        name : {
+            type: 'string'
+        },
+        description : {
+            type: 'string'
+        }
+    }
 };
-
