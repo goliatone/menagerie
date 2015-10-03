@@ -15,7 +15,7 @@
       <% records.map(function(record){%>
           <tr>
               <td>
-                  <a href="/device/<%= record.id %>">
+                  <a href="/<%= nicename %>/<%= record.id %>">
                       <%= record.uuid %>
                   </a>
               </td>
@@ -27,4 +27,4 @@
       <%});%>
   </tbody>
 </table>
-<a href="/device/new" class="button success">Add Record</a>
+<a href="/<%= nicename %>/new" class="button success">Add Record</a>
