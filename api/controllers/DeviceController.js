@@ -43,7 +43,7 @@ var uuid = require('random-uuid-v4');
              uuid: req.param('uuid'),
              name: req.param('name'),
              description: req.param('description'),
-             geodevice: req.param('geodevice'),
+             type: req.param('type'),
              location: req.param('location')
          };
 
@@ -74,6 +74,7 @@ var uuid = require('random-uuid-v4');
               uuid: req.param('uuid'),
               name: req.param('name'),
               description: req.param('description'),
+              type: req.param('type'),
               location: req.param('location')
           }).then(function (_record) {
               return res.redirect('device');
@@ -129,8 +130,8 @@ var uuid = require('random-uuid-v4');
      */
     find: function (req, res) {
         console.log('Inside find..............');
-        var _uuid = req.params.id;
-        console.log('Inside find.............. _uuid = ' + _uuid);
+        var id = req.params.id;
+        console.log('Inside find.............. id = ' + id);
 
         return Device.find().where({id: id}).then(function (_record) {
 
@@ -199,7 +200,7 @@ var uuid = require('random-uuid-v4');
                 uuid: uuid().toUpperCase(),
                 name: '',
                 description: '',
-                geodevice: '',
+                type: '',
                 devices: ''
             },
             status: 'OK',
