@@ -1,4 +1,5 @@
 'use strict';
+/* jshint global Device */
 /**
  * DeviceController
  *
@@ -10,16 +11,16 @@ var uuid = require('random-uuid-v4');
      manage: function(req, res){
          return Device.update({id: req.param('deviceId')},{
              location: req.param('locationId')
-         }).then(function (_record) {
+         }).then(function (record) {
              return res.redirect('device');
          }).catch(function (err) {
              console.error('Error on DeviceService.updateDevice');
              console.error(err);
 
-             return Device.find().where({id: req.param('deviceId')}).then(function (_record) {
-                 if (_record && _record.length > 0) {
+             return Device.find().where({id: req.param('deviceId')}).then(function (record) {
+                 if (record && record.length > 0) {
                      return res.view('device/edit', {
-                         record: _record[0],
+                         record: record[0],
                          status: 'Error',
                          errorType: 'validation-error',
                          statusDescription: err,
@@ -39,23 +40,19 @@ var uuid = require('random-uuid-v4');
      create: function (req, res) {
          console.log('Inside create..............req.params = ' + JSON.stringify(req.params.all()));
 
-         var _record = {
-             uuid: req.param('uuid'),
-             name: req.param('name'),
-             description: req.param('description'),
-             type: req.param('type'),
-             location: req.param('location')
-         };
+         var payload = Device.getParametersFromRequest(req);
+         console.log('Parameters: ', JSON.stringify(payload));
 
-         return Device.create(_record).then(function (_record) {
-             console.log('Device created: ' + JSON.stringify(_record));
+         return Device.create(payload).then(function (record) {
+             console.log('Device created: ' + JSON.stringify(record));
              return res.redirect('device');
          }).catch(function (err) {
              console.error('Error on DeviceService.createDevice');
              console.error(err);
              console.error(JSON.stringify(err));
+
              return res.view('device/new', {
-                 record: _record,
+                 record: payload,
                  status: 'Error',
                  statusDescription: err,
                  title: 'Add a new record'
@@ -68,24 +65,18 @@ var uuid = require('random-uuid-v4');
       */
       update: function (req, res) {
           console.log('Inside update..............');
+          var payload = Device.getParametersFromRequest(req);
 
-          return Device.update({
-              id: req.param('id'),
-              uuid: req.param('uuid'),
-              name: req.param('name'),
-              description: req.param('description'),
-              type: req.param('type'),
-              location: req.param('location')
-          }).then(function (_record) {
+          return Device.update(payload).then(function (record) {
               return res.redirect('device');
           }).catch(function (err) {
               console.error('Error on DeviceService.updateDevice');
               console.error(err);
 
-              return Device.find().where({id: req.param('id')}).then(function (_record) {
-                  if (_record && _record.length > 0) {
+              return Device.findByIdFromRequest(req).then(function (record) {
+                  if (record && record.length > 0) {
                       return res.view('device/edit', {
-                          record: _record[0],
+                          record: record[0],
                           status: 'Error',
                           errorType: 'validation-error',
                           statusDescription: err,
@@ -106,11 +97,11 @@ var uuid = require('random-uuid-v4');
        delete: function (req, res) {
            console.log('Inside delete..............');
 
-        return Device.find().where({id: req.param('id')}).then(function (_record) {
-            if (_record && _record.length > 0) {
+        return Device.findByIdFromRequest(req).then(function (record) {
+            if (record && record.length > 0) {
 
-                _record[0].destroy().then(function (_record) {
-                    console.log('Deleted successfully!!! _record = ' + _record);
+                record[0].destroy().then(function (record) {
+                    console.log('Deleted successfully!!! record = ' + record);
                     return res.redirect('device');
                 }).catch(function (err) {
                     console.error(err);
@@ -133,10 +124,10 @@ var uuid = require('random-uuid-v4');
         var id = req.params.id;
         console.log('Inside find.............. id = ' + id);
 
-        return Device.find().where({id: id}).then(function (_record) {
+        return Device.findByIdFromRequest(req).populateAll().then(function (record) {
 
-            if (_record && _record.length > 0) {
-                console.log('Inside find Found .... _record = ' + JSON.stringify(_record));
+            if (record && record.length > 0) {
+                console.log('Inside find Found .... record = ' + JSON.stringify(record));
                 return res.view('device/edit', {
                     form:{
                         action: '/device',
@@ -144,7 +135,7 @@ var uuid = require('random-uuid-v4');
                     },
                     status: 'OK',
                     title: 'Device Details',
-                    record: _record[0]
+                    record: record[0]
                 });
             } else {
                 console.log('Inside find NOT Found .... ');
@@ -173,12 +164,11 @@ var uuid = require('random-uuid-v4');
         console.log('Inside findall..............');
 
         return Device.find()
-            .populate('location', 'deviceType')
+            .populateAll()
             .then(function (records) {
             console.log('DeviceService.findAll -- records = ' + records);
-            if (req.wantsJSON) {
-                res.json(records);
-            } else {
+            if (req.wantsJSON) res.json(records);
+            else {
                 res.view('device/list', {
                     status: 'OK',
                     title: 'List of records',
@@ -232,7 +222,7 @@ var uuid = require('random-uuid-v4');
         });
     },
     resetData: function (req, res) {
-        DeviceService.preloadData(function(_records) {
+        DeviceService.preloadData(function(records) {
             return res.redirect('device');
         });
     }
