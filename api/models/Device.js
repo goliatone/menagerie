@@ -39,7 +39,6 @@ module.exports = {
         Object.keys(Device.attributes).map(function(key){
             value = req.param(key);
             if(!value) return;
-            if(Device.attributes[key].model) value = parseInt(value);
             record[key] = value;
         });
         return record;
