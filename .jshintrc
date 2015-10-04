@@ -27,6 +27,11 @@
   "forin":false,
   "plusplus":false,
   "globals": {
+    "Device": true,
+    "Location": true,
+    "DeviceType": true,
+    "Configuration": true,
+    "DeviceService": true,
     "angular": false,
     "jquery":true,
     "requirejs":true
