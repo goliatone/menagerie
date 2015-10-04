@@ -23,9 +23,22 @@ module.exports = {
         metadata : {
             type: 'json'
         },
-        devices:{
+        devices: {
             collection: 'device',
             via: 'type'
         }
+    },
+    getParametersFromRequest: function(req){
+        // req.params.all()
+        var record = {},
+            value;
+
+        Object.keys(DeviceType.attributes).map(function(key){
+            value = req.param(key);
+            if(!value) return;
+            record[key] = value;
+        });
+
+        return record;
     }
 };
