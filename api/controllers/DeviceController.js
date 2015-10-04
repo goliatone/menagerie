@@ -7,7 +7,9 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 var uuid = require('random-uuid-v4');
- module.exports = {
+var debug = require('debug')('controller:DeviceController');
+var Resource = require('../resources')('Device');
+module.exports = {
      manage: function(req, res){
          return Device.update({id: req.param('deviceId')},{
              location: req.param('locationId')
@@ -27,203 +29,198 @@ var uuid = require('random-uuid-v4');
                          title: 'Device Details'
                      });
                  } else {
-                     return res.view('500', {message: 'Sorry, no Device found with uuid - ' + req.param('uuid')});
+                     return res.view('500', {message: 'Sorry, no resource found with uuid - ' + req.param('uuid')});
                  }
              }).catch(function (err) {
-                 return res.view('500', {message: 'Sorry, no Device found with uuid - ' + req.param('uuid')});
+                 return res.view('500', {message: 'Sorry, no resource found with uuid - ' + req.param('uuid')});
              });
          });
      },
+
      /**
       * `DeviceController.create()`
       */
      create: function (req, res) {
-         console.log('Inside create..............req.params = ' + JSON.stringify(req.params.all()));
 
-         var payload = Device.getParametersFromRequest(req);
-         console.log('Parameters: ', JSON.stringify(payload));
+         var Model = Resource.getModel();
 
-         return Device.create(payload).then(function (record) {
-             console.log('Device created: ' + JSON.stringify(record));
-             return res.redirect('device');
+        //  debug('Inside create..............req.params = ' + JSON.stringify(req.params.all()));
+
+         var payload = Model.getParametersFromRequest(req);
+         debug('Inside create..............req.params = ' + JSON.stringify(payload));
+
+         return Model.create(payload).then(function (record) {
+             debug('Resource created: ' + JSON.stringify(record));
+             return res.redirect(Resource.baseView);
          }).catch(function (err) {
-             console.error('Error on DeviceService.createDevice');
+             console.error('Error on Resource.createDevice');
              console.error(err);
              console.error(JSON.stringify(err));
-
-             return res.view('device/new', {
+             return res.ok({
                  record: payload,
                  status: 'Error',
                  statusDescription: err,
                  title: 'Add a new record'
-             });
+             }, Resource.getViewPath('new'));
          });
 
      },
      /**
       * `DeviceController.update()`
       */
-      update: function (req, res) {
-          console.log('Inside update..............');
-          var payload = Device.getParametersFromRequest(req);
+     update: function (req, res) {
+         var Model = Resource.getModel();
+         var payload = Model.getParametersFromRequest(req);
 
-          return Device.update(payload).then(function (record) {
-              return res.redirect('device');
-          }).catch(function (err) {
-              console.error('Error on DeviceService.updateDevice');
-              console.error(err);
+         debug('Inside update..............req.params = ' + JSON.stringify(payload));
 
-              return Device.findByIdFromRequest(req).then(function (record) {
-                  if (record && record.length > 0) {
-                      return res.view('device/edit', {
-                          record: record[0],
-                          status: 'Error',
-                          errorType: 'validation-error',
-                          statusDescription: err,
-                          title: 'Device Details'
-                      });
-                  } else {
-                      return res.view('500', {message: 'Sorry, no Device found with uuid - ' + req.param('uuid')});
-                  }
-              }).catch(function (err) {
-                  return res.view('500', {message: 'Sorry, no Device found with uuid - ' + req.param('uuid')});
-              });
-          });
+         return Model.update(payload).then(function (record) {
+             debug('Device created: ' + JSON.stringify(record));
+            //  return res.redirect(Resource.baseView);
+             return res.redirect(Resource.getViewPath());
+         }).catch(function (err) {
+             console.error('Error on Resource.update');
+             console.error(err);
 
-      },
-      /**
-       * `DeviceController.delete()`
-       */
-       delete: function (req, res) {
-           console.log('Inside delete..............');
+             return Model.findByIdFromRequest(req).then(function (record) {
+                 if (record && record.length > 0) {
+                     return res.ok({
+                         record: record[0],
+                         status: 'Error',
+                         errorType: 'validation-error',
+                         statusDescription: err,
+                         title: 'Details'
+                     }, Resource.getViewPath('edit'));
+                 } else {
+                     return res.ok({message: 'Sorry, no resource found with id - ' + req.param('id')}, '500');
+                 }
+             }).catch(function (err) {
+                 return res.ok({message: 'Sorry, no resource found with id - ' + req.param('id')}, '500');
+             });
+         });
 
-        return Device.findByIdFromRequest(req).then(function (record) {
-            if (record && record.length > 0) {
+     },
+     /**
+      * `DeviceController.delete()`
+      */
+     delete: function (req, res) {
+         debug('Inside delete..............');
 
-                record[0].destroy().then(function (record) {
-                    console.log('Deleted successfully!!! record = ' + record);
-                    return res.redirect('device');
-                }).catch(function (err) {
-                    console.error(err);
-                    return res.redirect('device');
-                });
-            } else {
-                return res.view('500', {message: 'Sorry, no Device found with uuid - ' + req.param('uuid')});
-            }
-        }).catch(function (err) {
-            return res.view('500', {message: 'Sorry, no Device found with uuid - ' + req.param('uuid')});
-        });
+         var Model = Resource.getModel();
+         return Model.findByIdFromRequest(req).then(function (record) {
+             if (record && record.length > 0) {
+
+                 record[0].destroy().then(function (record) {
+                     debug('Deleted successfully!!! record = ' + record);
+                     return res.redirect(Resource.getViewPath());
+                 }).catch(function (err) {
+                     console.error(err);
+                     return res.redirect(Resource.getViewPath());
+                 });
+             } else {
+                 return res.ok({message: 'Sorry, no resource found with id - ' + req.param('id')}, '500');
+             }
+         }).catch(function (err) {
+             return res.ok({message: 'Sorry, no resource found with id - ' + req.param('id')}, '500');
+         });
 
 
-    },
-    /**
-     * `DeviceController.find()`
-     */
-    find: function (req, res) {
-        console.log('Inside find..............');
-        var id = req.params.id;
-        console.log('Inside find.............. id = ' + id);
+     },
+     /**
+      * `DeviceController.find()`
+      */
+     find: function (req, res) {
+         var Model = Resource.getModel();
+         debug('Inside find..............');
+         var id = req.params.id;
+         debug('Inside find.............. id = ' + id);
 
-        return Device.findByIdFromRequest(req).populateAll().then(function (record) {
+         return Model.findByIdFromRequest(req)
+         .populateAll()
+		 .then(function (record) {
 
-            if (record && record.length > 0) {
-                console.log('Inside find Found .... record = ' + JSON.stringify(record));
-                return res.view('device/edit', {
-                    form:{
-                        action: '/device',
-                        method: 'PUT'
-                    },
-                    status: 'OK',
-                    title: 'Device Details',
-                    record: record[0]
-                });
-            } else {
-                console.log('Inside find NOT Found .... ');
-                return res.view('device/edit', {
-                    status: 'Error',
-                    errorType: 'not-found',
-                    statusDescription: 'No record found with uuid, ' + id,
-                    title: 'Device Details'
-                });
-            }
-        }).catch(function (err) {
-            console.log('Inside find ERROR .... ');
-            return res.view('device/edit', {
-                status: 'Error',
-                errorType: 'not-found',
-                statusDescription: 'No record found with uuid, ' + id,
-                title: 'Device Details'
-            });
-        });
+             if (record && record.length > 0) {
+                 debug('Inside find Found .... record = ' + JSON.stringify(record));
+                 return res.ok({
+                     form:{
+                         action: '/' + Resource.nicename,
+                         method: 'PUT'
+                     },
+                     status: 'OK',
+                     title: 'Details',
+                     record: record[0]
+                 }, Resource.getViewPath('edit'));
+             } else {
+                 debug('Inside find NOT Found .... ');
+                 return res.ok({
+                     status: 'Error',
+                     errorType: 'not-found',
+                     statusDescription: 'No record found with id, ' + id,
+                     title: 'Details'
+                 }, Resource.getViewPath('edit'));
+             }
+         }).catch(function (err) {
+             debug('Inside find ERROR .... ');
+             return res.ok({
+                 status: 'Error',
+                 errorType: 'not-found',
+                 statusDescription: 'No record found with id, ' + id,
+                 title: 'Details'
+             }, Resource.getViewPath('edit'));
+         });
 
-    },
-    /**
-     * `DeviceController.findall()`
-     */
-    findall: function (req, res) {
-        console.log('Inside findall..............');
+     },
+     /**
+      * `DeviceController.findall()`
+      */
+     findall: function (req, res) {
+         var Model = Resource.getModel();
+         debug('Inside findall..............');
 
-        return Device.find()
-            .populateAll()
-            .then(function (records) {
-            console.log('DeviceService.findAll -- records = ' + records);
-            if (req.wantsJSON) res.json(records);
-            else {
-                res.view('device/list', {
-                    status: 'OK',
-                    title: 'List of records',
-                    nicename: 'device',
-                    records: records
-                });
-            }
-        }).catch(function (err) {
-            console.error('Error on DeviceService.findAll');
-            console.error(err);
-            if (req.wantsJSON) {
-                res.json({
-                    message: 'Sorry, an error occurd - ' + err,
-                    error: err
-                });
-            } else {
-                res.view('500', {message: 'Sorry, an error occurd - ' + err});
-            }
-
-        });
-    },
-    /**
-     * `DeviceController.findall()`
-     */
-    new : function (req, res) {
-        console.log('Inside new..............');
-        var payload = {
-            form: {
-                action: '/device',
-                method: 'POST'
-            },
-            record: {
-                uuid: uuid().toUpperCase(),
-                name: '',
-                description: '',
-                type: '',
-                devices: ''
-            },
-            status: 'OK',
-            title: 'Add a new record'
-        };
-
-        if (req.wantsJSON) res.json(payload);
-        else res.view('device/new', payload);
-
-    },
-    showFind: function (req, res) {
-        console.log('Inside showFind..............');
-        res.view('device/find', {
-            title: 'Search records'
-        });
-    },
+         return Model.find().then(function (records) {
+             debug('findAll -- records = ' + records);
+             return res.ok({
+                 status: 'OK',
+                 title: 'List of records',
+                 nicename: Resource.nicename,
+                 records: records
+             }, Resource.getViewPath('list'));
+         }).catch(function (err) {
+             console.error('Error on findAll');
+             console.error(err);
+             return res.ok({message: 'Sorry, an error occured - ' + err}, '500');
+         });
+     },
+     /**
+      * `DeviceController.findall()`
+      */
+     new : function (req, res) {
+         var Model = Resource.getModel();
+         debug('Inside new..............');
+         return res.ok({
+             form: {
+                 action: '/' + Resource.nicename,
+                 method: 'POST'
+             },
+             record: {
+                 name: '',
+                 description: '',
+                 label: '',
+                 metadata: ''
+             },
+             status: 'OK',
+             title: 'Add a new record'
+         }, Resource.getViewPath('new'));
+     },
+     showFind: function (req, res) {
+         debug('Inside showFind..............');
+         res.ok({
+             title: 'Search records'
+         }, Resource.getViewPath('find'));
+     },
     resetData: function (req, res) {
         DeviceService.preloadData(function(records) {
-            return res.redirect('device');
+            return res.redirect( Resource.getViewPath());
         });
     }
 
