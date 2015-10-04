@@ -4,11 +4,10 @@
 <table>
   <thead>
     <tr>
-      <th width="400">UUID</th>
+      <th width="40">ID</th>
       <th>Name</th>
       <th width="150">Description</th>
-      <th width="150">Location</th>
-      <th width="150">Type</th>
+      <th width="150">Label</th>
     </tr>
   </thead>
   <tbody>
@@ -16,13 +15,12 @@
           <tr>
               <td>
                   <a href="/<%= nicename %>/<%= record.id %>">
-                      <%= record.uuid %>
+                      <%= record.id %>
                   </a>
               </td>
               <td><%= record.name %></td>
               <td><%= record.description %></td>
-              <td><%= record.location %></td>
-              <td><%= record.type %></td>
+              <td><%= record.label %></td>
           </tr>
       <%});%>
   </tbody>
