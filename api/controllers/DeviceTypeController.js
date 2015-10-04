@@ -1,15 +1,15 @@
+'use strict';
 /**
  * DeviceTypeController
  *
  * @description :: Server-side logic for managing devicetypes
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
+var debug = require('debug')('controller:DeviceTypeController');
 
- var uuid = require('random-uuid-v4');
-
- function _uppercase(str){
+function _uppercase(str){
      return str.charAt(0).toUpperCase() + str.slice(1, str.length);
- }
+}
 
  function BaseController(name){
      this.nicename = name;
@@ -30,29 +30,24 @@
 
          var Model = DeviceType;
 
-         console.log('Inside create..............req.params = ' + JSON.stringify(req.params.all()));
+        //  debug('Inside create..............req.params = ' + JSON.stringify(req.params.all()));
 
-         var _record = {
-             uuid: req.param('uuid'),
-             name: req.param('name'),
-             description: req.param('description'),
-             geolocation: req.param('geolocation'),
-             devices: req.param('devices')
-         };
+         var payload = DeviceType.getParametersFromRequest(req);
+         debug('Inside create..............req.params = ' + JSON.stringify(payload));
 
-         return Model.create(_record).then(function (_record) {
-             console.log('Location created: ' + JSON.stringify(_record));
+         return Model.create(payload).then(function (record) {
+             debug('DeviceType created: ' + JSON.stringify(record));
              return res.redirect(Resource.baseView);
          }).catch(function (err) {
-             console.error('Error on LocationService.createLocation');
+             console.error('Error on DeviceType.createLocation');
              console.error(err);
              console.error(JSON.stringify(err));
-             return res.view(Resource.getViewPath('new'), {
-                 record: _record,
+             return res.ok({
+                 record: payload,
                  status: 'Error',
                  statusDescription: err,
                  title: 'Add a new record'
-             });
+             }, Resource.getViewPath('new'));
          });
 
      },
@@ -60,35 +55,33 @@
       * `DeviceTypeController.update()`
       */
      update: function (req, res) {
-         console.log('Inside update..............');
          var Model = DeviceType;
+         var payload = Model.getParametersFromRequest(req);
 
-         return Model.update({
-             id: req.param('id'),
-             uuid: req.param('uuid'),
-             name: req.param('name'),
-             description: req.param('description'),
-             devices: req.param('devices')
-         }).then(function (_record) {
-             return res.redirect(Resource.getViewPath());
+         debug('Inside update..............req.params = ' + JSON.stringify(payload));
+
+         return Model.update(payload).then(function (record) {
+             debug('DeviceType created: ' + JSON.stringify(record));
+             return res.redirect(Resource.baseView);
+            //  return res.redirect(Resource.getViewPath());
          }).catch(function (err) {
-             console.error('Error on LocationService.updateLocation');
+             console.error('Error on DeviceType.updateLocation');
              console.error(err);
 
-             return Model.find().where({id: req.param('id')}).then(function (_record) {
-                 if (_record && _record.length > 0) {
-                     return res.view(Resource.getViewPath('edit'), {
-                         record: _record[0],
+             return Model.find().where({id: req.param('id')}).then(function (record) {
+                 if (record && record.length > 0) {
+                     return res.ok({
+                         record: record[0],
                          status: 'Error',
                          errorType: 'validation-error',
                          statusDescription: err,
                          title: 'Location Details'
-                     });
+                     }, Resource.getViewPath('edit'));
                  } else {
-                     return res.view('500', {message: 'Sorry, no Location found with uuid - ' + req.param('uuid')});
+                     return res.ok({message: 'Sorry, no Location found with id - ' + req.param('id')}, '500');
                  }
              }).catch(function (err) {
-                 return res.view('500', {message: 'Sorry, no Location found with uuid - ' + req.param('uuid')});
+                 return res.ok({message: 'Sorry, no Location found with id - ' + req.param('id')}, '500');
              });
          });
 
@@ -97,23 +90,23 @@
       * `DeviceTypeController.delete()`
       */
      delete: function (req, res) {
-         console.log('Inside delete..............');
+         debug('Inside delete..............');
          var Model = DeviceType;
-         return Model.find().where({id: req.param('id')}).then(function (_record) {
-             if (_record && _record.length > 0) {
+         return Model.find().where({id: req.param('id')}).then(function (record) {
+             if (record && record.length > 0) {
 
-                 _record[0].destroy().then(function (_record) {
-                     console.log('Deleted successfully!!! _record = ' + _record);
+                 record[0].destroy().then(function (record) {
+                     debug('Deleted successfully!!! record = ' + record);
                      return res.redirect(Resource.getViewPath());
                  }).catch(function (err) {
                      console.error(err);
                      return res.redirect(Resource.getViewPath());
                  });
              } else {
-                 return res.view('500', {message: 'Sorry, no Location found with uuid - ' + req.param('uuid')});
+                 return res.ok({message: 'Sorry, no Location found with id - ' + req.param('id')}, '500');
              }
          }).catch(function (err) {
-             return res.view('500', {message: 'Sorry, no Location found with uuid - ' + req.param('uuid')});
+             return res.ok({message: 'Sorry, no Location found with id - ' + req.param('id')}, '500');
          });
 
 
@@ -123,43 +116,44 @@
       */
      find: function (req, res) {
          var Model = DeviceType;
-         console.log('Inside find..............');
+         debug('Inside find..............');
          var id = req.params.id;
-         console.log('Inside find.............. _uuid = ' + _uuid);
+         debug('Inside find.............. id = ' + id);
 
          return Model.find()
 		 .where({id: id})
-		 .populate('location')
-		 .then(function (_record) {
+         .populateAll()
+		 .then(function (record) {
 
-             if (_record && _record.length > 0) {
-                 console.log('Inside find Found .... _record = ' + JSON.stringify(_record));
-                 return res.view(Resource.getViewPath('edit'), {
+             if (record && record.length > 0) {
+                 debug('Inside find Found .... record = ' + JSON.stringify(record));
+                 return res.ok({
                      form:{
                          action: '/' + Resource.nicename,
                          method: 'PUT'
+                        //  method: 'PUT'
                      },
                      status: 'OK',
                      title: 'Location Details',
-                     record: _record[0]
-                 });
+                     record: record[0]
+                 }, Resource.getViewPath('edit'));
              } else {
-                 console.log('Inside find NOT Found .... ');
-                 return res.view(Resource.getViewPath('edit'), {
+                 debug('Inside find NOT Found .... ');
+                 return res.ok({
                      status: 'Error',
                      errorType: 'not-found',
-                     statusDescription: 'No record found with uuid, ' + _uuid,
+                     statusDescription: 'No record found with id, ' + id,
                      title: 'Location Details'
-                 });
+                 }, Resource.getViewPath('edit'));
              }
          }).catch(function (err) {
-             console.log('Inside find ERROR .... ');
-             return res.view(Resource.getViewPath('edit'), {
+             debug('Inside find ERROR .... ');
+             return res.ok({
                  status: 'Error',
                  errorType: 'not-found',
-                 statusDescription: 'No record found with uuid, ' + _uuid,
+                 statusDescription: 'No record found with id, ' + id,
                  title: 'Location Details'
-             });
+             }, Resource.getViewPath('edit'));
          });
 
      },
@@ -168,20 +162,20 @@
       */
      findall: function (req, res) {
          var Model = DeviceType;
-         console.log('Inside findall..............');
+         debug('Inside findall..............');
 
          return Model.find().then(function (records) {
-             console.log('LocationService.findAll -- records = ' + records);
-             return res.view(Resource.getViewPath('list'), {
+             debug('DeviceType.findAll -- records = ' + records);
+             return res.ok({
                  status: 'OK',
                  title: 'List of records',
                  nicename: Resource.nicename,
                  records: records
-             });
+             }, Resource.getViewPath('list'));
          }).catch(function (err) {
-             console.error('Error on LocationService.findAll');
+             console.error('Error on DeviceType.findAll');
              console.error(err);
-             return res.view('500', {message: 'Sorry, an error occurd - ' + err});
+             return res.ok({message: 'Sorry, an error occured - ' + err}, '500');
          });
      },
      /**
@@ -189,31 +183,30 @@
       */
      new : function (req, res) {
          var Model = DeviceType;
-         console.log('Inside new..............');
-         return res.view(Resource.getViewPath('new'), {
+         debug('Inside new..............');
+         return res.ok({
              form: {
                  action: '/' + Resource.nicename,
                  method: 'POST'
              },
              record: {
-                 uuid: uuid().toUpperCase(),
                  name: '',
                  description: '',
-                 geolocation: '',
-                 devices: ''
+                 label: '',
+                 metadata: ''
              },
              status: 'OK',
              title: 'Add a new record'
-         });
+         }, Resource.getViewPath('new'));
      },
      showFind: function (req, res) {
-         console.log('Inside showFind..............');
-         res.view(Resource.getViewPath('find'), {
+         debug('Inside showFind..............');
+         res.ok({
              title: 'Search records'
-         });
+         }, Resource.getViewPath('find'));
      },
      resetData: function (req, res) {
-         LocationService.preloadData(function(_records) {
+         DeviceType.preloadData(function(records) {
              return res.redirect(Resource.getViewPath());
          });
      }
