@@ -31,5 +31,24 @@ module.exports = {
         configuration: {
             model: 'configuration'
         }
+    },
+    getParametersFromRequest: function(req){
+        var record = {},
+            value;
+
+        Object.keys(Device.attributes).map(function(key){
+            value = req.param(key);
+            if(!value) return;
+            if(Device.attributes[key].model) value = parseInt(value);
+            record[key] = value;
+        });
+        return record;
+    },
+    findByIdFromRequest: function(req){
+        var pk = Device.primaryKey;
+        var query = {};
+        query[pk] = req.param('id');
+        //We should use findOne()
+        return Device.find().where(query);
     }
 };

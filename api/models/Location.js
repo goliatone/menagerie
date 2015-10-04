@@ -23,7 +23,7 @@ module.exports = {
             lng: 'number',
             lat: 'number'
         },
-        devices:{
+        devices: {
             collection: 'device',
             via: 'location'
         }
