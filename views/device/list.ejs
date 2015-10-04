@@ -21,8 +21,8 @@
               </td>
               <td><%= record.name %></td>
               <td><%= record.description %></td>
-              <td><%= record.location %></td>
-              <td><%= record.type %></td>
+              <td><%= record.location ? record.location.name : '---' %></td>
+              <td><%= record.type ? record.type.name : '---' %></td>
           </tr>
       <%});%>
   </tbody>
