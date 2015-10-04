@@ -5,41 +5,27 @@
  * @description :: Server-side logic for managing devicetypes
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
+var Resource = require('../resources')('DeviceType');
 var debug = require('debug')('controller:DeviceTypeController');
 
-function _uppercase(str){
-     return str.charAt(0).toUpperCase() + str.slice(1, str.length);
-}
-
- function BaseController(name){
-     this.nicename = name;
-     this.baseView = this.nicename;
-     this.label = _uppercase(name);
- }
- BaseController.prototype.getViewPath = function(action){
-     return action ? this.baseView + '/' + action : this.baseView;
- };
-
- var Resource = new BaseController('devicetype');
-
- module.exports = {
+module.exports = {
      /**
       * `DeviceTypeController.create()`
       */
      create: function (req, res) {
 
-         var Model = DeviceType;
+         var Model = Resource.getModel();
 
         //  debug('Inside create..............req.params = ' + JSON.stringify(req.params.all()));
 
-         var payload = DeviceType.getParametersFromRequest(req);
+         var payload = Model.getParametersFromRequest(req);
          debug('Inside create..............req.params = ' + JSON.stringify(payload));
 
          return Model.create(payload).then(function (record) {
-             debug('DeviceType created: ' + JSON.stringify(record));
+             debug('Resource created: ' + JSON.stringify(record));
              return res.redirect(Resource.baseView);
          }).catch(function (err) {
-             console.error('Error on DeviceType.createLocation');
+             console.error('Error on Resource.create');
              console.error(err);
              console.error(JSON.stringify(err));
              return res.ok({
@@ -55,33 +41,33 @@ function _uppercase(str){
       * `DeviceTypeController.update()`
       */
      update: function (req, res) {
-         var Model = DeviceType;
+         var Model = Resource.getModel();
          var payload = Model.getParametersFromRequest(req);
 
          debug('Inside update..............req.params = ' + JSON.stringify(payload));
 
          return Model.update(payload).then(function (record) {
-             debug('DeviceType created: ' + JSON.stringify(record));
-             return res.redirect(Resource.baseView);
-            //  return res.redirect(Resource.getViewPath());
+             debug('Resource created: ' + JSON.stringify(record));
+            //  return res.redirect(Resource.baseView);
+             return res.redirect(Resource.getViewPath());
          }).catch(function (err) {
-             console.error('Error on DeviceType.updateLocation');
+             console.error('Error on Resource.update');
              console.error(err);
 
-             return Model.find().where({id: req.param('id')}).then(function (record) {
+             return Model.findByIdFromRequest(req).then(function (record) {
                  if (record && record.length > 0) {
                      return res.ok({
                          record: record[0],
                          status: 'Error',
                          errorType: 'validation-error',
                          statusDescription: err,
-                         title: 'Location Details'
+                         title: 'Details'
                      }, Resource.getViewPath('edit'));
                  } else {
-                     return res.ok({message: 'Sorry, no Location found with id - ' + req.param('id')}, '500');
+                     return res.ok({message: 'Sorry, no resource found with id - ' + req.param('id')}, '500');
                  }
              }).catch(function (err) {
-                 return res.ok({message: 'Sorry, no Location found with id - ' + req.param('id')}, '500');
+                 return res.ok({message: 'Sorry, no resource found with id - ' + req.param('id')}, '500');
              });
          });
 
@@ -91,8 +77,8 @@ function _uppercase(str){
       */
      delete: function (req, res) {
          debug('Inside delete..............');
-         var Model = DeviceType;
-         return Model.find().where({id: req.param('id')}).then(function (record) {
+         var Model = Resource.getModel();
+         return Model.findByIdFromRequest(req).then(function (record) {
              if (record && record.length > 0) {
 
                  record[0].destroy().then(function (record) {
@@ -103,10 +89,10 @@ function _uppercase(str){
                      return res.redirect(Resource.getViewPath());
                  });
              } else {
-                 return res.ok({message: 'Sorry, no Location found with id - ' + req.param('id')}, '500');
+                 return res.ok({message: 'Sorry, no resource found with id - ' + req.param('id')}, '500');
              }
          }).catch(function (err) {
-             return res.ok({message: 'Sorry, no Location found with id - ' + req.param('id')}, '500');
+             return res.ok({message: 'Sorry, no resource found with id - ' + req.param('id')}, '500');
          });
 
 
@@ -115,13 +101,12 @@ function _uppercase(str){
       * `DeviceTypeController.find()`
       */
      find: function (req, res) {
-         var Model = DeviceType;
+         var Model = Resource.getModel();
          debug('Inside find..............');
          var id = req.params.id;
          debug('Inside find.............. id = ' + id);
 
-         return Model.find()
-		 .where({id: id})
+         return Model.findByIdFromRequest(req)
          .populateAll()
 		 .then(function (record) {
 
@@ -131,10 +116,9 @@ function _uppercase(str){
                      form:{
                          action: '/' + Resource.nicename,
                          method: 'PUT'
-                        //  method: 'PUT'
                      },
                      status: 'OK',
-                     title: 'Location Details',
+                     title: 'Details',
                      record: record[0]
                  }, Resource.getViewPath('edit'));
              } else {
@@ -143,7 +127,7 @@ function _uppercase(str){
                      status: 'Error',
                      errorType: 'not-found',
                      statusDescription: 'No record found with id, ' + id,
-                     title: 'Location Details'
+                     title: 'Details'
                  }, Resource.getViewPath('edit'));
              }
          }).catch(function (err) {
@@ -152,7 +136,7 @@ function _uppercase(str){
                  status: 'Error',
                  errorType: 'not-found',
                  statusDescription: 'No record found with id, ' + id,
-                 title: 'Location Details'
+                 title: 'Details'
              }, Resource.getViewPath('edit'));
          });
 
@@ -161,11 +145,11 @@ function _uppercase(str){
       * `DeviceTypeController.findall()`
       */
      findall: function (req, res) {
-         var Model = DeviceType;
+         var Model = Resource.getModel();
          debug('Inside findall..............');
 
          return Model.find().then(function (records) {
-             debug('DeviceType.findAll -- records = ' + records);
+             debug('Resource.findAll -- records = ' + records);
              return res.ok({
                  status: 'OK',
                  title: 'List of records',
@@ -173,7 +157,7 @@ function _uppercase(str){
                  records: records
              }, Resource.getViewPath('list'));
          }).catch(function (err) {
-             console.error('Error on DeviceType.findAll');
+             console.error('Error on Resource.findAll');
              console.error(err);
              return res.ok({message: 'Sorry, an error occured - ' + err}, '500');
          });
@@ -182,7 +166,7 @@ function _uppercase(str){
       * `DeviceTypeController.findall()`
       */
      new : function (req, res) {
-         var Model = DeviceType;
+         var Model = Resource.getModel();
          debug('Inside new..............');
          return res.ok({
              form: {
@@ -206,7 +190,7 @@ function _uppercase(str){
          }, Resource.getViewPath('find'));
      },
      resetData: function (req, res) {
-         DeviceType.preloadData(function(records) {
+         Resource.preloadData(function(records) {
              return res.redirect(Resource.getViewPath());
          });
      }
