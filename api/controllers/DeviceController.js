@@ -6,7 +6,6 @@
  * @description :: Server-side logic for managing devices
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
-var uuid = require('random-uuid-v4');
 var debug = require('debug')('controller:DeviceController');
 
 var ResourceBase = require('../resources/resource')
@@ -32,10 +31,10 @@ module.exports = {
                          title: 'Device Details'
                      });
                  } else {
-                     return res.view('500', {message: 'Sorry, no resource found with uuid - ' + req.param('uuid')});
+                     return res.ok({message: 'Sorry, no resource found with id - ' + req.param('id')}, '500');
                  }
              }).catch(function (err) {
-                 return res.view('500', {message: 'Sorry, no resource found with uuid - ' + req.param('uuid')});
+                 return res.ok({message: 'Sorry, no resource found with id - ' + req.param('id')}, '500');
              });
          });
      },
@@ -87,9 +86,9 @@ module.exports = {
              console.error(err);
 
              return Model.findByIdFromRequest(req).then(function (record) {
-                 if (record && record.length > 0) {
+                 if (record) {
                      return res.ok({
-                         record: record[0],
+                         record: record,
                          status: 'Error',
                          errorType: 'validation-error',
                          statusDescription: err,
@@ -111,9 +110,8 @@ module.exports = {
 
          var Model = Resource.getModel();
          return Model.findByIdFromRequest(req).then(function (record) {
-             if (record && record.length > 0) {
-
-                 record[0].destroy().then(function (record) {
+             if (record) {
+                 record.destroy().then(function (record) {
                      debug('Deleted successfully!!! record = ' + record);
                      return res.redirect(Resource.getViewPath());
                  }).catch(function (err) {
@@ -141,8 +139,7 @@ module.exports = {
          return Model.findByIdFromRequest(req)
          .populateAll()
 		 .then(function (record) {
-
-             if (record && record.length > 0) {
+             if (record) {
                  debug('Inside find Found .... record = ' + JSON.stringify(record));
                  return res.ok({
                      form:{
@@ -152,7 +149,7 @@ module.exports = {
                      },
                      status: 'OK',
                      title: 'Details',
-                     record: record[0]
+                     record: record
                  }, Resource.getViewPath('edit'));
              } else {
                  debug('Inside find NOT Found .... ');
@@ -184,7 +181,7 @@ module.exports = {
          return Model.find()
          .populateAll()
          .then(function (records) {
-             debug('findAll -- records = ' + records);
+             debug('Resource.findAll -- records = ' + JSON.stringify(records, null, 4));
              return res.ok({
                  status: 'OK',
                  title: 'List of records',
