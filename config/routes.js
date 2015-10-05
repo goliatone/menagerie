@@ -52,7 +52,8 @@ module.exports.routes = {
     'GET /location/reset': 'LocationController.resetData',
     'GET /location/:id': 'LocationController.find',
     'POST /location': 'LocationController.create',
-    'PUT /location': 'LocationController.update',
+    'POST /location/update': 'LocationController.update',
+    // 'PUT /location': 'LocationController.update',
     'DELETE /location': 'LocationController.delete',
 
     'GET /device': 'DeviceController.findall',
@@ -62,7 +63,7 @@ module.exports.routes = {
     'GET /device/:id': 'DeviceController.find',
     'POST /device': 'DeviceController.create',
     'PUT /device': 'DeviceController.update',
-    // 'POST /device/update': 'DeviceController.update',
+    'POST /device/update': 'DeviceController.update',
     'DELETE /device': 'DeviceController.delete',
     'GET /device/manage': 'DeviceController.manage',
 
@@ -72,7 +73,7 @@ module.exports.routes = {
     'GET /devicetype/reset': 'DeviceTypeController.resetData',
     'GET /devicetype/:id': 'DeviceTypeController.find',
     'POST /devicetype': 'DeviceTypeController.create',
-    'PUT /devicetype': 'DeviceTypeController.update',
-    // 'POST /devicetype/update': 'DeviceTypeController.update',
+    'POST /devicetype/update': 'DeviceTypeController.update',
+    // 'PUT /devicetype': 'DeviceTypeController.update',
     'DELETE /devicetype': 'DeviceTypeController.delete',
 };
