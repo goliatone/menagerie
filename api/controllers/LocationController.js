@@ -176,7 +176,7 @@ module.exports = {
                 action: '/' + Resource.nicename,
                 method: 'POST'
             },
-            record: Model.getEmptyObject(),
+            record: Model.getEmptyObject(req),
             status: 'OK',
             title: 'Add a new record'
         }, Resource.getViewPath('new'));
