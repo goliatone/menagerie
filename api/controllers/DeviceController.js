@@ -8,7 +8,10 @@
  */
 var uuid = require('random-uuid-v4');
 var debug = require('debug')('controller:DeviceController');
-var Resource = require('../resources')('Device');
+
+var ResourceBase = require('../resources/resource')
+var Resource = new ResourceBase('Device');
+
 module.exports = {
      manage: function(req, res){
          return Device.update({id: req.param('deviceId')},{
@@ -70,12 +73,13 @@ module.exports = {
       */
      update: function (req, res) {
          var Model = Resource.getModel();
-         var payload = Model.getParametersFromRequest(req);
-
+         var payload = Model.getParametersFromRequest(req),
+             id = payload.id;
+         delete payload.id;
          debug('Inside update..............req.params = ' + JSON.stringify(payload));
 
-         return Model.update(payload).then(function (record) {
-             debug('Device created: ' + JSON.stringify(record));
+         return Model.update({id: id}, payload).then(function (record) {
+             debug('Device update: ' + JSON.stringify(record));
             //  return res.redirect(Resource.baseView);
              return res.redirect(Resource.getViewPath());
          }).catch(function (err) {
@@ -98,7 +102,6 @@ module.exports = {
                  return res.ok({message: 'Sorry, no resource found with id - ' + req.param('id')}, '500');
              });
          });
-
      },
      /**
       * `DeviceController.delete()`
@@ -143,8 +146,9 @@ module.exports = {
                  debug('Inside find Found .... record = ' + JSON.stringify(record));
                  return res.ok({
                      form:{
-                         action: '/' + Resource.nicename,
-                         method: 'PUT'
+                         action: '/' + Resource.nicename + '/update',
+                         method: 'POST'
+                        //  method: 'PUT'
                      },
                      status: 'OK',
                      title: 'Details',
@@ -177,7 +181,9 @@ module.exports = {
          var Model = Resource.getModel();
          debug('Inside findall..............');
 
-         return Model.find().then(function (records) {
+         return Model.find()
+         .populateAll()
+         .then(function (records) {
              debug('findAll -- records = ' + records);
              return res.ok({
                  status: 'OK',
@@ -202,12 +208,7 @@ module.exports = {
                  action: '/' + Resource.nicename,
                  method: 'POST'
              },
-             record: {
-                 name: '',
-                 description: '',
-                 label: '',
-                 metadata: ''
-             },
+             record: Model.getEmptyObject(),
              status: 'OK',
              title: 'Add a new record'
          }, Resource.getViewPath('new'));
