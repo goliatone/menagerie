@@ -5,6 +5,7 @@
 * @docs        :: http://sailsjs.org/#!documentation/models
 */
 var uuid = require('random-uuid-v4');
+var parseModel = require('../../node_modules/sails/lib/hooks/blueprints/actionUtil').parseModel;
 module.exports = {
     autoPK: true,
     nicename: 'Device',
@@ -33,21 +34,23 @@ module.exports = {
             model: 'configuration'
         }
     },
-    getEmptyObject: function(){
+    getEmptyObject: function(req){
+        var Model = parseModel(req);
         var record = {},
             value;
 
-        Object.keys(Device.attributes).map(function(key){
+        Object.keys(Model.attributes).map(function(key){
             record[key] = null;
         });
         record.uuid = uuid().toUpperCase();
         return record;
     },
     getParametersFromRequest: function(req){
+        var Model = parseModel(req);
         var record = {},
             value;
 
-        Object.keys(Device.attributes).map(function(key){
+        Object.keys(Model.attributes).map(function(key){
             value = req.param(key);
             if(!value) return;
             record[key] = value;
@@ -55,10 +58,10 @@ module.exports = {
         return record;
     },
     findByIdFromRequest: function(req){
-        var pk = Device.primaryKey;
+        var Model = parseModel(req);
+        var pk = Model.primaryKey;
         var query = {};
         query[pk] = req.param(pk);
-        //We should use findOne()
-        return Device.find().where(query);
+        return Model.findOne(query);
     }
 };
