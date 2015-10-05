@@ -6,22 +6,8 @@
  * @description :: Server-side logic for managing locations
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
-var uuid = require('random-uuid-v4');
-
-function _uppercase(str){
-    return str.charAt(0).toUpperCase() + str.slice(1, str.length);
-}
-
-function BaseController(name){
-    this.nicename = name;
-    this.baseView = this.nicename;
-    this.label = _uppercase(name);
-}
-BaseController.prototype.getViewPath = function(action){
-    return action ? this.baseView + '/' + action : this.baseView;
-};
-
-var Resource = new BaseController('location');
+var Resource = require('../resources')('Location');
+var debug = require('debug')('controller:Location');
 
 module.exports = {
     /**
@@ -29,31 +15,26 @@ module.exports = {
      */
     create: function (req, res) {
 
-        var Model = Location;
+        var Model = Resource.getModel();
 
-        console.log('Inside create..............req.params = ' + JSON.stringify(req.params.all()));
+       //  debug('Inside create..............req.params = ' + JSON.stringify(req.params.all()));
 
-        var _record = {
-            uuid: req.param('uuid'),
-            name: req.param('name'),
-            description: req.param('description'),
-            geolocation: req.param('geolocation'),
-            devices: req.param('devices')
-        };
+        var payload = Model.getParametersFromRequest(req);
+        debug('Inside create..............req.params = ' + JSON.stringify(payload));
 
-        return Model.create(_record).then(function (_record) {
-            console.log('Location created: ' + JSON.stringify(_record));
+        return Model.create(payload).then(function (record) {
+            debug('Resource created: ' + JSON.stringify(record));
             return res.redirect(Resource.baseView);
         }).catch(function (err) {
-            console.error('Error on LocationService.createLocation');
+            console.error('Error on Resource.createDevice');
             console.error(err);
             console.error(JSON.stringify(err));
-            return res.view(Resource.getViewPath('new'), {
-                record: _record,
+            return res.ok({
+                record: payload,
                 status: 'Error',
                 statusDescription: err,
                 title: 'Add a new record'
-            });
+            }, Resource.getViewPath('new'));
         });
 
     },
@@ -61,61 +42,58 @@ module.exports = {
      * `LocationController.update()`
      */
     update: function (req, res) {
-        console.log('Inside update..............');
-        var Model = Location;
+        var Model = Resource.getModel();
+        var payload = Model.getParametersFromRequest(req),
+            id = payload.id;
+        delete payload.id;
+        debug('Inside update..............req.params = ' + JSON.stringify(payload));
 
-        return Model.update({
-            id: req.param('id'),
-            uuid: req.param('uuid'),
-            name: req.param('name'),
-            description: req.param('description'),
-            geolocation: req.param('geolocation'),
-            devices: req.param('devices')
-        }).then(function (_record) {
+        return Model.update({id: id}, payload).then(function (record) {
+            debug('Device update: ' + JSON.stringify(record));
+           //  return res.redirect(Resource.baseView);
             return res.redirect(Resource.getViewPath());
         }).catch(function (err) {
-            console.error('Error on LocationService.updateLocation');
+            console.error('Error on Resource.update');
             console.error(err);
 
-            return Model.find().where({uuid: req.param('uuid')}).then(function (_record) {
-                if (_record && _record.length > 0) {
-                    return res.view(Resource.getViewPath('edit'), {
-                        record: _record[0],
+            return Model.findByIdFromRequest(req).then(function (record) {
+                if (record) {
+                    return res.ok({
+                        record: record,
                         status: 'Error',
                         errorType: 'validation-error',
                         statusDescription: err,
-                        title: 'Location Details'
-                    });
+                        title: 'Details'
+                    }, Resource.getViewPath('edit'));
                 } else {
-                    return res.view('500', {message: 'Sorry, no Location found with uuid - ' + req.param('uuid')});
+                    return res.ok({message: 'Sorry, no resource found with id - ' + req.param('id')}, '500');
                 }
             }).catch(function (err) {
-                return res.view('500', {message: 'Sorry, no Location found with uuid - ' + req.param('uuid')});
+                return res.ok({message: 'Sorry, no resource found with id - ' + req.param('id')}, '500');
             });
         });
-
     },
     /**
      * `LocationController.delete()`
      */
     delete: function (req, res) {
-        console.log('Inside delete..............');
-        var Model = Location;
-        return Model.find().where({id: req.param('id')}).then(function (_record) {
-            if (_record && _record.length > 0) {
+        debug('Inside delete..............');
 
-                _record[0].destroy().then(function (_record) {
-                    console.log('Deleted successfully!!! _record = ' + _record);
+        var Model = Resource.getModel();
+        return Model.findByIdFromRequest(req).then(function (record) {
+            if (record) {
+                record.destroy().then(function (record) {
+                    debug('Deleted successfully!!! record = ' + record);
                     return res.redirect(Resource.getViewPath());
                 }).catch(function (err) {
                     console.error(err);
                     return res.redirect(Resource.getViewPath());
                 });
             } else {
-                return res.view('500', {message: 'Sorry, no Location found with uuid - ' + req.param('uuid')});
+                return res.ok({message: 'Sorry, no resource found with id - ' + req.param('id')}, '500');
             }
         }).catch(function (err) {
-            return res.view('500', {message: 'Sorry, no Location found with uuid - ' + req.param('uuid')});
+            return res.ok({message: 'Sorry, no resource found with id - ' + req.param('id')}, '500');
         });
 
 
@@ -124,41 +102,43 @@ module.exports = {
      * `LocationController.find()`
      */
     find: function (req, res) {
-        var Model = Location;
-        console.log('Inside find..............');
+        var Model = Resource.getModel();
+        debug('Inside find..............');
         var id = req.params.id;
-        console.log('Inside find.............. _uuid = ' + _uuid);
+        debug('Inside find.............. id = ' + id);
 
-        return Model.find().where({id: id}).then(function (_record) {
-
-            if (_record && _record.length > 0) {
-                console.log('Inside find Found .... _record = ' + JSON.stringify(_record));
-                return res.view(Resource.getViewPath('edit'), {
+        return Model.findByIdFromRequest(req)
+        .populateAll()
+        .then(function (record) {
+            if (record) {
+                debug('Inside find Found .... record = ' + JSON.stringify(record));
+                return res.ok({
                     form:{
-                        action: '/' + Resource.nicename,
-                        method: 'PUT'
+                        action: '/' + Resource.nicename + '/update',
+                        method: 'POST'
+                       //  method: 'PUT'
                     },
                     status: 'OK',
-                    title: 'Location Details',
-                    record: _record[0]
-                });
+                    title: 'Details',
+                    record: record
+                }, Resource.getViewPath('edit'));
             } else {
-                console.log('Inside find NOT Found .... ');
-                return res.view(Resource.getViewPath('edit'), {
+                debug('Inside find NOT Found .... ');
+                return res.ok({
                     status: 'Error',
                     errorType: 'not-found',
-                    statusDescription: 'No record found with uuid, ' + _uuid,
-                    title: 'Location Details'
-                });
+                    statusDescription: 'No record found with id, ' + id,
+                    title: 'Details'
+                }, Resource.getViewPath('edit'));
             }
         }).catch(function (err) {
-            console.log('Inside find ERROR .... ');
-            return res.view(Resource.getViewPath('edit'), {
+            debug('Inside find ERROR .... ');
+            return res.ok({
                 status: 'Error',
                 errorType: 'not-found',
-                statusDescription: 'No record found with uuid, ' + _uuid,
-                title: 'Location Details'
-            });
+                statusDescription: 'No record found with id, ' + id,
+                title: 'Details'
+            }, Resource.getViewPath('edit'));
         });
 
     },
@@ -166,55 +146,50 @@ module.exports = {
      * `LocationController.findall()`
      */
     findall: function (req, res) {
-        var Model = Location;
-        console.log('Inside findall..............');
+        var Model = Resource.getModel();
+        debug('Inside findall..............');
 
-        return Model.find().then(function (records) {
-            console.log('LocationService.findAll -- records = ' + records);
-            return res.view(Resource.getViewPath('list'), {
+        return Model.find()
+        .populateAll()
+        .then(function (records) {
+            debug('Resource.findAll -- records = ' + JSON.stringify(records, null, 4));
+            return res.ok({
                 status: 'OK',
                 title: 'List of records',
                 nicename: Resource.nicename,
                 records: records
-            });
+            }, Resource.getViewPath('list'));
         }).catch(function (err) {
-            console.error('Error on LocationService.findAll');
+            console.error('Error on findAll');
             console.error(err);
-            return res.view('500', {message: 'Sorry, an error occurd - ' + err});
+            return res.ok({message: 'Sorry, an error occured - ' + err}, '500');
         });
     },
     /**
      * `LocationController.findall()`
      */
-    new : function (req, res) {
-        var Model = Location;
-        console.log('Inside new..............');
-        return res.view(Resource.getViewPath('new'), {
+    new: function (req, res) {
+        var Model = Resource.getModel();
+        debug('Inside new..............');
+        return res.ok({
             form: {
                 action: '/' + Resource.nicename,
                 method: 'POST'
             },
-            record: {
-                uuid: uuid().toUpperCase(),
-                name: '',
-                description: '',
-                geolocation: '',
-                devices: ''
-            },
+            record: Model.getEmptyObject(),
             status: 'OK',
             title: 'Add a new record'
-        });
+        }, Resource.getViewPath('new'));
     },
     showFind: function (req, res) {
-        console.log('Inside showFind..............');
-        res.view(Resource.getViewPath('find'), {
+        debug('Inside showFind..............');
+        res.ok({
             title: 'Search records'
-        });
+        }, Resource.getViewPath('find'));
     },
     resetData: function (req, res) {
-        LocationService.preloadData(function(_records) {
-            return res.redirect(Resource.getViewPath());
+        DeviceService.preloadData(function(records) {
+            return res.redirect( Resource.getViewPath());
         });
     }
-
 };
