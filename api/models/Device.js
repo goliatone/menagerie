@@ -4,9 +4,10 @@
 * @description :: TODO: You might write a short summary of how this model works and what it represents here.
 * @docs        :: http://sailsjs.org/#!documentation/models
 */
-
+var uuid = require('random-uuid-v4');
 module.exports = {
     autoPK: true,
+    nicename: 'Device',
     attributes: {
         uuid: {
             type: 'string',
@@ -32,6 +33,16 @@ module.exports = {
             model: 'configuration'
         }
     },
+    getEmptyObject: function(){
+        var record = {},
+            value;
+
+        Object.keys(Device.attributes).map(function(key){
+            record[key] = null;
+        });
+        record.uuid = uuid().toUpperCase();
+        return record;
+    },
     getParametersFromRequest: function(req){
         var record = {},
             value;
@@ -46,7 +57,7 @@ module.exports = {
     findByIdFromRequest: function(req){
         var pk = Device.primaryKey;
         var query = {};
-        query[pk] = req.param('id');
+        query[pk] = req.param(pk);
         //We should use findOne()
         return Device.find().where(query);
     }
