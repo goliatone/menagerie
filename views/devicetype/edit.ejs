@@ -1,0 +1,11 @@
+<% include ../_header.ejs %>
+
+<div class="content">
+    <div class="row">
+        <h3>Update Device Type</h3>
+        <%if(status === "Error") { %>
+        <div class="alert alert-danger" role="alert"><%=statusDescription%></div>
+        <% } %>
+        <% include _form.ejs %>
+    </div>
+</div>

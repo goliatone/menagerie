@@ -6,24 +6,32 @@
 */
 
 module.exports = {
-
-  attributes: {
-      uuid : {
-          type: 'string'
-          /*, required: true*/,
-          // index: { unique: true, sparse: true }
-      },
-      name : {
-          type: 'string'
-      },
-      description : {
-          type: 'string'
-      },
-      device: {
-          model: 'device'
-      },
-      data: {
-          type: 'json'
-      }
-  }
+    autoPK: true,
+    attributes: {
+        uuid : {
+            type: 'string'
+            // primaryKey: true,
+            // required: true
+        },
+        name : {
+            type: 'string'
+        },
+        description : {
+            type: 'string'
+        },
+        device: {
+            model: 'device'
+        },
+        data: {
+            type: 'json'
+        }
+    },
+    updateOrCreate: function (id, pojo) {
+        return Configuration.update({id: id}, pojo).then(function(ua){
+            if(ua.length === 0){
+                // No records updated, UserAddress does not exist. Create.
+                return Configuration.create(pojo);
+            }
+        });
+    }
 };

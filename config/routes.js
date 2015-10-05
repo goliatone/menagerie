@@ -33,8 +33,8 @@ module.exports.routes = {
   ***************************************************************************/
 
   '/': {
-    view: 'homepage'
-  }
+    view: 'dashboard'
+},
 
   /***************************************************************************
   *                                                                          *
@@ -46,4 +46,34 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
+    'GET /location': 'LocationController.findall',
+    'GET /location/new': 'LocationController.new',
+    'GET /location/find': 'LocationController.showFind',
+    'GET /location/reset': 'LocationController.resetData',
+    'GET /location/:id': 'LocationController.find',
+    'POST /location': 'LocationController.create',
+    'POST /location/update': 'LocationController.update',
+    // 'PUT /location': 'LocationController.update',
+    'DELETE /location': 'LocationController.delete',
+
+    'GET /device': 'DeviceController.findall',
+    'GET /device/new': 'DeviceController.new',
+    'GET /device/find': 'DeviceController.showFind',
+    'GET /device/reset': 'DeviceController.resetData',
+    'GET /device/:id': 'DeviceController.find',
+    'POST /device': 'DeviceController.create',
+    'PUT /device': 'DeviceController.update',
+    'POST /device/update': 'DeviceController.update',
+    'DELETE /device': 'DeviceController.delete',
+    'GET /device/manage': 'DeviceController.manage',
+
+    'GET /devicetype': 'DeviceTypeController.findall',
+    'GET /devicetype/new': 'DeviceTypeController.new',
+    'GET /devicetype/find': 'DeviceTypeController.showFind',
+    'GET /devicetype/reset': 'DeviceTypeController.resetData',
+    'GET /devicetype/:id': 'DeviceTypeController.find',
+    'POST /devicetype': 'DeviceTypeController.create',
+    'POST /devicetype/update': 'DeviceTypeController.update',
+    // 'PUT /devicetype': 'DeviceTypeController.update',
+    'DELETE /devicetype': 'DeviceTypeController.delete',
 };

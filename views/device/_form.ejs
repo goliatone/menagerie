@@ -1,0 +1,53 @@
+<form id="menagerie" action="<%= form.action %>" method="<%= form.method %>">
+    <div class="row">
+        <div class="large-12 columns">
+            <label>UUID
+                <input name="uuid" type="text" placeholder="UUID" value="<%= record.uuid ? record.uuid : 'UUID' %>"/>
+            </label>
+        </div>
+        <div class="large-12 columns">
+            <label>Name
+                <input name="name" type="text" placeholder="Name" value="<%= record.name ? record.name : 'Name' %>"/>
+            </label>
+        </div>
+        <div class="large-12 columns">
+            <label>Description
+                <input name="description" type="text" placeholder="Description"  value="<%= record.description ? record.description : 'Description' %>"/>
+            </label>
+        </div>
+        <div class="large-12 columns">
+            <label>Status
+                <select name="status"  value="<%= record.status %>">
+                    <option value="opeartive">Operative</option>
+                    <option value="offline">Off-line</option>
+                    <option value="online">On-line</option>
+                </select>
+            </label>
+        </div>
+        <div class="large-12 columns">
+            <label>Type
+                <select name="type"  value="<%= record.type %>">
+                    <option value="1">Beacon</option>
+                    <option value="2">WAP</option>
+                    <option value="3">Router</option>
+                </select>
+            </label>
+        </div>
+        <div class="large-12 columns">
+            <label>Location
+                <select name="location"  value="<%= record.location %>">
+                    <option value="1">NY15</option>
+                    <option value="2">NY09</option>
+                    <option value="3">LND01</option>
+                </select>
+            </label>
+        </div>
+    </div>
+    <% if(record.id){%>
+    <input hidden="true" name="id" value="<%= record.id %>" />
+    <%}%>
+    <button id="submit" class="success expand radius">Send</button>
+</form>
+<code>
+    <%= JSON.stringify(record) %>
+</code>
