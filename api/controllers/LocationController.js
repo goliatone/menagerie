@@ -10,6 +10,6 @@ var BaseController = require('../../lib/BaseController')('Location');
 var debug = require('debug')('controller:Location');
 var extend = require('gextend');
 
-var Location = {};
+var Controller = {};
 
-module.exports = extend({}, BaseController, Location);
+module.exports = extend({}, BaseController, Controller);

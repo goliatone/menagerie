@@ -9,6 +9,6 @@ var BaseController = require('../../lib/BaseController')('DeviceType');
 var debug = require('debug')('controller:DeviceType');
 var extend = require('gextend');
 
-var DeviceType = {};
+var Controller = {};
 
-module.exports = extend({}, BaseController, DeviceType);
+module.exports = extend({}, BaseController, Controller);

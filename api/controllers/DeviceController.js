@@ -10,7 +10,7 @@
  var debug = require('debug')('controller:Device');
  var extend = require('gextend');
 
-var Device = {
+var Controller = {
      manage: function(req, res){
          return Device.update({id: req.param('deviceId')},{
              location: req.param('locationId')
@@ -39,4 +39,4 @@ var Device = {
      }
  };
 
-module.exports = extend({}, BaseController, Device);
+module.exports = extend({}, BaseController, Controller);
