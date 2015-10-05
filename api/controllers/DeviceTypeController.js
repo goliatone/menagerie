@@ -5,7 +5,9 @@
  * @description :: Server-side logic for managing devicetypes
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
-var Resource = require('../resources')('DeviceType');
+// var Resource = require('../resources')('DeviceType');
+var ResourceBase = require('../resources/resource')
+var Resource = new ResourceBase('DeviceType');
 var debug = require('debug')('controller:DeviceTypeController');
 
 module.exports = {
@@ -15,9 +17,6 @@ module.exports = {
      create: function (req, res) {
 
          var Model = Resource.getModel();
-
-        //  debug('Inside create..............req.params = ' + JSON.stringify(req.params.all()));
-
          var payload = Model.getParametersFromRequest(req);
          debug('Inside create..............req.params = ' + JSON.stringify(payload));
 
@@ -42,11 +41,13 @@ module.exports = {
       */
      update: function (req, res) {
          var Model = Resource.getModel();
-         var payload = Model.getParametersFromRequest(req);
+		 var payload = Model.getParametersFromRequest(req),
+             id = payload.id;
+         delete payload.id;
 
          debug('Inside update..............req.params = ' + JSON.stringify(payload));
 
-         return Model.update(payload).then(function (record) {
+         return Model.update({id: id}, payload).then(function (record) {
              debug('Resource created: ' + JSON.stringify(record));
             //  return res.redirect(Resource.baseView);
              return res.redirect(Resource.getViewPath());
@@ -102,7 +103,7 @@ module.exports = {
       */
      find: function (req, res) {
          var Model = Resource.getModel();
-         debug('Inside find..............');
+         debug('Inside find..............' + Model.nicename);
          var id = req.params.id;
          debug('Inside find.............. id = ' + id);
 
@@ -114,8 +115,10 @@ module.exports = {
                  debug('Inside find Found .... record = ' + JSON.stringify(record));
                  return res.ok({
                      form:{
-                         action: '/' + Resource.nicename,
-                         method: 'PUT'
+                         action: '/' + Resource.nicename + '/update',
+                         method: 'POST'
+                        //  action: '/' + Resource.nicename,
+                        //  method: 'PUT'
                      },
                      status: 'OK',
                      title: 'Details',
@@ -148,7 +151,9 @@ module.exports = {
          var Model = Resource.getModel();
          debug('Inside findall..............');
 
-         return Model.find().then(function (records) {
+         return Model.find()
+		 .populateAll()
+		 .then(function (records) {
              debug('Resource.findAll -- records = ' + records);
              return res.ok({
                  status: 'OK',
