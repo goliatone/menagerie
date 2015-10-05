@@ -7,6 +7,7 @@
 
 module.exports = {
     autoPK: true,
+    nicename: 'DeviceType',
     attributes: {
         name : {
             type: 'string',
@@ -40,5 +41,12 @@ module.exports = {
         });
 
         return record;
+    },
+    findByIdFromRequest: function(req){
+        var pk = DeviceType.primaryKey;
+        var query = {};
+        query[pk] = req.param(pk);
+        //We should use findOne()
+        return DeviceType.find().where(query);
     }
 };
