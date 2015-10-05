@@ -17,7 +17,7 @@
         </div>
         <div class="large-12 columns">
             <label>Metadata
-                <textarea name="metadata"><%= record.label ? record.label : '' %></textarea>
+                <textarea name="metadata"><%= record.metadata ? record.metadata : '' %></textarea>
             </label>
         </div>
 
@@ -27,3 +27,8 @@
     <%}%>
     <button id="submit" class="success expand radius">Send</button>
 </form>
+
+
+<code>
+    <%= JSON.stringify(record, null, 4) %>
+</code>
