@@ -4,8 +4,10 @@
 * @description :: TODO: You might write a short summary of how this model works and what it represents here.
 * @docs        :: http://sailsjs.org/#!documentation/models
 */
-var parseModel = require('../../node_modules/sails/lib/hooks/blueprints/actionUtil').parseModel;
-module.exports = {
+var extend = require('gextend');
+var BaseModel = require('../../lib/BaseModel');
+
+var Location = {
     autoPK: true,
     attributes: {
         uuid : {
@@ -27,35 +29,7 @@ module.exports = {
             collection: 'device',
             via: 'location'
         }
-    },
-    getEmptyObject: function(req){
-        var Model = parseModel(req);
-        var record = {},
-            value;
-
-        Object.keys(Model.attributes).map(function(key){
-            record[key] = null;
-        });
-        record.uuid = uuid().toUpperCase();
-        return record;
-    },
-    getParametersFromRequest: function(req){
-        var Model = parseModel(req);
-        var record = {},
-            value;
-
-        Object.keys(Model.attributes).map(function(key){
-            value = req.param(key);
-            if(!value) return;
-            record[key] = value;
-        });
-        return record;
-    },
-    findByIdFromRequest: function(req){
-        var Model = parseModel(req);
-        var pk = Model.primaryKey;
-        var query = {};
-        query[pk] = req.param(pk);
-        return Model.findOne(query);
     }
 };
+
+module.exports = extend({}, BaseModel, Location);
