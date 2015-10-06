@@ -32,6 +32,7 @@
     "DeviceType": true,
     "Configuration": true,
     "DeviceService": true,
+    "BarcodeService": true,
     "angular": false,
     "jquery":true,
     "requirejs":true
