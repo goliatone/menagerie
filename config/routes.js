@@ -45,6 +45,8 @@ module.exports.routes = {
   * for configuration options and examples.                                  *
   *                                                                          *
   ***************************************************************************/
+    'POST /barcode/:content': 'BarcodeController.index',
+    'GET /images/qrs/:filename':'BarcodeController.serve',
 
     'GET /location': 'LocationController.findall',
     'GET /location/new': 'LocationController.new',
@@ -65,7 +67,7 @@ module.exports.routes = {
     'PUT /device': 'DeviceController.update',
     'POST /device/update': 'DeviceController.update',
     'DELETE /device': 'DeviceController.delete',
-    'GET /device/manage': 'DeviceController.manage',
+    'POST /device/manage': 'DeviceController.manage',
 
     'GET /devicetype': 'DeviceTypeController.findall',
     'GET /devicetype/new': 'DeviceTypeController.new',
