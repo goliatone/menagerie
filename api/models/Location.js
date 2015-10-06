@@ -29,6 +29,15 @@ var Location = {
             collection: 'device',
             via: 'location'
         }
+    },
+    afterCreate: function(record, done){
+
+        var url = '/find/location/' + record.uuid,
+            filename = record.uuid;
+
+        BarcodeService.createQRCode(url, filename).finally(function(){
+            done();
+        });
     }
 };
 
