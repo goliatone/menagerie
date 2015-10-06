@@ -1,3 +1,9 @@
 nav.main-header{
     margin-bottom: 30px;
 }
+
+
+img.qr-code{
+    width: 60px;
+    height: 60px;
+}
