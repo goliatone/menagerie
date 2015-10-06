@@ -34,6 +34,15 @@ var Device = {
         configuration: {
             model: 'configuration'
         }
+    },
+    afterCreate: function(record, done){
+
+        var url = '/find/device/' + record.uuid,
+            filename = record.uuid;
+
+        BarcodeService.createQRCode(url, filename).finally(function(){
+            done();
+        });
     }
 };
 
