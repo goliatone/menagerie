@@ -7,8 +7,8 @@ var qr = require('qrcodeine'),
 
 var DEFAULTS = {
     dotSize: 20,
-    foregroundColor: 0xFFFFFF,
-    backgroundColor: 0x000000
+    // foregroundColor: 0xFFFFFF,
+    // backgroundColor: 0x000000
 };
 
 module.exports = {
@@ -16,8 +16,22 @@ module.exports = {
         options = extend({}, DEFAULTS, options);
 
         var img = qr.encodePng(content, options);
-        var uri = '/images/qrs/' + filename + '.png';
+        var uri = module.exports.getImagePath(filename);
 
-        return fs.writeFile('./assets' + uri, img.data);
+        //We probably want to save this in S3 and just
+        //redirect..
+        return fs.writeFileAsync('./assets' + uri, img.data);
+    },
+    getImagePath: function(filename){
+        return '/images/qrs/' + filename + '.png';
+    },
+    getImageStream: function(filename){
+        var stream = null,
+            filepath = './assets/images/qrs/' + filename;
+        try {
+            if(!fs.existsSync(filepath)) return stream;
+            stream = fs.createReadStream(filepath);
+        } catch (e) {}
+        return stream;
     }
 };
