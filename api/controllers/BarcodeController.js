@@ -2,7 +2,18 @@
 var qr = require('qrcodeine');
 var fs = require('fs');
 
-
+/**
+ * BarcodeService.
+ * qrcodeine uses libqrencode, we might want
+ * to try making a wrapper for zint.
+ *
+ * TODO: Offer support for other formats.
+ *
+ * https://www.npmjs.com/package/barcode
+ * https://www.npmjs.com/package/io-barcode
+ * https://www.npmjs.com/package/qrcode
+ *
+ */
 module.exports = {
     index: function(req, res){
         var content = req.param('content'),
