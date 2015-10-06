@@ -10,6 +10,7 @@
               <th width="400">UUID</th>
               <th>Name</th>
               <th width="150">Description</th>
+              <th width="150">QR Code</th>
             </tr>
           </thead>
           <tbody>
@@ -23,6 +24,7 @@
                       </td>
                       <td><%= record.name %></td>
                       <td><%= record.description %></td>
+                      <td><img class="location qr-code" src="/images/qrs/<%=record.uuid%>.png"/></td>
                   </tr>
               <%});%>
           </tbody>
