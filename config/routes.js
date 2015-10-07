@@ -67,7 +67,10 @@ module.exports.routes = {
     'PUT /device': 'DeviceController.update',
     'POST /device/update': 'DeviceController.update',
     'DELETE /device': 'DeviceController.delete',
-    'POST /device/manage': 'DeviceController.manage',
+
+    'POST /things/pair': 'DeviceController.manage',
+
+
 
     'GET /devicetype': 'DeviceTypeController.findall',
     'GET /devicetype/new': 'DeviceTypeController.new',
