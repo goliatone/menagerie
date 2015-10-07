@@ -10,10 +10,13 @@
  */
 
 module.exports.bootstrap = function(cb) {
-
+/*
     var localtunnel = require('localtunnel');
-    var port = 1337;//sails.config.local.port;
-    var tunnel = localtunnel(port, {subdomain:'menagerie'}, function(err, tunnel) {
+
+    var port = sails.config.port;
+    var tunnel = localtunnel(port, {
+        subdomain: 'menagerie'
+    }, function(err, tunnel) {
         if (err) console.log('ERROR')
 
         // the assigned public url for your tunnel
@@ -24,7 +27,7 @@ module.exports.bootstrap = function(cb) {
     tunnel.on('close', function() {
         // tunnels are closed
     });
-
+    */
     // It's very important to trigger this callback method when you are finished
     // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
     cb();
