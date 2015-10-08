@@ -27,6 +27,7 @@ module.exports.bootstrap = function(cb) {
 
     sails.on('file:upload', function(f){
         console.log('FILE UPLOADED', f);
+        CSVService.toJSON(f.files[0].fd);
     });
 
     // It's very important to trigger this callback method when you are finished
