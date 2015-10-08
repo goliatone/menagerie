@@ -25,9 +25,19 @@ module.exports.bootstrap = function(cb) {
         // tunnels are closed
     });
 
+    var MinionJob = require('minion-job');
+
     sails.on('file:upload', function(f){
         console.log('FILE UPLOADED', f);
-        CSVService.toJSON(f.files[0].fd);
+
+        // var job = new MinionJob.Job(
+        //   function(dataset){
+            CSVService.toJSON(f.files[0].fd);
+        //   },
+        //   'urgent_queue'
+    //   );
+
+        // job.perform_later(f.files[0].fd);
     });
 
     // It's very important to trigger this callback method when you are finished
