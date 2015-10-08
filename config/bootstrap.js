@@ -27,7 +27,22 @@ module.exports.bootstrap = function(cb) {
     tunnel.on('close', function() {
         // tunnels are closed
     });
-    */
+
+    var MinionJob = require('minion-job');
+
+    sails.on('file:upload', function(f){
+        console.log('FILE UPLOADED', f);
+
+        // var job = new MinionJob.Job(
+        //   function(dataset){
+            CSVService.toJSON(f.files[0].fd);
+        //   },
+        //   'urgent_queue'
+    //   );
+
+        // job.perform_later(f.files[0].fd);
+    });
+
     // It's very important to trigger this callback method when you are finished
     // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
     cb();
