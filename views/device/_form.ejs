@@ -2,7 +2,12 @@
     <div class="row">
         <div class="large-12 columns">
             <label>UUID
-                <input name="uuid" type="text" placeholder="UUID" value="<%= record.uuid ? record.uuid : 'UUID' %>"/>
+                <input name="uuid" type="text" placeholder="UUID"
+                    value="<%= record.uuid ? record.uuid : 'UUID' %>"
+                    <% if(form.intention !== 'create'){ %>
+                    disabled="disabled"
+                    <%}%>
+                />
             </label>
         </div>
         <div class="large-12 columns">
