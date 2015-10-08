@@ -11,6 +11,8 @@
 
 module.exports.bootstrap = function(cb) {
 /*
+ngrok http port -subdomain=subdomain
+
     var localtunnel = require('localtunnel');
 
     var port = sails.config.port;
@@ -27,8 +29,8 @@ module.exports.bootstrap = function(cb) {
     tunnel.on('close', function() {
         // tunnels are closed
     });
-
-    var MinionJob = require('minion-job');
+*/
+    // var MinionJob = require('minion-job');
 
     sails.on('file:upload', function(f){
         console.log('FILE UPLOADED', f);
