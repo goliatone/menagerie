@@ -29,7 +29,8 @@
     "grunt-cli": "^0.1.13",
     "gextend": "^0.1.6",
     "skipper-s3": "^0.5.6",
-    "csvtojson": "^0.4.3"
+    "csvtojson": "^0.4.3",
+    "minion-job": "0.0.2"
   },
   "scripts": {
     "debug": "node debug app.js",
