@@ -10,3 +10,19 @@ https://github.com/cgmartin/sailsjs-angularjs-bootstrap-example/tree/master/view
 
 http://stackoverflow.com/questions/30671160/swagger-sails-js
 -->
+
+
+
+
+```js
+var pojo = {name:'Sockete 3', description: 'Sockete instance', status:'offline', type:1, location:1}
+io.socket.post('/device', pojo, function(data, jwres){
+    console.log(arguments)
+});
+```
+
+```js
+io.socket.get('/device/1', function(data, jwres){
+    console.log(arguments)
+});
+```
