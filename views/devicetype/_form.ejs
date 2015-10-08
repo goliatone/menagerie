@@ -17,17 +17,15 @@
         </div>
         <div class="large-12 columns">
             <label>Metadata
-                <textarea name="metadata"><%= record.metadata ? record.metadata : '' %></textarea>
+                <textarea name="metadata"><%= record.metadata ? JSON.stringify(record.metadata) : '' %></textarea>
             </label>
         </div>
-
     </div>
     <% if(record.id){%>
     <input hidden="true" name="id" value="<%= record.id %>" />
     <%}%>
     <button id="submit" class="success expand radius">Send</button>
 </form>
-
 
 <code>
     <%= JSON.stringify(record, null, 4) %>
