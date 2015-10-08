@@ -18,27 +18,25 @@
         <div class="large-12 columns">
             <label>Status
                 <select name="status"  value="<%= record.status %>">
-                    <option value="opeartive">Operative</option>
-                    <option value="offline">Off-line</option>
-                    <option value="online">On-line</option>
+                    <option value="unknown">Unknown</option>
+                    <option value="not_inuse">Not In Use</option>
+                    <option value="inuse">In Use</option>
+                    <option value="online">Online</option>
+                    <option value="offline">Offline</option>
+                    <option value="unavailable">Unavailable</option>
+                    <option value="operative">Operative</option>
                 </select>
             </label>
         </div>
         <div class="large-12 columns">
             <label>Type
                 <select name="type"  value="<%= record.type %>">
-                    <option value="1">Beacon</option>
-                    <option value="2">WAP</option>
-                    <option value="3">Router</option>
                 </select>
             </label>
         </div>
         <div class="large-12 columns">
             <label>Location
                 <select name="location"  value="<%= record.location %>">
-                    <option value="1">NY15</option>
-                    <option value="2">NY09</option>
-                    <option value="3">LND01</option>
                 </select>
             </label>
         </div>
@@ -51,3 +49,18 @@
 <code>
     <%= JSON.stringify(record) %>
 </code>
+
+<script type="text/javascript">
+function populateOption(name, selector){
+    io.socket.get('/' + name, function(data, jwres){
+        console.log(data)
+        data = data || {records:[]};
+        data.records.map(function(record){
+            $('[name="' + selector + '"]').append('<option value="' + record.id + '">' + record.name + '</option>');
+        });
+    });
+}
+populateOption('devicetype', 'type');
+populateOption('location', 'location');
+$('[name="status"]').val("<%= record.status%>");
+</script>
