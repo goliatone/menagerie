@@ -23,7 +23,8 @@ var Device = {
             type: 'string'
         },
         status: {
-            type: 'string'
+            type: 'string',
+            enum: ['unknown', 'not_inuse', 'inuse', 'online', 'offline', 'unavailable', 'operative']
         },
         type: {
             model:'deviceType'
