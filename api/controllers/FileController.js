@@ -20,6 +20,7 @@ module.exports = {
     	req.file('uploaded-file').upload(function (err, files) {
       		if (err) return res.serverError(err);
 			sails.emit('file:upload', {files:files});
+			return res.redirect('back');
       		return res.json({
         		message: files.length + ' file(s) uploaded successfully!',
         		files: files
