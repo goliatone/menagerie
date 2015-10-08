@@ -18,7 +18,7 @@ module.exports = {
     index: function(req, res){
         var content = req.param('content'),
             filename = req.param('filename');
-
+            
         BarcodeService.createQRCode(content, filename).done(function(){
             var uri = BarcodeService.getImagePath(filename);
             res.redirect(uri);
