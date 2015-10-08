@@ -12,9 +12,17 @@
 
 var Controller = {
      manage: function(req, res){
+
+         var payload = {
+             deviceId: req.param('deviceId'),
+             locationId: req.param('locationId')
+         };
+
          return Device.update({id: req.param('deviceId')},{
              location: req.param('locationId')
          }).then(function (record) {
+             sails.sockets.blast('/things/pair/true', {ok:true});
+             console.log('HEREREWRJAEWRAWERAWER')
              return res.redirect('device');
          }).catch(function (err) {
              console.error('Error on DeviceService.updateDevice');
