@@ -1,7 +1,4 @@
 'use strict';
-var qr = require('qrcodeine');
-var fs = require('fs');
-
 /**
  * BarcodeService.
  * qrcodeine uses libqrencode, we might want
@@ -18,7 +15,7 @@ module.exports = {
     index: function(req, res){
         var content = req.param('content'),
             filename = req.param('filename');
-            
+
         BarcodeService.createQRCode(content, filename).done(function(){
             var uri = BarcodeService.getImagePath(filename);
             res.redirect(uri);
