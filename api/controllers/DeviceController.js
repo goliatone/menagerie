@@ -11,39 +11,59 @@
  var extend = require('gextend');
 
 var Controller = {
-     manage: function(req, res){
+    manage: function(req, res){
 
-         var payload = {
-             deviceId: req.param('deviceId'),
-             locationId: req.param('locationId')
-         };
+        var payload = {
+            deviceId: req.param('deviceId'),
+            locationId: req.param('locationId')
+        };
 
-         return Device.update({id: req.param('deviceId')},{
-             location: req.param('locationId')
-         }).then(function (record) {
-             sails.sockets.blast('/things/pair/true', {ok:true});
-             console.log('HEREREWRJAEWRAWERAWER')
-             return res.redirect('device');
-         }).catch(function (err) {
-             console.error('Error on DeviceService.updateDevice');
-             console.error(err);
+        var devQuery = {
+            id: payload.deviceId
+        };
 
-             return Device.find().where({id: req.param('deviceId')}).then(function (record) {
-                 if (record && record.length > 0) {
-                     return res.view('device/edit', {
-                         record: record[0],
-                         status: 'Error',
-                         errorType: 'validation-error',
-                         statusDescription: err,
-                         title: 'Device Details'
-                     });
-                 } else {
-                     return res.ok({message: 'Sorry, no resource found with id - ' + req.param('id')}, '500');
-                 }
-             }).catch(function (err) {
-                 return res.ok({message: 'Sorry, no resource found with id - ' + req.param('id')}, '500');
-             });
-         });
+        if(typeof payload.deviceId === 'string'){
+            delete devQuery.id;
+            devQuery.where = {uuid: payload.deviceId};
+        }
+
+        var locQuery = {
+            id: payload.locationId
+        };
+
+        if(typeof payload.locationId === 'string'){
+            delete locQuery.id;
+            locQuery.where = {uuid: payload.locationId};
+        }
+
+        console.log('QUERY', locQuery, devQuery);
+
+        Location.findOne(locQuery).then(function(location){
+            Device.update(devQuery, {
+                location: location.id
+            }).then(function (record) {
+                sails.sockets.blast('/things/pair/true', {ok:true});
+                return res.redirect('device');
+            }).catch(function(err){
+                return err;
+            });
+        }).catch(function(err){
+            return Device.findOne({id: req.param('deviceId')}).then(function (record) {
+                if (record) {
+                    return res.view('device/edit', {
+                        record: record,
+                        status: 'Error',
+                        errorType: 'validation-error',
+                        statusDescription: err,
+                        title: 'Device Details'
+                    });
+                } else {
+                    return res.ok({message: 'Sorry, no resource found with id - ' + req.param('id')}, '500');
+                }
+            }).catch(function (err) {
+                return res.ok({message: 'Sorry, no resource found with id - ' + req.param('id')}, '500');
+            });
+        });
      }
  };
 
