@@ -17,7 +17,7 @@
         "application/json"
     ],
     "paths": {
-        "/api/configuration": {
+        "/configuration": {
             "get": {
                 "summary": "Returns a list of configurations",
                 "description": "Finds configurations with any user defined filters applied.",
@@ -180,7 +180,7 @@
                 }
             }
         },
-        "/api/configuration/{id}": {
+        "//configuration/{id}": {
             "get": {
                 "summary": "Returns a specific configuration",
                 "description": "Finds a specific configuration based on its id",
@@ -347,7 +347,7 @@
                 }
             }
         },
-        "/api/device": {
+        "/device": {
             "get": {
                 "summary": "Returns a list of devices",
                 "description": "Finds devices with any user defined filters applied.",
@@ -522,7 +522,7 @@
                 }
             }
         },
-        "/api/device/{id}": {
+        "/device/{id}": {
             "get": {
                 "summary": "Returns a specific device",
                 "description": "Finds a specific device based on its id",
@@ -689,7 +689,7 @@
                 }
             }
         },
-        "/api/devicetype": {
+        "/devicetype": {
             "get": {
                 "summary": "Returns a list of devicetypes",
                 "description": "Finds devicetypes with any user defined filters applied.",
@@ -855,7 +855,7 @@
                 }
             }
         },
-        "/api/devicetype/{id}": {
+        "/devicetype/{id}": {
             "get": {
                 "summary": "Returns a specific devicetype",
                 "description": "Finds a specific devicetype based on its id",
@@ -1022,7 +1022,7 @@
                 }
             }
         },
-        "/api/devicetype/{parentId}/devices": {
+        "/devicetype/{parentId}/devices": {
             "get": {
                 "summary": "Gets devices for a devicetype",
                 "description": "Gets devices associated with a devicetype",
@@ -1136,7 +1136,7 @@
                 }
             }
         },
-        "/api/devicetype/{parentId}/devices/{id}": {
+        "/devicetype/{parentId}/devices/{id}": {
             "post": {
                 "summary": "Adds the device to a devicetype",
                 "description": "Attaches the posted device to the specified devicetype",
@@ -1257,7 +1257,7 @@
                 }
             }
         },
-        "/api/location": {
+        "/location": {
             "get": {
                 "summary": "Returns a list of locations",
                 "description": "Finds locations with any user defined filters applied.",
@@ -1421,7 +1421,7 @@
                 }
             }
         },
-        "/api/location/{id}": {
+        "/location/{id}": {
             "get": {
                 "summary": "Returns a specific location",
                 "description": "Finds a specific location based on its id",
@@ -1588,7 +1588,7 @@
                 }
             }
         },
-        "/api/location/{parentId}/devices": {
+        "/location/{parentId}/devices": {
             "get": {
                 "summary": "Gets devices for a location",
                 "description": "Gets devices associated with a location",
@@ -1702,7 +1702,7 @@
                 }
             }
         },
-        "/api/location/{parentId}/devices/{id}": {
+        "/location/{parentId}/devices/{id}": {
             "post": {
                 "summary": "Adds the device to a location",
                 "description": "Attaches the posted device to the specified location",
