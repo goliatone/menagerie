@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="large-12 columns">
+    <div class="large-12 large-centered small-11 small-centered columns">
         <form id="menagerie" action="<%= form.action %>" method="<%= form.method %>">
             <label>UUID
                 <input name="uuid" type="text" placeholder="UUID"
@@ -29,11 +29,16 @@
             </label>
             <label>Type
                 <select name="type"  value="<%= record.type %>">
+                    <% if (!record.type) {%>
+                    <option value="">Not assigned</option>
+                    <% } %>
                 </select>
             </label>
             <label>Location
                 <select name="location"  value="<%= record.location %>">
-                    <option value="0">Not assigned</option>
+                    <% if (!record.type) {%>
+                    <option value="">Not assigned</option>
+                    <% } %>
                 </select>
             </label>
         <% if(record.id){%>
@@ -53,6 +58,7 @@ function populateOption(name, selector){
         console.log(data)
         data = data || {records:[]};
         data.records.map(function(record){
+            console.log('CREATE OPTION FOR', selector, record.name);
             $('[name="' + selector + '"]').append('<option value="' + record.id + '">' + record.name + '</option>');
         });
     });
