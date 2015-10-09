@@ -34,7 +34,13 @@
                             <%= record.description %>
                         </td>
                         <td>
-                            <%= record.location ? record.location.name : '---' %>
+                            <% if(record.location){ %>
+                                <a href="/location/<%= record.location.id %>">
+                                    <%= record.location.name %>
+                                </a>
+                            <% } else { %>
+                                ---
+                            <%}%>
                         </td>
                         <td>
                             <%= record.type ? record.type.name : '---' %>
