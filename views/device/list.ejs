@@ -2,7 +2,7 @@
 <% include ../_file-upload.ejs %>
 
 <div class="content row">
-    <div class="large-12 large-centered">
+    <div class="large-12 large-centered small-11 small-centered columns">
         <h3>Devices</h3>
         <dl class="sub-nav">
             <dt>Filter:</dt>
@@ -21,7 +21,7 @@
             </thead>
             <tbody>
                 <% records.map(function(record){%>
-                    <tr>
+                    <tr id="record-<%= record.id %>">
                         <td>
                             <a href="/<%= nicename %>/<%= record.id %>">
                                 <%= record.uuid %>
@@ -35,8 +35,8 @@
                         </td>
                         <td>
                             <% if(record.location){ %>
-                                <a href="/location/<%= record.location.id %>">
-                                    <%= record.location.name %>
+                                <a class="location" href="/location/<%= record.location.id %>">
+                                    <%= record.location.name %>: <%= record.location.description %>
                                 </a>
                             <% } else { %>
                                 ---
@@ -67,4 +67,16 @@ function populateOption(name, selector){
     });
 }
 populateOption('devicetype', '.sub-nav');
+
+io.socket.on('/things/pair/true', function(payload){
+    var context = '#record-' + payload.device.id;
+    var selector = 'a.location';
+    var href = '/location/' + payload.location.id;
+
+    console.log('THINGS UPDATED!', payload);
+    console.log('THINGS UPDATED!', selector, context, href);
+
+    $(selector, context).attr('href', href);
+    $(selector, context).html(payload.location.name + ': ' + payload.location.description);
+});
 </script>
