@@ -42,7 +42,9 @@ var Controller = {
             Device.update(devQuery, {
                 location: location.id
             }).then(function (record) {
-                sails.sockets.blast('/things/pair/true', {ok:true});
+                //This should actually be a regular Device update socket event...
+                sails.sockets.blast('/things/pair/true', {ok:true, device:record[0], location: location});
+
                 return res.redirect('device');
             }).catch(function(err){
                 return err;
