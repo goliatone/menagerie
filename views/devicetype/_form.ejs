@@ -1,32 +1,25 @@
-<form id="menagerie" action="<%= form.action %>" method="<%= form.method %>" enctype="application/x-www-form-urlencoded">
-    <div class="row">
-        <div class="large-12 columns">
+<div class="row">
+    <div class="large-12 large-centered small-11 small-centered columns">
+        <form id="menagerie" action="<%= form.action %>" method="<%= form.method %>" enctype="application/x-www-form-urlencoded">
             <label>Name
                 <input name="name" type="text" placeholder="Name" value="<%= record.name ? record.name : 'Name' %>"/>
             </label>
-        </div>
-        <div class="large-12 columns">
             <label>Description
                 <input name="description" type="text" placeholder="Description"  value="<%= record.description ? record.description : 'Description' %>"/>
             </label>
-        </div>
-        <div class="large-12 columns">
             <label>Label
                 <input name="label" type="text" placeholder="Label"  value="<%= record.label ? record.label : 'Label' %>"/>
             </label>
-        </div>
-        <div class="large-12 columns">
             <label>Metadata
                 <textarea name="metadata"><%= record.metadata ? JSON.stringify(record.metadata) : '' %></textarea>
             </label>
-        </div>
+            <% if(record.id){%>
+                <input hidden="true" name="id" value="<%= record.id %>" />
+            <%}%>
+            <button id="submit" class="success expand radius">Send</button>
+        </form>
+        <code>
+            <%= JSON.stringify(record, null, 4) %>
+        </code>
     </div>
-    <% if(record.id){%>
-    <input hidden="true" name="id" value="<%= record.id %>" />
-    <%}%>
-    <button id="submit" class="success expand radius">Send</button>
-</form>
-
-<code>
-    <%= JSON.stringify(record, null, 4) %>
-</code>
+</div>
