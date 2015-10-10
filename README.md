@@ -1,7 +1,15 @@
 # menagerie
+Manage things... all the things. WeeThings!
 
-a [Sails](http://sailsjs.org) application
-
+### TODO:
+* Replace `autoPK`, use UUID as main id instead.
+* CSV import
+* CSV export
+* Job to handle CSV import
+* Print QR codes
+* Add support for multiple identifiers:
+    * Barcode
+    * QR code
 
 <!--
 http://stackoverflow.com/questions/17929307/how-to-serve-a-bootstrap-template-in-sails-0-9
