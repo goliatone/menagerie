@@ -1,54 +1,54 @@
+
 <form id="menagerie" action="<%= form.action %>" method="<%= form.method %>">
-    <div class="row">
-        <div class="large-12 columns">
-            <label>UUID
-                <input name="uuid" type="text" placeholder="UUID" value="<%= record.uuid ? record.uuid : 'UUID' %>"/>
-            </label>
-        </div>
-        <div class="large-12 columns">
-            <label>Name
-                <input name="name" type="text" placeholder="Name" value="<%= record.name ? record.name : 'Name' %>"/>
-            </label>
-        </div>
-        <div class="large-12 columns">
-            <label>Description
-                <input name="description" type="text" placeholder="Description"  value="<%= record.description ? record.description : 'Description' %>"/>
-            </label>
-        </div>
-        <div class="large-12 columns">
-            <label>Status
-                <select name="status"  value="<%= record.status %>">
-                    <option value="unknown">Unknown</option>
-                    <option value="not_inuse">Not In Use</option>
-                    <option value="inuse">In Use</option>
-                    <option value="online">Online</option>
-                    <option value="offline">Offline</option>
-                    <option value="unavailable">Unavailable</option>
-                    <option value="operative">Operative</option>
-                </select>
-            </label>
-        </div>
-        <div class="large-12 columns">
-            <label>Type
-                <select name="type"  value="<%= record.type %>">
-                </select>
-            </label>
-        </div>
-        <div class="large-12 columns">
-            <label>Location
-                <select name="location"  value="<%= record.location %>">
-                </select>
-            </label>
-        </div>
-    </div>
-    <% if(record.id){%>
-    <input hidden="true" name="id" value="<%= record.id %>" />
-    <%}%>
-    <button id="submit" class="success expand radius">Send</button>
+    <label>UUID
+        <input name="uuid" type="text" placeholder="UUID"
+            value="<%= record.uuid ? record.uuid : 'UUID' %>"
+            <% if(form.intent !== 'create'){ %>
+            disabled="disabled"
+            <%}%>
+        />
+    </label>
+
+    <label>Name
+        <input name="name" type="text" placeholder="Name" value="<%= record.name ? record.name : 'Name' %>"/>
+    </label>
+    <label>Description
+        <input name="description" type="text" placeholder="Description"  value="<%= record.description ? record.description : 'Description' %>"/>
+    </label>
+    <label>Status
+        <select name="status"  value="<%= record.status ? record.status : 'unknown' %>">
+            <option value="unknown">Unknown</option>
+            <option value="not_inuse">Not In Use</option>
+            <option value="inuse">In Use</option>
+            <option value="online">Online</option>
+            <option value="offline">Offline</option>
+            <option value="unavailable">Unavailable</option>
+            <option value="operative">Operative</option>
+        </select>
+    </label>
+    <label>Type
+        <select name="type"  value="<%= record.type %>">
+            <% if (!record.type) {%>
+            <option value="">Not assigned</option>
+            <% } %>
+        </select>
+    </label>
+    <label>Location
+        <select name="location"  value="<%= record.location %>">
+            <% if (!record.type) {%>
+            <option value="">Not assigned</option>
+            <% } %>
+        </select>
+    </label>
+<% if(record.id){%>
+<input hidden="true" name="id" value="<%= record.id %>" />
+<%}%>
+<button id="submit" class="success expand radius">Send</button>
 </form>
-<code>
-    <%= JSON.stringify(record) %>
-</code>
+        <!--code>
+            < % = JSON.stringify(record) % >
+        </code-->
+
 
 <script type="text/javascript">
 function populateOption(name, selector){
@@ -56,6 +56,7 @@ function populateOption(name, selector){
         console.log(data)
         data = data || {records:[]};
         data.records.map(function(record){
+            console.log('CREATE OPTION FOR', selector, record.name);
             $('[name="' + selector + '"]').append('<option value="' + record.id + '">' + record.name + '</option>');
         });
     });

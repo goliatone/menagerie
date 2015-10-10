@@ -1,34 +1,31 @@
 <% include _header.ejs %>
 
-<div class="content">
-    <div class="row">
-        <h3>Add Device to Location</h3>
-        <form id="menagerie" action="/device/manage" method="post">
-            <div class="row">
-                <div class="large-12 columns">
+<div class="content row">
+    <div class="large-12 large-centered columns">
+        <div class="row">
+            <div class="large-12 columns">
+                <h3>Add Device to Location</h3>
+                <form id="menagerie" action="/device/manage" method="post">
                     <label>Location
                         <input id="location" name="locationId" type="text" placeholder="Id or UUID" />
                     </label>
-                </div>
-                <div class="large-12 columns">
-                    <div class="panel location-info">
-                    </div>
-                </div>
-                <div class="large-12 columns">
+
+                    <div class="panel location-info"></div>
+
                     <label>Device Id or UUID
                         <input id="device" name="deviceId" type="text" placeholder="Id or UUID" />
                     </label>
-                </div>
-                <div class="large-12 columns">
-                    <div class="panel device-info">
-                    </div>
-                </div>
+
+                    <div class="panel device-info"></div>
+
+                    <button id="submit" class="  radius">Clear</button>
+                    <button id="submit" class="success  radius">Send</button>
+                </form>
             </div>
-            <button id="submit" class="  radius">Clear</button>
-            <button id="submit" class="success  radius">Send</button>
-        </form>
+        </div>
     </div>
 </div>
+
 <script type="text/javascript">
 function populateInfo(name, uuid){
     io.socket.get('/'+name+'?where={"uuid":"'+uuid+'"}', function(data, jwres){

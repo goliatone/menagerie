@@ -24,6 +24,7 @@ var Device = {
         },
         status: {
             type: 'string',
+            defaultsTo:'unknown',
             enum: ['unknown', 'not_inuse', 'inuse', 'online', 'offline', 'unavailable', 'operative']
         },
         type: {

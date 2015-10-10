@@ -1,8 +1,8 @@
 <% include ../_header.ejs %>
 <% include ../_file-upload.ejs %>
 
-<div class="content">
-    <div class="row">
+<div class="content row">
+    <div class="large-12 large-centered small-11 small-centered columns">
         <h3>Devices</h3>
         <dl class="sub-nav">
             <dt>Filter:</dt>
@@ -12,8 +12,8 @@
             <thead>
                 <tr>
                     <th width="350">UUID</th>
-                    <th>Name</th>
-                    <th width="150">Description</th>
+                    <th width="150">Name</th>
+                    <th width="250">Description</th>
                     <th width="150">Location</th>
                     <th width="150">Type</th>
                     <th width="150">QR Code</th>
@@ -21,7 +21,7 @@
             </thead>
             <tbody>
                 <% records.map(function(record){%>
-                    <tr>
+                    <tr id="record-<%= record.id %>">
                         <td>
                             <a href="/<%= nicename %>/<%= record.id %>">
                                 <%= record.uuid %>
@@ -34,7 +34,13 @@
                             <%= record.description %>
                         </td>
                         <td>
-                            <%= record.location ? record.location.name : '---' %>
+                            <% if(record.location){ %>
+                                <a class="location" href="/location/<%= record.location.id %>">
+                                    <%= record.location.name %>: <%= record.location.description %>
+                                </a>
+                            <% } else { %>
+                                ---
+                            <%}%>
                         </td>
                         <td>
                             <%= record.type ? record.type.name : '---' %>
@@ -61,4 +67,16 @@ function populateOption(name, selector){
     });
 }
 populateOption('devicetype', '.sub-nav');
+
+io.socket.on('/things/pair/true', function(payload){
+    var context = '#record-' + payload.device.id;
+    var selector = 'a.location';
+    var href = '/location/' + payload.location.id;
+
+    console.log('THINGS UPDATED!', payload);
+    console.log('THINGS UPDATED!', selector, context, href);
+
+    $(selector, context).attr('href', href);
+    $(selector, context).html(payload.location.name + ': ' + payload.location.description);
+});
 </script>
