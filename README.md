@@ -34,3 +34,20 @@ io.socket.get('/device/1', function(data, jwres){
     console.log(arguments)
 });
 ```
+
+### Data Models
+
+Device
+* Alias
+Device needs to support multiple IDs, say a chip identifier and the given UUID.
+
+Location
+* Floor plan
+* Sublocation
+
+
+Device Type
+* Product Information
+    * Image
+    * Vendor
+    * URL
