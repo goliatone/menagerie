@@ -51,3 +51,15 @@ Device Type
     * Image
     * Vendor
     * URL
+
+
+```sql
+CREATE TABLE "category" 
+  (
+     "id"          SERIAL       PRIMARY KEY,
+     "parent"      INTEGER      NULL DEFAULT NULL REFERENCES "category" ("id")
+     "name"        VARCHAR(50)  NOT NULL UNIQUE,
+     "description" VARCHAR(100) NOT NULL,
+     "sort_order"  INTEGER      NULL DEFAULT NULL,
+  );
+```
