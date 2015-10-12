@@ -19,12 +19,18 @@ module.exports = {
   	upload: function  (req, res) {
     	req.file('uploaded-file').upload(function (err, files) {
       		if (err) return res.serverError(err);
+			//Trigger command
 			sails.emit('file:upload', {files:files});
+			sails.sockets.emit('/file/upload', {progress: 0});
+			
+			if(req.wantsJSON){
+				return res.jsonx({
+	        		message: files.length + ' file(s) uploaded successfully!',
+	        		files: files
+	      		});
+			}
 			return res.redirect('back');
-      		return res.json({
-        		message: files.length + ' file(s) uploaded successfully!',
-        		files: files
-      		});
+
     	});
   	},
 	uploadS3: function (req, res) {
