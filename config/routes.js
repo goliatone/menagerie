@@ -32,9 +32,9 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  '/': {
-    view: 'dashboard'
-},
+    '/': {
+      view: 'dashboard'
+    },
 
   /***************************************************************************
   *                                                                          *
@@ -69,7 +69,7 @@ module.exports.routes = {
     'DELETE /device': 'DeviceController.delete',
 
     'POST /things/pair': 'DeviceController.manage',
-
+    'POST /thing/:typeName/:id/status': 'ThingController.register',
 
 
     'GET /devicetype': 'DeviceTypeController.findall',
