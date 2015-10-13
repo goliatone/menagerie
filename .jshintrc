@@ -33,6 +33,8 @@
     "DeviceType": true,
     "Configuration": true,
     "DeviceService": true,
+    "CSVService": true,
+    "LocationService": true,
     "BarcodeService": true,
     "angular": false,
     "jquery":true,
