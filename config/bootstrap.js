@@ -30,48 +30,9 @@ ngrok http port -subdomain=subdomain
         // tunnels are closed
     });
 */
-    var AsyncTask = require( 'async-task' )
+    var locationCSVUpload = require('../api/commands/LocationCSVUpload');
 
-    sails.on('file:upload', function(f){
-        console.log('FILE UPLOADED', f);
-
-        var task = new AsyncTask({
-            doInBackground: function(data){
-                var out = [], uuid = require('random-uuid-v4');
-                if(Array.isArray(data)){
-                    data.map(function(record){
-                        // { Type: 'R710',
-                        // Level: 27,
-                        // 'Room Name / Type': 'CORRIDOR',
-                        // 'Room Number': 2700,
-                        // 'Port 1 ID': '27-010-W',
-                        // 'Port 2 ID': '27-011-W',
-                        // 'Natural Key': 'NY13-027-2700' }
-                        var obj = {};
-                        obj.uuid = uuid();
-                        obj.name = record['Natural Key'];
-                        obj.description = record['Room Name / Type'] + ' ' + record['Room Number'];
-                        if(obj.name && obj.name.length) out.push(obj);
-                    });
-                }
-                console.log('UPLOADING CSV DATA', out);
-                return out;
-            }
-        });
-
-        CSVService.toJSON(f.files[0].fd).then(function(dataset){
-            task.execute(dataset)
-            .then(function( result ) {
-                console.log('RESULT', result);
-                LocationService.preloadData(result, function(err, result){
-                    console.log('DONE!');
-                });
-            })
-            .catch( function(){
-                console.log('error');
-            });
-        });
-    });
+    sails.on(locationCSVUpload.eventType, locationCSVUpload.handler);
 
     // It's very important to trigger this callback method when you are finished
     // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
