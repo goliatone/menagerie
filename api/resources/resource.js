@@ -19,6 +19,7 @@ BaseResource.prototype.getModel = function(){
 BaseResource.prototype.actionUtil = actionUtil;
 BaseResource.prototype.parsePk = actionUtil.parsePk;
 BaseResource.prototype.parseValues = actionUtil.parseValues;
+BaseResource.prototype.populateEach = require('../../lib/populateEach');
 
 function _uppercase(str){
    return str.charAt(0).toUpperCase() + str.slice(1, str.length);
