@@ -7,12 +7,13 @@ module.exports = {
         var typeName = payload.typeName,
             id = payload.id;
 
-        Device.findOne()
-        .where({alias:id})
-        .where({devicetype:{name:typeName}})
-        .then(function(device){
+        var query = Device.findOne();
+        query.where({alias:id});
+        query.populate('type', {where:{name:typeName}});
+        query.then(function(device){
+            console.log('DEVICE', device)
             res.ok({
-                status: 'OK',
+                status: 'OKIS',
                 type: typeName,
                 id: id,
                 record: device
