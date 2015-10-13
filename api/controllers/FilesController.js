@@ -21,8 +21,8 @@ module.exports = {
       		if (err) return res.serverError(err);
 			//Trigger command
 			sails.emit('file:upload', {files:files});
-			sails.sockets.emit('/file/upload', {progress: 0});
-			
+			sails.io.emit('/file/upload', {progress: 0});
+
 			if(req.wantsJSON){
 				return res.jsonx({
 	        		message: files.length + ' file(s) uploaded successfully!',
