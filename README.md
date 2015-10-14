@@ -51,3 +51,22 @@ Device Type
     * Image
     * Vendor
     * URL
+
+
+Populate nested [relationships][1] and [more][2] and here with [locations][3], and [menu][4]
+
+```sql
+CREATE TABLE "category"
+  (
+     "id"          SERIAL       PRIMARY KEY,
+     "parent"      INTEGER      NULL DEFAULT NULL REFERENCES "category" ("id")
+     "name"        VARCHAR(50)  NOT NULL UNIQUE,
+     "description" VARCHAR(100) NOT NULL,
+     "sort_order"  INTEGER      NULL DEFAULT NULL,
+  );
+```
+
+[1]: http://stackoverflow.com/questions/23446484/sails-js-populate-nested-associations
+[2]: http://stackoverflow.com/questions/26535727/sails-js-waterline-populate-deep-nested-association
+[3]: http://stackoverflow.com/questions/32594628/use-bluebird-to-deep-populate-objects-in-sailsjs
+[4]: http://stackoverflow.com/questions/23995813/sails-beta-0-10-0-rc7-populate-a-b-c-association
