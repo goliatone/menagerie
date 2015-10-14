@@ -11,6 +11,7 @@ var BaseModel = require('../../lib/BaseModel');
 
 var Configuration = {
     autoPK: true,
+    nicename: 'Configuration',
     attributes: {
         uuid : {
             type: 'string'
@@ -36,6 +37,7 @@ var Configuration = {
     },
     beforeUpdate: function(record, cb){
         record.version ++;
+        cb();
     }
 };
 
