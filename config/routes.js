@@ -32,9 +32,9 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  '/': {
-    view: 'dashboard'
-},
+    '/': {
+      view: 'dashboard'
+    },
 
   /***************************************************************************
   *                                                                          *
@@ -48,6 +48,9 @@ module.exports.routes = {
     'POST /barcode/:content': 'BarcodeController.index',
     'GET /images/qrs/:filename':'BarcodeController.serve',
 
+    //TODO: We should be able to include this on blueprints
+    'GET /location/count': 'LocationController.count',
+
     'GET /location': 'LocationController.findall',
     'GET /location/new': 'LocationController.new',
     'GET /location/find': 'LocationController.showFind',
@@ -57,6 +60,9 @@ module.exports.routes = {
     'POST /location/update': 'LocationController.update',
     // 'PUT /location': 'LocationController.update',
     'DELETE /location': 'LocationController.delete',
+
+    //TODO: We should be able to include this on blueprints
+    'GET /device/count': 'DeviceController.count',
 
     'GET /device': 'DeviceController.findall',
     'GET /device/new': 'DeviceController.new',
@@ -69,8 +75,10 @@ module.exports.routes = {
     'DELETE /device': 'DeviceController.delete',
 
     'POST /things/pair': 'DeviceController.manage',
+    'POST /thing/:typeName/:id/status': 'ThingController.register',
 
-
+    //TODO: We should be able to include this on blueprints
+    'GET /devicetype/count': 'DeviceTypeController.count',
 
     'GET /devicetype': 'DeviceTypeController.findall',
     'GET /devicetype/new': 'DeviceTypeController.new',

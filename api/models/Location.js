@@ -28,6 +28,9 @@ var Location = {
         devices: {
             collection: 'device',
             via: 'location'
+        },
+        sublocation: {
+            model: 'location'
         }
     },
     afterCreate: function(record, done){

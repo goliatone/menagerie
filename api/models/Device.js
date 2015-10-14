@@ -11,10 +11,25 @@ var Device = {
     autoPK: true,
     nicename: 'Device',
     attributes: {
+        /*
+        * uuid either generated from by the system or
+        * imported during creation.
+        */
         uuid: {
             type: 'string',
             // primaryKey: true,
             // required: true
+        },
+        /*
+        * If the device has some means of unique
+        * identification other than a UUID, like:
+        * gimbal beacons: UX33-NAEYZ
+        * ESP8266: 91245
+        * It should be unique within a device type
+        * but not necessarily within a device instance.
+        */
+        alias: {
+            type: 'string'
         },
         name: {
             type: 'string'

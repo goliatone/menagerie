@@ -41,6 +41,8 @@ Device
 * Alias
 Device needs to support multiple IDs, say a chip identifier and the given UUID.
 
+www.menagerie.io/ESP8266/91243/
+
 Location
 * Floor plan
 * Sublocation
