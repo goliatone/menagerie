@@ -1,0 +1,35 @@
+<% include ../_header.ejs %>
+
+<div class="row">
+    <div class="large-12 large-centered small-11 small-centered columns">
+        <h3>Update Device Type</h3>
+        <%if(status === "Error") { %>
+        <div class="alert alert-danger" role="alert"><%=statusDescription%></div>
+        <% } %>
+        <table>
+          <thead>
+            <tr>
+              <th width="40">ID</th>
+              <th>Name</th>
+              <th width="150">Description</th>
+              <th width="150">Label</th>
+            </tr>
+          </thead>
+          <tbody>
+              <% records.map(function(record){%>
+                  <tr>
+                      <td>
+                          <a href="/<%= nicename %>/<%= record.id %>">
+                              <%= record.id %>
+                          </a>
+                      </td>
+                      <td><%= record.name %></td>
+                      <td><%= record.description %></td>
+                      <td><%= record.label %></td>
+                  </tr>
+              <%});%>
+          </tbody>
+        </table>
+        <a href="/<%= nicename %>/new" class="button success">Add Record</a>
+    </div>
+</div>

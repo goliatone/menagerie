@@ -27,6 +27,13 @@
   "forin":false,
   "plusplus":false,
   "globals": {
+    "sails": true,
+    "Device": true,
+    "Location": true,
+    "DeviceType": true,
+    "Configuration": true,
+    "DeviceService": true,
+    "BarcodeService": true,
     "angular": false,
     "jquery":true,
     "requirejs":true

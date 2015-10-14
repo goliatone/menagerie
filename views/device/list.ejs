@@ -1,30 +1,82 @@
 <% include ../_header.ejs %>
+<% include ../_file-upload.ejs %>
 
+<div class="content row">
+    <div class="large-12 large-centered small-11 small-centered columns">
+        <h3>Devices</h3>
+        <dl class="sub-nav">
+            <dt>Filter:</dt>
+            <dd class="active-implement"><a href="/<%= nicename %>">All</a></dd>
+        </dl>
+        <table>
+            <thead>
+                <tr>
+                    <th width="350">UUID</th>
+                    <th width="150">Name</th>
+                    <th width="250">Description</th>
+                    <th width="150">Location</th>
+                    <th width="150">Type</th>
+                    <th width="150">QR Code</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% records.map(function(record){%>
+                    <tr id="record-<%= record.id %>">
+                        <td>
+                            <a href="/<%= nicename %>/<%= record.id %>">
+                                <%= record.uuid %>
+                            </a>
+                        </td>
+                        <td>
+                            <%= record.name %>
+                        </td>
+                        <td>
+                            <%= record.description %>
+                        </td>
+                        <td>
+                            <% if(record.location){ %>
+                                <a class="location" href="/location/<%= record.location.id %>">
+                                    <%= record.location.name %>: <%= record.location.description %>
+                                </a>
+                            <% } else { %>
+                                ---
+                            <%}%>
+                        </td>
+                        <td>
+                            <%= record.type ? record.type.name : '---' %>
+                        </td>
+                        <td><img class="device qr-code" src="/images/qrs/<%=record.uuid%>.png" /></td>
+                    </tr>
+                    <%});%>
+            </tbody>
+        </table>
+        <a href="/<%= nicename %>/new" class="button success">Add Record</a>
+        <a href="#" data-reveal-id="csv-modal" class="button">CSV</a>
+    </div>
+</div>
+<script type="text/javascript">
+function populateOption(name, selector){
+    io.socket.get('/' + name, function(data, jwres){
+        console.log(data)
+        data = data || {records:[]};
+        data.records.map(function(record){
+            var value = '<dd><a href=\'/<%= nicename %>?where={"type":' + record.id;
+            value += '}\'>'+ record.name+'</a></dd>'
+            $(selector).append(value);
+        });
+    });
+}
+populateOption('devicetype', '.sub-nav');
 
-<table>
-  <thead>
-    <tr>
-      <th width="400">UUID</th>
-      <th>Name</th>
-      <th width="150">Description</th>
-      <th width="150">Location</th>
-      <th width="150">Type</th>
-    </tr>
-  </thead>
-  <tbody>
-      <% records.map(function(record){%>
-          <tr>
-              <td>
-                  <a href="/device/<%= record.id %>">
-                      <%= record.uuid %>
-                  </a>
-              </td>
-              <td><%= record.name %></td>
-              <td><%= record.description %></td>
-              <td><%= record.location %></td>
-              <td><%= record.type %></td>
-          </tr>
-      <%});%>
-  </tbody>
-</table>
-<a href="/device/new" class="button success">Add Record</a>
+io.socket.on('/things/pair/true', function(payload){
+    var context = '#record-' + payload.device.id;
+    var selector = 'a.location';
+    var href = '/location/' + payload.location.id;
+
+    console.log('THINGS UPDATED!', payload);
+    console.log('THINGS UPDATED!', selector, context, href);
+
+    $(selector, context).attr('href', href);
+    $(selector, context).html(payload.location.name + ': ' + payload.location.description);
+});
+</script>

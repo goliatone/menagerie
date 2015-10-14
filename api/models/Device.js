@@ -4,9 +4,12 @@
 * @description :: TODO: You might write a short summary of how this model works and what it represents here.
 * @docs        :: http://sailsjs.org/#!documentation/models
 */
+var extend = require('gextend');
+var BaseModel = require('../../lib/BaseModel');
 
-module.exports = {
+var Device = {
     autoPK: true,
+    nicename: 'Device',
     attributes: {
         uuid: {
             type: 'string',
@@ -20,7 +23,9 @@ module.exports = {
             type: 'string'
         },
         status: {
-            type: 'string'
+            type: 'string',
+            defaultsTo:'unknown',
+            enum: ['unknown', 'not_inuse', 'inuse', 'online', 'offline', 'unavailable', 'operative']
         },
         type: {
             model:'deviceType'
@@ -31,5 +36,17 @@ module.exports = {
         configuration: {
             model: 'configuration'
         }
+    },
+    afterCreate: function(record, done){
+
+        var url = '/find/device/' + record.uuid,
+            filename = record.uuid;
+
+        BarcodeService.createQRCode(url, filename).finally(function(){
+            done();
+        });
     }
 };
+
+
+module.exports = extend({}, BaseModel, Device);

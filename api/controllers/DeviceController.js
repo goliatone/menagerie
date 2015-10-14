@@ -1,96 +1,72 @@
 'use strict';
+/* jshint global Device */
 /**
  * DeviceController
  *
  * @description :: Server-side logic for managing devices
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
-var uuid = require('random-uuid-v4');
-var actionUtil = require('../../node_modules/sails/lib/hooks/blueprints/actionUtil');
+ var BaseController = require('../../lib/BaseController')('Device');
+ var debug = require('debug')('controller:Device');
+ var extend = require('gextend');
 
+var Controller = {
+    manage: function(req, res){
 
-module.exports = {
-    create: function(req, res){
-        var id = req.param('id');
-
-        var locals = {
-            resource: {
-                uuid: uuid().toUpperCase()
-            }
-        };
-        res.view('device/new',locals);
-    },
-    show: function(req, res){
-        var id = req.param('id'),
-            locals = {};
-
-        if(id) {
-            locals.id = id;
-            Device.findOne({id:id})
-            .populate('location', 'deviceType', 'configuration')
-            .then(function(device){
-                locals.resource = device;
-                console.log('JSON', JSON.stringify(locals));
-                res.view(locals);
-            }).catch(function(err){
-                locals.error = err;
-                res.view(locals);
-            });
-        } else res.redirect('device', locals);
-    },
-    new: function(req, res){
-
-        var locals = {
-            record:{
-                uuid: uuid().toUpperCase()
-            },
-            form:{
-                action: '/device/new',
-                method:'post'
-            }
+        var payload = {
+            deviceId: req.param('deviceId'),
+            locationId: req.param('locationId')
         };
 
-        res.view(locals);
-    },
-    list: function(req, res){
-        // Look up the model
-        var Model = Device;
+        var devQuery = {
+            id: payload.deviceId
+        };
 
-
-        // If an `id` param was specified, use the findOne blueprint action
-        // to grab the particular instance with its primary key === the value
-        // of the `id` param.   (mainly here for compatibility for 0.9, where
-        // there was no separate `findOne` action)
-        if ( actionUtil.parsePk(req) ) {
-            return require('../../node_modules/sails/lib/hooks/blueprints/actions/findOne')(req,res);
+        if(typeof payload.deviceId === 'string'){
+            delete devQuery.id;
+            devQuery.where = {uuid: payload.deviceId};
         }
 
-        // Lookup for records that match the specified criteria
-        var query = Model.find()
-            .where( actionUtil.parseCriteria(req) )
-            .limit( actionUtil.parseLimit(req) )
-            .skip( actionUtil.parseSkip(req) )
-            .sort( actionUtil.parseSort(req) );
+        var locQuery = {
+            id: payload.locationId
+        };
 
-        query.populate('location', 'deviceType', 'configuration');
+        if(typeof payload.locationId === 'string'){
+            delete locQuery.id;
+            locQuery.where = {uuid: payload.locationId};
+        }
 
-        // TODO: .populateEach(req.options);
-        query = actionUtil.populateEach(query, req);
-        query.exec(function found(err, matchingRecords) {
-            if (err) return res.serverError(err);
+        console.log('QUERY', locQuery, devQuery);
 
-            // Only `.watch()` for new instances of the model if
-            // `autoWatch` is enabled.
-            if (req._sails.hooks.pubsub && req.isSocket) {
-                Model.subscribe(req, matchingRecords);
-                if (req.options.autoWatch) { Model.watch(req); }
-                // Also subscribe to instances of all associated models
-                matchingRecords.map(function (record) {
-                    actionUtil.subscribeDeep(req, record);
-                });
-          }
+        Location.findOne(locQuery).then(function(location){
+            Device.update(devQuery, {
+                location: location.id
+            }).then(function (record) {
+                //This should actually be a regular Device update socket event...
+                sails.sockets.blast('/things/pair/true', {ok:true, device:record[0], location: location});
 
-            res.view({records:matchingRecords});
+                return res.redirect('device');
+            }).catch(function(err){
+                return err;
+            });
+        }).catch(function(err){
+            return Device.findOne({id: req.param('deviceId')}).then(function (record) {
+                if (record) {
+                    return res.view('device/edit', {
+                        record: record,
+                        status: 'Error',
+                        errorType: 'validation-error',
+                        statusDescription: err,
+                        title: 'Device Details'
+                    });
+                } else {
+                    return res.ok({message: 'Sorry, no resource found with id - ' + req.param('id')}, '500');
+                }
+            }).catch(function (err) {
+                return res.ok({message: 'Sorry, no resource found with id - ' + req.param('id')}, '500');
+            });
         });
-    }
-};
+     }
+ };
+
+module.exports = extend({}, BaseController, Controller);

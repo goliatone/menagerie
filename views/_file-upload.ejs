@@ -1,0 +1,11 @@
+<div id="csv-modal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+  <h2 id="modalTitle">Upload CSV file</h2>
+  <div>
+      <form action="http://localhost:1337/files/upload" enctype="multipart/form-data" method="post">
+          <input type="text" name="title"><br>
+          <input type="file" name="uploaded-file" multiple="multiple" accept=".csv"><br>
+          <input type="submit" class="button" value="Upload">
+      </form>
+  </div>
+  <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+</div>

@@ -1,23 +1,28 @@
 <nav class="main-header top-bar" data-topbar>
     <ul class="title-area">
-
         <li class="name">
             <h1>
-        <a href="#">
-          Menagerie
-        </a>
-      </h1>
+                <a href="#">Menagerie</a>
+            </h1>
         </li>
-        <li class="toggle-topbar menu-icon"><a href="#"><span>menu</span></a></li>
+        <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+        <li class="toggle-topbar menu-icon">
+            <a href="#"><span>Menu</span></a>
+        </li>
     </ul>
 
     <section class="top-bar-section">
-
         <ul class="right">
             <li class="divider"></li>
-            <li><a href="/" class="active">Dashboard</a></li>
+            <li class="active-implement"><a href="/">Dashboard</a></li>
             <li class="divider"></li>
-            <li><a href="/device">Devices</a></li>
+            <li class="has-dropdown">
+                <a href="#">Manage</a>
+                <ul class="dropdown">
+                    <li><a href="/device">Devices</a></li>
+                    <li><a href="/devicetype">Types</a></li>
+                </ul>
+            </li>
             <li><a href="/location">Locations</a></li>
             <li class="divider"></li>
             <li><a href="/docs">Docs</a></li>

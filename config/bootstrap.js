@@ -10,10 +10,15 @@
  */
 
 module.exports.bootstrap = function(cb) {
+/*
+ngrok http port -subdomain=subdomain
 
     var localtunnel = require('localtunnel');
-    var port = 1337;//sails.config.local.port;
-    var tunnel = localtunnel(port, {subdomain:'menagerie'}, function(err, tunnel) {
+
+    var port = sails.config.port;
+    var tunnel = localtunnel(port, {
+        subdomain: 'menagerie'
+    }, function(err, tunnel) {
         if (err) console.log('ERROR')
 
         // the assigned public url for your tunnel
@@ -23,6 +28,21 @@ module.exports.bootstrap = function(cb) {
 
     tunnel.on('close', function() {
         // tunnels are closed
+    });
+*/
+    // var MinionJob = require('minion-job');
+
+    sails.on('file:upload', function(f){
+        console.log('FILE UPLOADED', f);
+
+        // var job = new MinionJob.Job(
+        //   function(dataset){
+            CSVService.toJSON(f.files[0].fd);
+        //   },
+        //   'urgent_queue'
+    //   );
+
+        // job.perform_later(f.files[0].fd);
     });
 
     // It's very important to trigger this callback method when you are finished

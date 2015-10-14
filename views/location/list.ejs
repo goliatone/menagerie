@@ -1,0 +1,32 @@
+<% include ../_header.ejs %>
+
+<div class="content">
+    <div class="row">
+        <h3>Locations</h3>
+        <table>
+          <thead>
+            <tr>
+              <th width="400">UUID</th>
+              <th>Name</th>
+              <th width="250">Description</th>
+              <th width="150">QR Code</th>
+            </tr>
+          </thead>
+          <tbody>
+              <% records.map(function(record){%>
+                  <tr>
+                      <td>
+                          <a href="/<%= nicename %>/<%= record.id %>">
+                              <%= record.uuid %>
+                          </a>
+                      </td>
+                      <td><%= record.name %></td>
+                      <td><%= record.description %></td>
+                      <td><img class="location qr-code" src="/images/qrs/<%=record.uuid%>.png"/></td>
+                  </tr>
+              <%});%>
+          </tbody>
+        </table>
+        <a href="/<%= nicename %>/new" class="button success">Add Record</a>
+    </div>
+</div>

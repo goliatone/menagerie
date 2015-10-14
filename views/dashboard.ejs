@@ -1,34 +1,48 @@
 <% include _header.ejs %>
 
-<div class="content">
-    <div class="row">
-        <h3>Attach Location to Device</h3>
-        <form id="menagerie" action="/api/manage" method="post">
-            <!-- <div class="row">
-                <div class="large-12 columns">
-                    <label>Select User
-                        <select name="receiver">
-                            <option value="1">User 1</option>
-                            <option value="2">User 2</option>
-                            <option value="3">User 3</option>
-                        </select>
+<div class="content row">
+    <div class="large-12 large-centered columns">
+        <div class="row">
+            <div class="large-12 columns">
+                <h3>Add Device to Location</h3>
+                <form id="menagerie" action="/device/manage" method="post">
+                    <label>Location
+                        <input id="location" name="locationId" type="text" placeholder="Id or UUID" />
                     </label>
-                </div>
-            </div>-->
-            <div class="row">
-                <div class="large-12 columns">
-                    <label>Device Id
-                        <input name="deviceId" type="text" placeholder="Device Id" />
-                    </label>
-                </div>
-                <div class="large-12 columns">
-                    <label>Location Id
-                        <input name="locationId" type="text" placeholder="Location Id" />
-                    </label>
-                </div>
 
+                    <div class="panel location-info"></div>
+
+                    <label>Device Id or UUID
+                        <input id="device" name="deviceId" type="text" placeholder="Id or UUID" />
+                    </label>
+
+                    <div class="panel device-info"></div>
+
+                    <button id="submit" class="  radius">Clear</button>
+                    <button id="submit" class="success  radius">Send</button>
+                </form>
             </div>
-            <button id="submit" class="success expand radius">Send</button>
-        </form>
+        </div>
     </div>
 </div>
+
+<script type="text/javascript">
+function populateInfo(name, uuid){
+    io.socket.get('/'+name+'?where={"uuid":"'+uuid+'"}', function(data, jwres){
+        console.log(data);
+        var record = data.records[0];
+        $('.'+name+'-info').append('<h5>' + record.name + '</h5>');
+        $('.'+name+'-info').append('<p>' + record.description + '</p>');
+    });
+}
+$('#device').change(function(e){
+    console.log()
+    populateInfo('device', $(this).val());
+});
+
+
+$('#location').change(function(e){
+
+    populateInfo('location', $(this).val());
+});
+</script>
