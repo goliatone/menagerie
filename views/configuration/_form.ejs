@@ -1,0 +1,84 @@
+
+
+<script src="/vendors/codemirror/lib/codemirror.js" type="text/javascript" charset="utf-8"></script>
+<script src="/vendors/codemirror/addon/selection/active-line.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" href="/vendors/codemirror/lib/codemirror.css" />
+<link rel="stylesheet" href="/vendors/codemirror/addon/fold/foldgutter.css" />
+<link rel="stylesheet" href="/vendors/codemirror/theme/tomorrow-night-eighties.css" />
+
+<!-- add Javascript-mode dependencies -->
+<script src="/vendors/codemirror/mode/javascript/javascript.js" type="text/javascript" charset="utf-8"></script>
+
+<form id="menagerie" action="<%= form.action %>" method="<%= form.method %>">
+    <label>UUID
+        <input name="uuid" type="text" placeholder="UUID"
+            value="<%= record.uuid ? record.uuid : 'UUID' %>"
+            <% if(form.intent !== 'create'){ %>
+            disabled="disabled"
+            <%}%>
+        />
+    </label>
+
+    <label>Name
+        <input name="name" type="text" placeholder="Name" value="<%= record.name ? record.name : 'Name' %>"/>
+    </label>
+    <label>Version
+        <input name="version" type="text" placeholder="Version" value="<%= record.assetTag == null ? 0 : record.assetTag %>"/>
+    </label>
+    <label>Description
+        <input name="description" type="text" placeholder="Description" value="<%= record.description ? record.description : 'Description' %>"/>
+    </label>
+    <label>Device
+        <select name="device"  value="<%= record.device %>">
+            <% if (!record.type) {%>
+            <option value="">Not assigned</option>
+            <% } %>
+        </select>
+    </label>
+
+    <label>Metadata
+        <textarea id="data" name="data"><%= record.data ? JSON.stringify(record.data, null, 4) : '' %></textarea>
+    </label>
+    <br/>
+
+    <% if(record.id){%>
+    <input hidden="true" name="id" value="<%= record.id %>" />
+    <%}%>
+
+    <button id="submit" class="success expand radius">Send</button>
+</form>
+
+
+<script type="text/javascript">
+function populateOption(name, selector){
+    io.socket.get('/' + name, function(data, jwres){
+        console.log(data)
+        data = data || {records:[]};
+        data.records.map(function(record){
+            console.log('CREATE OPTION FOR', selector, record.name);
+            $('[name="' + selector + '"]').append('<option value="' + record.id + '">' + record.name + '</option>');
+        });
+    });
+}
+populateOption('device', 'device');
+</script>
+
+<script type="text/javascript">
+$(document).ready(function () {
+    CodeMirror.commands.autocomplete = function(cm) {
+        CodeMirror.showHint(cm, CodeMirror.hint.javascript);
+    };
+    var code = "<%= record.data ? JSON.stringify(record.data) : '' %>";
+    window.codemirror1 = CodeMirror.fromTextArea($('#data')[0], {
+        mode: "javascript",
+        lineNumbers: true,
+        lineWrapping: true,
+        extraKeys: {'Ctrl-Space': 'autocomplete'},
+        theme: 'tomorrow-night-eighties'
+        // foldGutter: {
+        //     rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.brace, CodeMirror.fold.comment)
+        // },
+        // gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter']
+    });
+});
+</script>
