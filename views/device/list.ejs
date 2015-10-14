@@ -19,6 +19,7 @@
                     <th width="150">Location</th>
                     <th width="150">Type</th>
                     <th width="150">QR Code</th>
+                    <th width="150"></th>
                 </tr>
             </thead>
             <tbody>
@@ -54,6 +55,10 @@
                             <%= record.type ? record.type.name : '---' %>
                         </td>
                         <td><img class="device qr-code" src="/images/qrs/<%=record.uuid%>.png" /></td>
+                        <td>
+                            <a href="#" class="">Edit</a>
+                            <a href="#" class="">Delete</a>
+                        </td>
                     </tr>
                     <%});%>
             </tbody>
