@@ -27,6 +27,16 @@
               <%});%>
           </tbody>
         </table>
+        <ul class="pagination" role="menubar" aria-label="Pagination">
+          <li class="arrow unavailable" aria-disabled="true"><a href="">&laquo; Previous</a></li>
+          <li class="current"><a href="?skip=0">1</a></li>
+          <li><a href="?skip=5">2</a></li>
+          <li><a href="?skip=10">3</a></li>
+          <li><a href="?skip=15">4</a></li>
+          <!--% <li class="unavailable" aria-disabled="true"><a href="">&hellip;</a></li>%-->
+          <li><a href="?skip=20">20</a></li>
+          <li class="arrow"><a href="">Next &raquo;</a></li>
+        </ul>
         <a href="/<%= nicename %>/new" class="button success">Add Record</a>
     </div>
 </div>
