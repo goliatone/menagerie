@@ -89,4 +89,17 @@ module.exports.routes = {
     'POST /devicetype/update': 'DeviceTypeController.update',
     // 'PUT /devicetype': 'DeviceTypeController.update',
     'DELETE /devicetype': 'DeviceTypeController.delete',
+
+    //TODO: We should be able to include this on blueprints
+    'GET /configuration/count': 'ConfigurationController.count',
+
+    'GET /configuration': 'ConfigurationController.findall',
+    'GET /configuration/new': 'ConfigurationController.new',
+    'GET /configuration/find': 'ConfigurationController.showFind',
+    'GET /configuration/reset': 'ConfigurationController.resetData',
+    'GET /configuration/:id': 'ConfigurationController.find',
+    'POST /configuration': 'ConfigurationController.create',
+    'POST /configuration/update': 'ConfigurationController.update',
+    // 'PUT /devicetype': 'ConfigurationController.update',
+    'DELETE /configuration': 'ConfigurationController.delete',
 };
