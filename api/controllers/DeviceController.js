@@ -24,7 +24,7 @@ var Controller = {
 
         if(typeof payload.deviceId === 'string'){
             delete devQuery.id;
-            devQuery.where = {uuid: payload.deviceId};
+            devQuery.where = { uuid: payload.deviceId };
         }
 
         var locQuery = {

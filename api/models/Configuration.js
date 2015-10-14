@@ -1,17 +1,25 @@
+'use strict';
+
 /**
 * Configuration.js
 *
 * @description :: TODO: You might write a short summary of how this model works and what it represents here.
 * @docs        :: http://sailsjs.org/#!documentation/models
 */
+var extend = require('gextend');
+var BaseModel = require('../../lib/BaseModel');
 
-module.exports = {
+var Configuration = {
     autoPK: true,
     attributes: {
         uuid : {
             type: 'string'
             // primaryKey: true,
             // required: true
+        },
+        version:{
+            type: 'int',
+            defaultsTo: 0
         },
         name : {
             type: 'string'
@@ -26,12 +34,11 @@ module.exports = {
             type: 'json'
         }
     },
-    updateOrCreate: function (id, pojo) {
-        return Configuration.update({id: id}, pojo).then(function(ua){
-            if(ua.length === 0){
-                // No records updated, UserAddress does not exist. Create.
-                return Configuration.create(pojo);
-            }
-        });
+    beforeUpdate: function(record, cb){
+        record.version ++;
     }
 };
+
+
+
+module.exports = extend({}, BaseModel, Configuration);
