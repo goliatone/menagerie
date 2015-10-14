@@ -180,7 +180,7 @@
                 }
             }
         },
-        "//configuration/{id}": {
+        "/configuration/{id}": {
             "get": {
                 "summary": "Returns a specific configuration",
                 "description": "Finds a specific configuration based on its id",
