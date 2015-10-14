@@ -20,6 +20,12 @@ var Device = {
             // primaryKey: true,
             // required: true
         },
+        /**
+         * All devices carry an asset tag
+         */
+        assetTag: {
+            type: 'string'
+        },
         /*
         * If the device has some means of unique
         * identification other than a UUID, like:
