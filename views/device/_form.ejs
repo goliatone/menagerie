@@ -1,3 +1,8 @@
+<script src="/vendors/codemirror/lib/codemirror.js" type="text/javascript" charset="utf-8"></script>
+<script src="/vendors/codemirror/addon/selection/active-line.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" href="/vendors/codemirror/lib/codemirror.css" />
+<link rel="stylesheet" href="/vendors/codemirror/addon/fold/foldgutter.css" />
+<link rel="stylesheet" href="/vendors/codemirror/theme/tomorrow-night-eighties.css" />
 
 <form id="menagerie" action="<%= form.action %>" method="<%= form.method %>">
     <label>UUID
@@ -46,6 +51,12 @@
             <% } %>
         </select>
     </label>
+
+    <label>Metadata
+        <textarea id="configuration" name="data"><%= record.configuration ? JSON.stringify(record.configuration.data, null, 4) : '' %></textarea>
+    </label>
+    <br/>
+
 <% if(record.id){%>
 <input hidden="true" name="id" value="<%= record.id %>" />
 <%}%>
@@ -54,8 +65,6 @@
         <!--code>
             < % = JSON.stringify(record) % >
         </code-->
-
-
 <script type="text/javascript">
 function populateOption(name, selector){
     io.socket.get('/' + name, function(data, jwres){
@@ -70,4 +79,23 @@ function populateOption(name, selector){
 populateOption('devicetype', 'type');
 populateOption('location', 'location');
 $('[name="status"]').val("<%= record.status%>");
+</script>
+<script type="text/javascript">
+$(document).ready(function () {
+    CodeMirror.commands.autocomplete = function(cm) {
+        CodeMirror.showHint(cm, CodeMirror.hint.javascript);
+    };
+    var code = "<%= record.data ? JSON.stringify(record.data) : '' %>";
+    window.codemirror1 = CodeMirror.fromTextArea($('#configuration')[0], {
+        mode: "javascript",
+        lineNumbers: true,
+        lineWrapping: true,
+        extraKeys: {'Ctrl-Space': 'autocomplete'},
+        theme: 'tomorrow-night-eighties'
+        // foldGutter: {
+        //     rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.brace, CodeMirror.fold.comment)
+        // },
+        // gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter']
+    });
+});
 </script>
