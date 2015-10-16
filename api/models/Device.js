@@ -37,6 +37,12 @@ var Device = {
         alias: {
             type: 'string'
         },
+        manufacturer:{
+            type: 'string'
+        },
+        model: {
+            type: 'string'
+        },
         name: {
             type: 'string'
         },
@@ -56,6 +62,9 @@ var Device = {
         },
         configuration: {
             model: 'configuration'
+        },
+        metadata:{
+            type:'json'
         }
     },
     afterCreate: function(record, done){
