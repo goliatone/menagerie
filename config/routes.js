@@ -45,8 +45,13 @@ module.exports.routes = {
   * for configuration options and examples.                                  *
   *                                                                          *
   ***************************************************************************/
+
     'POST /barcode/:content': 'BarcodeController.index',
     'GET /images/qrs/:filename':'BarcodeController.serve',
+
+    // 'POST /things/pair': 'DeviceController.manage',
+    'POST /thing/barcode-scann': 'ThingController.handleScann',
+    'POST /thing/:typeName/:id/status': 'ThingController.register',
 
     //TODO: We should be able to include this on blueprints
     'GET /location/count': 'LocationController.count',
@@ -73,9 +78,6 @@ module.exports.routes = {
     'PUT /device': 'DeviceController.update',
     'POST /device/update': 'DeviceController.update',
     'DELETE /device': 'DeviceController.delete',
-
-    'POST /things/pair': 'DeviceController.manage',
-    'POST /thing/:typeName/:id/status': 'ThingController.register',
 
     //TODO: We should be able to include this on blueprints
     'GET /devicetype/count': 'DeviceTypeController.count',
