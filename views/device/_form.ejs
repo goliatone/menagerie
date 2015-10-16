@@ -26,6 +26,12 @@
     <label>Description
         <input name="description" type="text" placeholder="Description"  value="<%= record.description ? record.description : 'Description' %>"/>
     </label>
+    <label>Manufacturer
+        <input name="manufacturer" type="text" placeholder="Manufacturer"  value="<%= record.manufacturer ? record.manufacturer : 'Manufacturer' %>"/>
+    </label>
+    <label>Model
+        <input name="model" type="text" placeholder="Model"  value="<%= record.model ? record.model : 'Model' %>"/>
+    </label>
     <label>Status
         <select name="status"  value="<%= record.status ? record.status : 'unknown' %>">
             <option value="unknown">Unknown</option>
