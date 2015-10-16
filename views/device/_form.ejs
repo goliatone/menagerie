@@ -53,6 +53,10 @@
     </label>
 
     <label>Metadata
+        <textarea id="metadata" name="metadata"><%= record.metadata ? JSON.stringify(record.metadata, null, 4) : '' %></textarea>
+    </label>
+
+    <label>Configuration
         <textarea id="configuration" name="data"><%= record.configuration ? JSON.stringify(record.configuration.data, null, 4) : '' %></textarea>
     </label>
     <br/>
@@ -85,8 +89,21 @@ $(document).ready(function () {
     CodeMirror.commands.autocomplete = function(cm) {
         CodeMirror.showHint(cm, CodeMirror.hint.javascript);
     };
-    var code = "<%= record.data ? JSON.stringify(record.data) : '' %>";
+    // var code = "<%= record.configuration && record.configuration.data ? JSON.stringify(record.data) : '' %>";
     window.codemirror1 = CodeMirror.fromTextArea($('#configuration')[0], {
+        mode: "javascript",
+        lineNumbers: true,
+        lineWrapping: true,
+        extraKeys: {'Ctrl-Space': 'autocomplete'},
+        theme: 'tomorrow-night-eighties'
+        // foldGutter: {
+        //     rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.brace, CodeMirror.fold.comment)
+        // },
+        // gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter']
+    });
+
+    // var code = "<%= record.data ? JSON.stringify(record.data) : '' %>";
+    window.codemirror2 = CodeMirror.fromTextArea($('#metadata')[0], {
         mode: "javascript",
         lineNumbers: true,
         lineWrapping: true,
