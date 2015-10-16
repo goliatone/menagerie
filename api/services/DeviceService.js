@@ -27,7 +27,7 @@ module.exports = {
         //TODO: Ensure that we are following a schema
         console.log('Preload data from JSON Export');
 
-        var datasource = {locations:[]};
+        var datasource = [];
 
         try {
             datasource = require('../../init-data/device-export.json');
@@ -37,20 +37,14 @@ module.exports = {
         }
 
         //Here we assume that all devices are of the same type:
-        DeviceType.findOne({name:datasource.locations[0].tag}).then(onTypeFound)
-        .catch(function(err){
-            console.log('ERROR', err);
+
+        console.log('data: ', datasource);
+        console.log('Preloading data...');
+        module.exports.preloadData(datasource).then(function(){
+            console.log('Complete');
+        }).catch(function(err){
+            console.log('Error');
         });
 
-        function onTypeFound(type){
-            var data = datasource.locations;
-            console.log('data: ', data);
-            console.log('Preloading data...');
-            module.exports.preloadData(data).then(function(){
-                console.log('Complete');
-            }).catch(function(err){
-                console.log('Error');
-            });
-        }
     }
 };
