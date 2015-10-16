@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Bootstrap
  * (sails.config.bootstrap)
@@ -30,6 +32,7 @@ ngrok http port -subdomain=subdomain
         // tunnels are closed
     });
 */
+
     var locationCSVUpload = require('../api/commands/LocationCSVUpload');
 
     sails.on(locationCSVUpload.eventType, locationCSVUpload.handler);
