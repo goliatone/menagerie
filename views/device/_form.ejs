@@ -14,9 +14,9 @@
         />
     </label>
 
-    <label>Name
+    <!--label>Name
         <input name="name" type="text" placeholder="Name" value="<%= record.name ? record.name : 'Name' %>"/>
-    </label>
+    </label-->
     <label>Asset Tag
         <input name="assetTag" type="text" placeholder="Asset Tag" value="<%= record.assetTag ? record.assetTag : 'Asset Tag' %>"/>
     </label>
@@ -52,7 +52,7 @@
     </label>
     <label>Location
         <select name="location"  value="<%= record.location %>">
-            <% if (!record.type) {%>
+            <% if (!record.location) {%>
             <option value="">Not assigned</option>
             <% } %>
         </select>
