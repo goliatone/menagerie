@@ -49,7 +49,7 @@
                         <td>
                             <% if(record.location){ %>
                                 <a class="location" href="/location/<%= record.location.id %>">
-                                    <%= record.location.name %>: <%= record.location.description %>
+                                    <%= record.location.name %>
                                 </a>
                             <% } else { %>
                                 ---
@@ -67,6 +67,19 @@
                     <%});%>
             </tbody>
         </table>
+        <ul class="pagination" role="menubar" aria-label="Pagination">
+          <li class="arrow unavailable" aria-disabled="true"><a href="">&laquo; Previous</a></li>
+          <li class="current[inactivated]"><a href="?skip=0">1</a></li>
+          <li><a href="?skip=5">2</a></li>
+          <li><a href="?skip=10">3</a></li>
+          <li><a href="?skip=15">4</a></li>
+          <!--% <li class="unavailable" aria-disabled="true"><a href="">&hellip;</a></li>%-->
+          <li><a href="?skip=20">5</a></li>
+          <li><a href="?skip=25">6</a></li>
+          <li><a href="?skip=30">7</a></li>
+          <li><a href="?skip=35">8</a></li>
+          <li class="arrow"><a href="">Next &raquo;</a></li>
+        </ul>
         <a href="/<%= nicename %>/new" class="button success">Add Record</a>
         <a href="#" data-reveal-id="csv-modal" class="button">CSV</a>
     </div>
