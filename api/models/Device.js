@@ -37,7 +37,7 @@ var Device = {
         alias: {
             type: 'string'
         },
-        manufacturer:{
+        manufacturer: {
             type: 'string'
         },
         model: {
