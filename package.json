@@ -2,7 +2,10 @@
   "name": "menagerie",
   "private": true,
   "version": "0.0.0",
-  "description": "a Sails application",
+  "description": "Manage all the things",
+  "engines": {
+    "node": "0.12.4"
+  },
   "keywords": [],
   "dependencies": {
     "bluebird": "^2.10.2",
@@ -25,6 +28,7 @@
     "include-all": "~0.1.6",
     "localtunnel": "^1.7.0",
     "lodash": "^3.10.1",
+    "pm2": "^0.15.7",
     "qrcodeine": "^1.0.0",
     "random-uuid-v4": "0.0.5",
     "rc": "~1.0.1",
