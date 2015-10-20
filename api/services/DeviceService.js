@@ -1,7 +1,7 @@
 'use strict';
 var uuid = require('random-uuid-v4');
 
-var datasource = require('../../init-data/location.js');
+var datasource = require('../../init-data/device-import.json');
 //import contactsList from '/init-data/contacts';
 
 module.exports = {
@@ -21,7 +21,7 @@ module.exports = {
         });
     },
     preloadDataFromSeed:function(cb){
-        module.exports.preloadData(datasource.records, cb);
+        module.exports.preloadData(datasource, cb);
     },
     preloadFromJSONExport: function(){
         //TODO: Ensure that we are following a schema
@@ -30,7 +30,7 @@ module.exports = {
         var datasource = [];
 
         try {
-            datasource = require('../../init-data/device-export.json');
+            datasource = require('../../init-data/device-import.json');
         } catch(e){
             console.log('Error importing datasource');
             return;
