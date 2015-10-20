@@ -2,7 +2,7 @@ menagerie:
   build: .
   command: /opt/menagerie/node_modules/.bin/pm2 start app.js --name "menagerie" -i 2 --no-daemon -- --prod
   links:
-      - postgresql:pgsql01.menagerie.io
+      - postgres
   environment:
     - DEBUG=*
     - NODE_AMQP_ENDPOINT=${NODE_AMQP_ENDPOINT}
@@ -15,14 +15,10 @@ menagerie:
       max-file: "4"
   ports:
     - "1337:1337"
-postgresql:
+postgres:
   image: postgres
   environment:
-    - POSTGRESQL_DB=youtubeadl
-    - POSTGRESQL_USER=youtubeadl
-    - POSTGRESQL_PASSWORD=password
-  # volumes:
-    # - ~/dockerfiles/youtube-audio-dl/postgresql:/var/lib/postgresql
+    # - PGDATA=/var/lib/postgresql/data/
   ports:
     - "5432:5432"
   log_opt:
