@@ -1,0 +1,26 @@
+menagerie:
+  build: .
+  command: /opt/menagerie/node_modules/.bin/pm2 start app.js --name "menagerie" -i 2 --no-daemon -- --prod
+  links:
+      - postgres
+  environment:
+    - DEBUG=*
+    - NODE_AMQP_ENDPOINT=${NODE_AMQP_ENDPOINT}
+    - NODE_HONEYBADGER_KEY=${NODE_HONEYBADGER_KEY}
+    - NODE_AWS_ACCESS_KEY_ID=${NODE_AWS_ACCESS_KEY_ID}
+    - NODE_AWS_SECRET_ACCESS_KEY=${NODE_AWS_SECRET_ACCESS_KEY}
+  restart: always
+  log_opt:
+      max-size: "1g"
+      max-file: "4"
+  ports:
+    - "1337:1337"
+postgres:
+  image: postgres
+  environment:
+    # - PGDATA=/var/lib/postgresql/data/
+  ports:
+    - "5432:5432"
+  log_opt:
+    max-size: "1g"
+    max-file: "4"

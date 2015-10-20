@@ -1,3 +1,5 @@
+'use strict';
+
 /**
 * Device.js
 *
@@ -18,7 +20,7 @@ var Device = {
         uuid: {
             type: 'string',
             // primaryKey: true,
-            // required: true
+            required: true
         },
         /**
          * All devices carry an asset tag
@@ -37,7 +39,7 @@ var Device = {
         alias: {
             type: 'string'
         },
-        manufacturer:{
+        manufacturer: {
             type: 'string'
         },
         model: {
@@ -69,7 +71,12 @@ var Device = {
     },
     afterCreate: function(record, done){
 
-        var url = '/find/device/' + record.uuid,
+        if(!record || !record.uuid){
+            console.error('THIS SHOULD NEVER HAPPEN. We cannot have a Location instance without an UUID');
+            return done();
+        }
+        
+        var url = record.uuid,
             filename = record.uuid;
 
         BarcodeService.createQRCode(url, filename).finally(function(){

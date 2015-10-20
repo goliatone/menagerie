@@ -1,3 +1,5 @@
+'use strict';
+
 /**
 * Location.js
 *
@@ -11,9 +13,9 @@ var Location = {
     autoPK: true,
     attributes: {
         uuid : {
-            type: 'string'
+            type: 'string',
             // primaryKey: true,
-            // required: true
+            required: true
         },
         name : {
             type: 'string'
@@ -21,9 +23,11 @@ var Location = {
         description : {
             type: 'string'
         },
-        geolocation : {
-            lng: 'number',
-            lat: 'number'
+        geolocation_lng : {
+            type: 'number',
+        },
+        geolocation_lat : {
+            type: 'number',
         },
         devices: {
             collection: 'device',
@@ -35,7 +39,12 @@ var Location = {
     },
     afterCreate: function(record, done){
 
-        var url = '/find/location/' + record.uuid,
+        if(!record || !record.uuid){
+            console.error('THIS SHOULD NEVER HAPPEN. We cannot have a Location instance without an UUID');
+            return done();
+        }
+
+        var url = '' + record.uuid,
             filename = record.uuid;
 
         BarcodeService.createQRCode(url, filename).finally(function(){
