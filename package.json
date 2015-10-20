@@ -29,6 +29,7 @@
     "grunt-sync": "~0.2.3",
     "include-all": "~0.1.6",
     "lodash": "^3.10.1",
+    "ngrok-daemon": "^0.5.0",
     "qrcodeine": "^1.0.0",
     "random-uuid-v4": "0.0.5",
     "rc": "~1.0.1",
