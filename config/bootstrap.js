@@ -32,6 +32,24 @@ ngrok http port -subdomain=subdomain
         // tunnels are closed
     });
 */
+    var port = sails.config.port;
+
+    console.log('=============================');
+    console.log('NGROK CMD: ', 'ngrok http '+ port + ' -subdomain=menagerie');
+
+    var ngrok = require('ngrok-daemon');
+
+    ngrok.start('ngrok http '+ port + ' -subdomain=menagerie') // Port
+    .then(function(tunnel) {
+        // Tunnel has three propeties:
+        // - url - URL to the started tunnel
+        // - pid - process id of ngrok (PID)
+        // - log - path to ngrok log in temporary directory
+        console.log('Ngrok started:', tunnel);
+    }).catch(function() {
+        // Failed to start ngrok on given port (eg ngrok is not installed)
+        console.log('FAILED')
+    });
 
     console.log('=============================');
     console.log('|');
