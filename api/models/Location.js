@@ -21,9 +21,11 @@ var Location = {
         description : {
             type: 'string'
         },
-        geolocation : {
-            lng: 'number',
-            lat: 'number'
+        geolocation_lng : {
+            type: 'number',
+        },
+        geolocation_lat : {
+            type: 'number',
         },
         devices: {
             collection: 'device',
