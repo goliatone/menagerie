@@ -29,7 +29,7 @@ module.exports = {
         var datasource = {locations:[]};
 
         try {
-            datasource = require('../../init-data/location-export-json');
+            datasource = require('../../init-data/location-import-json');
         } catch(e){
             console.log('Error importing datasource');
             return;
