@@ -33,8 +33,17 @@ ngrok http port -subdomain=subdomain
     });
 */
 
-    var locationCSVUpload = require('../api/commands/LocationCSVUpload');
+    console.log('=============================');
+    console.log('|');
+    console.log('| POGSTRESS STUFF:');
+    console.log('| POSTGRES_PORT_5432_TCP_ADDR:', process.env.POSTGRES_PORT_5432_TCP_ADDR);
+    console.log('| POSTGRES_PORT_5432_TCP_PORT:', process.env.POSTGRES_PORT_5432_TCP_PORT);
+    console.log('| POSTGRESQL_USER:', process.env.POSTGRESQL_USER);
+    console.log('| POSTGRESQL_PASSWORD:', process.env.POSTGRESQL_PASSWORD);
+    console.log('|');
+    console.log('=============================');
 
+    var locationCSVUpload = require('../api/commands/LocationCSVUpload');
     sails.on(locationCSVUpload.eventType, locationCSVUpload.handler);
 
     // It's very important to trigger this callback method when you are finished
