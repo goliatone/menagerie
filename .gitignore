@@ -123,3 +123,4 @@ nbproject
 # CRUFT 
 ###############################################
 docker-compose.yml
+init-data/*.json
