@@ -33,7 +33,7 @@ ngrok http port -subdomain=subdomain
     });
 */
     var port = sails.config.port;
-
+/*
     console.log('=============================');
     console.log('NGROK CMD: ', 'ngrok http '+ port + ' -subdomain=menagerie');
 
@@ -50,7 +50,7 @@ ngrok http port -subdomain=subdomain
         // Failed to start ngrok on given port (eg ngrok is not installed)
         console.log('FAILED')
     });
-
+*/
     console.log('=============================');
     console.log('|');
     console.log('| POGSTRESS STUFF:');
