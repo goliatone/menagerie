@@ -1,11 +1,15 @@
 menagerie:
   build: .
-  command: /opt/menagerie/node_modules/.bin/pm2 start app.js --name "menagerie" -i 2 --no-daemon -- --prod
+  command: node app.js --prod
+  # command: /opt/menagerie/node_modules/.bin/pm2 start app.js --name "menagerie" -i 2 --no-daemon -- --prod
   links:
       - postgres
   environment:
     - DEBUG=*
-    - NODE_AMQP_ENDPOINT=${NODE_AMQP_ENDPOINT}
+    - NODE_POSTGRES_USER=${NODE_POSTGRES_USER}
+    - NODE_POSTGRES_PSWD=${NODE_POSTGRES_PSWD}
+    - NODE_POSTGRES_DATABASE=${NODE_POSTGRES_DATABASE}
+    - NODE_POSTGRES_ENDPOINT=${NODE_POSTGRES_ENDPOINT}
     - NODE_HONEYBADGER_KEY=${NODE_HONEYBADGER_KEY}
     - NODE_AWS_ACCESS_KEY_ID=${NODE_AWS_ACCESS_KEY_ID}
     - NODE_AWS_SECRET_ACCESS_KEY=${NODE_AWS_SECRET_ACCESS_KEY}
@@ -17,8 +21,6 @@ menagerie:
     - "1337:1337"
 postgres:
   image: postgres
-  environment:
-    # - PGDATA=/var/lib/postgresql/data/
   ports:
     - "5432:5432"
   log_opt:
