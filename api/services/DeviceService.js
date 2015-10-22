@@ -23,6 +23,7 @@ module.exports = {
     preloadDataFromSeed:function(cb){
         module.exports.preloadData(datasource, cb);
     },
+    //TODO: Rename!!
     preloadFromJSONExport: function(){
         //TODO: Ensure that we are following a schema
         console.log('Preload data from JSON Export');

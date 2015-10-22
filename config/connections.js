@@ -74,6 +74,7 @@ module.exports.connections = {
   *                                                                          *
   *                                                                          *
   ***************************************************************************/
+
   'developmentPostgres': {
     adapter: 'sails-postgresql',
     host: process.env.POSTGRES_PORT_5432_TCP_ADDR || '192.168.99.100',
@@ -83,10 +84,10 @@ module.exports.connections = {
   },
   'productionPostgres': {
     adapter: 'sails-postgresql',
-    host: process.env.POSTGRES_PORT_5432_TCP_ADDR,
-    user: 'postgres',
-    password: '',
-    database: 'postgres'
+    host: process.env.NODE_POSTGRES_ENDPOINT,
+    user: process.env.NODE_POSTGRES_USER,
+    password: process.env.NODE_POSTGRES_PSWD,
+    database: process.env.NODE_POSTGRES_DATABASE
   }
 
 
