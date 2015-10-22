@@ -39,5 +39,5 @@ COPY app.js $TARGET_DIR/app.js
 COPY data $TARGET_DIR/data
 COPY init-data $TARGET_DIR/init-data
 
-CMD ["node", "app.js"]
+CMD ["node", "app.js", "--prod"]
 # CMD ["pm2", "start", "app.js", "--name", '"menagerie"', "-i", "2", "--", "--prod", "--no-daemon"]
