@@ -16,10 +16,11 @@ module.exports = {
    * Set the default database connection for models in the development       *
    * environment (see config/connections.js and config/models.js )           *
    ***************************************************************************/
-
+  host: '127.0.0.1',
   models: {
     //   connection: 'localDiskDb'
     //   connection: 'productionPostgres'
-      connection: 'developmentPostgres'
+      connection: 'developmentPostgres',
+
   }
 };
