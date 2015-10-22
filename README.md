@@ -19,8 +19,7 @@ https://github.com/cgmartin/sailsjs-angularjs-bootstrap-example/tree/master/view
 http://stackoverflow.com/questions/30671160/swagger-sails-js
 -->
 
-
-
+### Development
 
 ```js
 var pojo = {name:'Sockete 3', description: 'Sockete instance', status:'offline', type:1, location:1}
@@ -67,6 +66,21 @@ CREATE TABLE "category"
      "sort_order"  INTEGER      NULL DEFAULT NULL,
   );
 ```
+
+
+### Deployment
+
+Select prod:
+
+```
+docker-compose -f docker-compose.prod.yml up -d
+```
+
+Development:
+```
+docker-compose up -d
+```
+
 
 [1]: http://stackoverflow.com/questions/23446484/sails-js-populate-nested-associations
 [2]: http://stackoverflow.com/questions/26535727/sails-js-waterline-populate-deep-nested-association
