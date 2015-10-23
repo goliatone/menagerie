@@ -2,10 +2,14 @@
 var uuid = require('random-uuid-v4');
 
 
-var locations = require('./device-export.json');
+var devices = [];
+
+try{
+    devices = require('./device-export.json');
+} catch(e){}
 
 var out = [], record;
-locations.map(function(loc){
+devices.map(function(loc){
     record = {
         type: 1,
         status: 'not_inuse',

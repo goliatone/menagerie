@@ -1,6 +1,10 @@
 'use strict';
 
-var locations = require('./location-import.json');
+var locations = [];
+
+try {
+    locations = require('./location-import.json');
+} catch(e){}
 
 module.exports = {
     locations: locations
