@@ -41,4 +41,5 @@ COPY init-data $TARGET_DIR/init-data
 
 EXPOSE 1337
 CMD ["node", "app.js", "--prod"]
+# CMD ["node", "app.js", "--prod"]
 # CMD ["pm2", "start", "app.js", "--name", '"menagerie"', "-i", "2", "--", "--prod", "--no-daemon"]
