@@ -9,6 +9,7 @@
   "keywords": [],
   "dependencies": {
     "async-task": "^0.3.25",
+    "bcryptjs": "^2.3.0",
     "bluebird": "^2.10.2",
     "csvtojson": "^0.4.3",
     "debug": "^2.2.0",
@@ -29,14 +30,21 @@
     "grunt-sync": "~0.2.3",
     "include-all": "~0.1.6",
     "lodash": "^3.10.1",
+    "passport": "^0.3.0",
+    "passport-github": "^1.0.0",
+    "passport-google-oauth": "^0.2.0",
+    "passport-http-bearer": "^1.0.1",
+    "passport-local": "^1.0.0",
     "qrcodeine": "^1.0.0",
     "random-uuid-v4": "0.0.5",
     "rc": "~1.0.1",
     "sails": "~0.12.0-rc3",
     "sails-disk": "~0.10.7",
+    "sails-generate-auth": "^0.3.1",
     "sails-hook-autoreload": "^0.12.0",
     "sails-postgresql": "^0.10.16",
-    "skipper-s3": "^0.5.6"
+    "skipper-s3": "^0.5.6",
+    "validator": "^4.2.0"
   },
   "devDependencies": {
     "pm2": "^0.15.7",
