@@ -45,6 +45,19 @@ module.exports.routes = {
   * for configuration options and examples.                                  *
   *                                                                          *
   ***************************************************************************/
+    //passport auth
+    'GET /login': 'AuthController.login',
+    'GET /logout': 'AuthController.logout',
+    'GET /register': 'AuthController.register',
+
+    'POST /auth/local': 'AuthController.callback',
+    'POST /auth/local/:action': 'AuthController.callback',
+
+    'GET /auth/:provider': 'AuthController.provider',
+    'GET /auth/:provider/callback': 'AuthController.callback',
+    'GET /auth/:provider/:action': 'AuthController.callback',
+    //auth end
+
 
     'POST /barcode/:content': 'BarcodeController.index',
     'GET /images/qrs/:filename':'BarcodeController.serve',
