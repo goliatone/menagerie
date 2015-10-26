@@ -27,7 +27,14 @@ module.exports.policies = {
   ***************************************************************************/
 
   // '*': true,
-
+  '*': ['passport', 'sessionAuth'],
+  'auth': {
+      '*': ['passport']
+  },
+  //API token bearer...
+  /* 'flash': {
+      'remoteHome': ['passport', 'bearerAuth']
+   }*/
   /***************************************************************************
   *                                                                          *
   * Here's an example of mapping some policies to run before a controller    *
