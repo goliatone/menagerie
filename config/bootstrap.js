@@ -32,6 +32,8 @@ ngrok http port -subdomain=subdomain
         // tunnels are closed
     });
 */
+    //Load all passport strategies
+    sails.services.passport.loadStrategies();
 
     console.log('=============================');
     console.log('|');
