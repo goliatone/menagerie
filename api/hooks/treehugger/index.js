@@ -1,11 +1,8 @@
 'use strict';
 var path = require('path');
+var debug = require('debug')('hook:treehugger');
 
 module.exports = function treehugger(sails){
-    //console.log('HOOK HOOK!');
-    //console.log('ENV', sails.config.environment);
-    //console.log('ENV', sails.config);
-
     function reload(key, base){
         var filepath = path.join(base, key);
         delete require.cache[require.resolve(filepath)];
@@ -14,7 +11,7 @@ module.exports = function treehugger(sails){
 
     function loadEnvironmentVariables(data){
         Object.keys(data).map(function(k){
-            //console.log('KEY %s VALUE %s', k, data[k]);
+            debug('KEY %s VALUE %s', k, data[k]);
             process.env[k] = data[k];
         });
     }
@@ -30,16 +27,16 @@ module.exports = function treehugger(sails){
         },
         ready: false,
         configure: function(){
-            console.log('hook configure', sails.config.treehugger);
+            debug('hook configure', sails.config.treehugger);
         },
         initialize: function(cb){
             //Only apply the hook on development environment
             if(/production/.exec(sails.config.environment)) return cb();
 
-            var FileFinder = require('filefinder');
+            var _FileFinder = require('filefinder');
 
-            FileFinder().find('.secrets', __dirname).on('loaded', function(data){
-                console.log('LOADED secrets %o\nADDING TO ENV:', typeof data);
+            _FileFinder().find('.secrets', __dirname).on('loaded', function(data){
+                debug('LOADED secrets %o\nADDING TO ENV:',  JSON.stringify(data, null, 4));
 
                 loadEnvironmentVariables(data);
 
