@@ -1,6 +1,5 @@
 node_modules/
 *.md
-Makefile
 expand
 provision-aws
 bower_components
