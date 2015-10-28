@@ -2,9 +2,9 @@
 var path = require('path');
 
 module.exports = function treehugger(sails){
-    console.log('HOOK HOOK!');
-    console.log('ENV', sails.config.environment);
-    console.log('ENV', sails.config);
+    //console.log('HOOK HOOK!');
+    //console.log('ENV', sails.config.environment);
+    //console.log('ENV', sails.config);
 
     function reload(key, base){
         var filepath = path.join(base, key);
@@ -14,7 +14,7 @@ module.exports = function treehugger(sails){
 
     function loadEnvironmentVariables(data){
         Object.keys(data).map(function(k){
-            console.log('KEY %s VALUE %s', k, data[k]);
+            //console.log('KEY %s VALUE %s', k, data[k]);
             process.env[k] = data[k];
         });
     }
@@ -34,7 +34,7 @@ module.exports = function treehugger(sails){
         },
         initialize: function(cb){
             //Only apply the hook on development environment
-            if(sails.config.environment !== 'development')return cb();
+            if(/production/.exec(sails.config.environment)) return cb();
 
             var FileFinder = require('filefinder');
 
