@@ -76,6 +76,12 @@ var AuthController = {
     },
 
     /**
+     * We want to only enable this to ppl we want to offer
+     * a registration token.
+     * A) Create token, send link with token
+     * B) Check token vs database, if valid show
+     * C) Send to token expired
+     *
      * Render the registration page
      *
      * Just like the login form, the registration form is just simple HTML:
