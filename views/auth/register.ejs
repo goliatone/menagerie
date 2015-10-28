@@ -1,12 +1,19 @@
-<% if (errors) {%>
-  <% errors.forEach(function (error) { %>
-    <%= __(error) %>
-  <% }) %>
-<% } %>
+<div class="vertically-centered content row">
+    <div class="large-6 large-centered small-6 small-centered columns">
+        <div class="panel">
 
-<form role="form" action="/auth/local/register" method="post">
-  <input type="text" name="username" placeholder="Username">
-  <input type="text" name="email" placeholder="Email">
-  <input type="password" name="password" placeholder="Password">
-  <button type="submit">Sign up</button>
-</form>
+            <% if (errors) {%>
+              <% errors.forEach(function (error) { %>
+                <%= __(error) %>
+              <% }) %>
+            <% } %>
+
+            <form role="form" action="/auth/local/register" method="post">
+              <input type="text" name="username" placeholder="Username">
+              <input type="text" name="email" placeholder="Email">
+              <input type="password" name="password" placeholder="Password">
+              <button class="expand" type="submit">Sign up</button>
+            </form>
+        </div>
+    </div>
+</div>
