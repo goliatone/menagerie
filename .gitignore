@@ -126,3 +126,4 @@ docker-compose.yml
 init-data/*.json
 docker-compose.prod.yml
 *.env
+*.secrets
