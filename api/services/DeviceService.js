@@ -1,9 +1,6 @@
 'use strict';
 var uuid = require('random-uuid-v4');
 
-var datasource = require('../../init-data/device-import.json');
-//import contactsList from '/init-data/contacts';
-
 module.exports = {
     preloadData: function (data, cb) {
         console.log('>>>>>>>>>>>>>>> preloading data.......');
