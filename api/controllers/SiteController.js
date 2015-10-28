@@ -8,14 +8,15 @@
 
 module.exports = {
 	homepage: function(req, res){
-        res.ok('homepage', {
+        res.ok({
             title: 'Menagerie'
-        });
+        }, 'homepage');
+
     },
     dashboard: function(req, res){
-        res.ok('dashboard', {
+        res.ok({
             title: 'Menagerie'
-        });
+        }, 'dashboard');
     },
     _config:{}
 };
