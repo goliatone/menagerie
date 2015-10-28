@@ -28,6 +28,7 @@
   "plusplus":false,
   "globals": {
     "sails": true,
+    "passport": true,
     "Device": true,
     "Location": true,
     "DeviceType": true,
