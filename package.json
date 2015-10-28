@@ -48,8 +48,10 @@
     "validator": "^4.2.0"
   },
   "devDependencies": {
+    "chai": "^3.4.0",
+    "localtunnel": "^1.7.0",
     "pm2": "^0.15.7",
-    "localtunnel": "^1.7.0"
+    "sails-test-helper": "^0.5.0"
   },
   "scripts": {
     "debug": "node debug app.js",
