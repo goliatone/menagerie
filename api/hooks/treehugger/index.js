@@ -19,7 +19,7 @@ module.exports = function treehugger(sails){
     return {
         defaults: {
             treehugger: {
-                // basePath: ''
+                envCheck: /production/,
                 reload: [
                     'passport'
                 ]
@@ -29,9 +29,10 @@ module.exports = function treehugger(sails){
         configure: function(){
             debug('hook configure', sails.config.treehugger);
         },
-        initialize: function(cb){
+        initialize: function(done){
             //Only apply the hook on development environment
-            if(/production/.exec(sails.config.environment)) return cb();
+            var cf = sails.config;
+            if(cf.treehugger.envCheck.exec(cf.environment)) return done();
 
             var _FileFinder = require('filefinder');
 
@@ -42,15 +43,15 @@ module.exports = function treehugger(sails){
 
                 //Reload config for specific file
                 //TODO: Move to it's own file/hook
-                var basePath = path.join(sails.config.appPath, 'config');
-                sails.config.treehugger.reload.map(function(key){
+                var basePath = path.join(cf.appPath, 'config');
+                cf.treehugger.reload.map(function(key){
                     reload(key, basePath);
                 });
 
-                cb();
-
+                done();
             }).once('error', function(e){
-                cb();
+                debug('TreeHugger error %e', e);
+                done();
             });
         }
     };
