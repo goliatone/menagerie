@@ -127,3 +127,5 @@ init-data/*.json
 docker-compose.prod.yml
 *.env
 *.secrets
+data/*.csv
+data/*.json
