@@ -3,11 +3,14 @@ Manage things... all the things. WeeThings!
 
 ### TODO:
 * Replace `autoPK`, use UUID as main id instead.
-* CSV import
-* CSV export
-* Job to handle CSV import
+* ~~CSV import~~
+* ~~CSV export~~
+* ~~Job to handle CSV import~~
+* Extarnalize CSV import job
+* Table for quick search: id, uuid, alias, className
+* Invite to register user, token table/validation
 * Print QR codes
-* Add support for multiple identifiers:
+* ~~Add support for multiple identifiers:~~
     * Barcode
     * QR code
 
