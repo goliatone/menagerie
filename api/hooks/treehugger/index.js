@@ -19,7 +19,7 @@ module.exports = function treehugger(sails){
     return {
         defaults: {
             treehugger: {
-                envCheck: /production/,
+                envCheck: /dev/,
                 reload: [
                     'passport'
                 ]
@@ -32,7 +32,11 @@ module.exports = function treehugger(sails){
         initialize: function(done){
             //Only apply the hook on development environment
             var cf = sails.config;
-            if(cf.treehugger.envCheck.exec(cf.environment)) return done();
+
+            if( ! cf.treehugger.envCheck.exec(cf.environment)){
+                debug('Environment not matched, return: %s !== %s', cf.environment, cf.treehugger.envCheck);
+                return done();
+            }
 
             var _FileFinder = require('filefinder');
 
