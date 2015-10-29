@@ -3,3 +3,8 @@ node_js:
     - "0.12.4"
 env:
   - NODE_ENV="test"
+addons:
+  apt:
+    packages:
+    - libqrencode-dev
+    - libpng-dev
