@@ -1,3 +1,4 @@
+'use strict';
 /**
  * Development environment settings
  *
@@ -9,17 +10,12 @@
  * any private information to this file!
  *
  */
-
 module.exports = {
-
   /***************************************************************************
    * Set the default database connection for models in the development       *
    * environment (see config/connections.js and config/models.js )           *
    ***************************************************************************/
   models: {
       connection: 'localDiskDb'
-    //   connection: 'productionPostgres'
-    //   connection: 'developmentPostgres',
-
   }
 };

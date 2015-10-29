@@ -32,6 +32,8 @@ COPY config $TARGET_DIR/config
 COPY lib $TARGET_DIR/lib
 COPY tasks $TARGET_DIR/tasks
 COPY views $TARGET_DIR/views
+COPY test $TARGET_DIR/test
+COPY Makefile $TARGET_DIR/Makefile
 COPY Gruntfile.js $TARGET_DIR/Gruntfile.js
 COPY package.json $TARGET_DIR/package.json
 COPY app.js $TARGET_DIR/app.js
@@ -41,5 +43,4 @@ COPY init-data $TARGET_DIR/init-data
 
 EXPOSE 1337
 CMD ["node", "app.js", "--prod"]
-# CMD ["node", "app.js", "--prod"]
 # CMD ["pm2", "start", "app.js", "--name", '"menagerie"', "-i", "2", "--", "--prod", "--no-daemon"]

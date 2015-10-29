@@ -27,8 +27,8 @@ module.exports.passport = {
     protocol: 'oauth2',
     strategy: require('passport-google-oauth').OAuth2Strategy,
     options: {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      clientID: process.env.GOOGLE_CLIENT_ID || 'none',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'none',
       scope: 'https://www.googleapis.com/auth/userinfo.email',
     //   scope: 'https://www.googleapis.com/auth/plus.me,https://www.googleapis.com/auth/userinfo.email',
       hd: 'wework.com'
@@ -49,8 +49,8 @@ module.exports.passport = {
     protocol: 'oauth2',
     strategy: require('passport-github').Strategy,
     options: {
-      clientID: process.env.GITHUB_CLIENT_ID,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET
+      clientID: process.env.GITHUB_CLIENT_ID || 'none',
+      clientSecret: process.env.GITHUB_CLIENT_SECRET || 'none'
     }
   },
 /*

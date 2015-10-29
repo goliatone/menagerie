@@ -27,6 +27,9 @@
   "forin":false,
   "plusplus":false,
   "globals": {
+    "it": true,
+    "describe": true,
+    "request": true,
     "sails": true,
     "passport": true,
     "Device": true,

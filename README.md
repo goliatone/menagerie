@@ -90,3 +90,39 @@ docker-compose up -d
 [2]: http://stackoverflow.com/questions/26535727/sails-js-waterline-populate-deep-nested-association
 [3]: http://stackoverflow.com/questions/32594628/use-bluebird-to-deep-populate-objects-in-sailsjs
 [4]: http://stackoverflow.com/questions/23995813/sails-beta-0-10-0-rc7-populate-a-b-c-association
+
+
+## Build process
+
+#### Travis CI
+
+If you don't have the `travis` CLI [client][1] installed, then follow the [instructions][2].
+
+Also, you might want to configure the client with a [github token][3], it will make working with the client easier.
+
+In order to push `docker` images to `docker hub` you have to setup environmental variables for `travis`:
+
+```
+travis env set DOCKER_EMAIL me@example.com
+travis env set DOCKER_USERNAME myusername
+travis env set DOCKER_PASSWORD secretsecret
+```
+
+
+#### Docker
+
+All build commands are in the `.travis.yml` file, but basically:
+
+Build and tag image:
+```
+docker build -t goliatone/menagerie .
+```
+
+Then, we run tests:
+```
+docker run goliatone/menagerie  /bin/sh -c "cd /opt/menagerie; npm test"
+```
+
+[1]: https://github.com/travis-ci/travis.rb
+[2]: https://github.com/travis-ci/travis.rb#installation
+[3]: https://github.com/settings/tokens
