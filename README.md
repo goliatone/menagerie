@@ -3,6 +3,7 @@ Manage things... all the things. WeeThings!
 
 ### TODO:
 * Replace `autoPK`, use UUID as main id instead.
+* Add model validations
 * ~~CSV import~~
 * ~~CSV export~~
 * ~~Job to handle CSV import~~
