@@ -1,13 +1,5 @@
-sudo: required
-
-services:
-  - docker
-
-before_install:
-  - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-  - docker build -t goliatone/menagerie .
-  - docker ps -a
-
-script:
-  - docker run goliatone/menagerie  /bin/sh -c "cd /opt/menagerie; npm test"
-  - docker push goliatone/menagerie
+language: node_js
+node_js:
+    - "0.12.4"
+env:
+  - NODE_ENV="test"
