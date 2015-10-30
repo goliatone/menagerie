@@ -3,6 +3,14 @@
 # this script will use docker-machine to provision a machine
 # to AWS
 
+# Get a reference to the current executing path
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+#Set default value for AWS_HOME
+if [ -n "${AWS_HOME:-x}" ];then
+    export AWS_HOME=~/.aws
+fi
+
 E_BADARGS=13
 
 if [ "$#" -lt 2 ];then
@@ -10,8 +18,8 @@ if [ "$#" -lt 2 ];then
   exit $E_BADARGS
 fi
 
-ACCESS_KEY_ID="$(./aws-env access-key)"
-SECRET_KEY="$(./tools/aws-env secret-key)"
+ACCESS_KEY_ID="$($DIR/aws-env access-key)"
+SECRET_KEY="$($DIR/aws-env secret-key)"
 ZONE=${3:-"a"}
 
 docker-machine create --driver amazonec2 \
