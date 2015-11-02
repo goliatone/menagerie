@@ -22,6 +22,8 @@ ACCESS_KEY_ID="$($DIR/aws-env access-key)"
 SECRET_KEY="$($DIR/aws-env secret-key)"
 ZONE=${3:-"a"}
 
+#If your vpc has multiple subnets, ensure that either a (default) is
+#publicly accessible or that you specify a value that is public!!
 docker-machine create --driver amazonec2 \
 --amazonec2-secret-key $SECRET_KEY \
 --amazonec2-access-key $ACCESS_KEY_ID \
