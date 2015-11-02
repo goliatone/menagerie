@@ -158,11 +158,14 @@ var AuthController = {
             }
         }
 
-        console.log('CALLBACK', req.body, req.headers);
         passport.callback(req, res, function(err, user, challenges, statuses) {
-            console.log('passport callback', err, user, challenges, statuses);
-
             if (err || !user) return tryAgain(challenges);
+
+            //Once we have a user back, we should ensure the user
+            //has an email that belongs to the domain we want:
+            if( ! sails.config.auth.passport.authenticateDomain(user)) {
+                return res.forbidden('Invalid user domain');
+            }
 
             req.login(user, function(err) {
                 if (err) return tryAgain(err);
