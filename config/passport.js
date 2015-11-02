@@ -29,9 +29,9 @@ module.exports.passport = {
     options: {
       clientID: process.env.GOOGLE_CLIENT_ID || 'none',
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'none',
-      scope: 'https://www.googleapis.com/auth/userinfo.email',
-    //   scope: 'https://www.googleapis.com/auth/plus.me,https://www.googleapis.com/auth/userinfo.email',
-      hd: 'wework.com'
+      scope: ['profile', 'email'],
+      display:'popup',
+      hd: 'wework.com' //hostedDomain: This is also duplicated on sails.config.auth.passport
     }
   },
   /*twitter: {
