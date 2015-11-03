@@ -316,7 +316,8 @@ passport.loadStrategies = function() {
 
             Strategy = strategies[key].strategy;
 
-            var baseUrl = sails.getBaseurl();
+            //TODO: Figure out how to make getBaseurl work inside Docker container
+            var baseUrl = process.env.NODE_CLIENT_BASE_URL || sails.getBaseurl();
 
             switch (protocol) {
                 case 'oauth':
