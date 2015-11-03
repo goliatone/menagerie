@@ -30,40 +30,12 @@ module.exports.passport = {
       clientID: process.env.GOOGLE_CLIENT_ID || 'none',
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'none',
       scope: ['profile', 'email'],
-      display:'popup',
-      hd: 'wework.com' //hostedDomain: This is also duplicated on sails.config.auth.passport
+      //display:'popup',
+      //hostedDomain: This is also duplicated on sails.config.auth.passport
+      //hd: 'wework.com'
     }
   },
-  /*twitter: {
-    name: 'Twitter',
-    protocol: 'oauth',
-    strategy: require('passport-twitter').Strategy,
-    options: {
-      consumerKey: 'your-consumer-key',
-      consumerSecret: 'your-consumer-secret'
-    }
-  },
-*/
-  github: {
-    name: 'GitHub',
-    protocol: 'oauth2',
-    strategy: require('passport-github').Strategy,
-    options: {
-      clientID: process.env.GITHUB_CLIENT_ID || 'none',
-      clientSecret: process.env.GITHUB_CLIENT_SECRET || 'none'
-    }
-  },
-/*
-  facebook: {
-    name: 'Facebook',
-    protocol: 'oauth2',
-    strategy: require('passport-facebook').Strategy,
-    options: {
-      clientID: 'your-client-id',
-      clientSecret: 'your-client-secret',
-      scope: ['email'] /* email is necessary for login behavior * /
-    }
-  },
+  /*
   cas: {
     name: 'CAS',
     protocol: 'cas',
