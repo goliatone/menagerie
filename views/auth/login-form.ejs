@@ -1,0 +1,29 @@
+
+
+<div class="vertically-centered content row">
+    <div class="large-6 large-centered small-6 small-centered columns">
+        <div class="panel">
+
+            <% if (errors) {%>
+              <% errors.forEach(function (error) { %>
+                <%= __(error) %>
+              <% }) %>
+            <% } %>
+
+            <form role="form" action="/auth/local" method="post">
+              <input type="text" name="identifier" placeholder="Username or Email">
+              <input type="password" name="password" placeholder="Password">
+              <button class="success expand" type="submit">Sign in</button>
+            </form>
+
+            <% if (Object.keys(providers).length) {%>
+              <hr/>
+              <h5>You can also use one of these...</h5>
+
+              <% Object.keys(providers).forEach(function (key) { %>
+                <a href="/auth/<%= providers[key].slug %>" role="button"><%= providers[key].name %></a>
+              <% }) %>
+            <% } %>
+        </div>
+    </div>
+</div>
