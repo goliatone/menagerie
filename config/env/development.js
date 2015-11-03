@@ -19,7 +19,6 @@ module.exports = {
   models: {
       connection: 'localDiskDb'
     //   connection: 'productionPostgres'
-    //   connection: 'developmentPostgres',
-
+      // connection: 'stagingPostgres',
   }
 };

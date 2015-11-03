@@ -1,5 +1,9 @@
 'use strict';
 
+/**
+ * Info about Google OpenId parameters
+ * https://developers.google.com/identity/protocols/OpenIDConnect#hd-param
+ */
 module.exports.auth = {
     loginRedirect: '/dashboard',
     passport: {

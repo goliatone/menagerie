@@ -37,6 +37,9 @@ ngrok http port -subdomain=subdomain
 
     console.log('=============================');
     console.log('|');
+    console.log('| ENV STUFF:');
+    console.log('| RUNTIME_ENVIRONMENT:', process.env.NODE_ENV);
+    console.log('|');
     console.log('| POGSTRESS STUFF:');
     console.log('| POSTGRES_PORT_5432_TCP_ADDR:', process.env.POSTGRES_PORT_5432_TCP_ADDR);
     console.log('| POSTGRES_PORT_5432_TCP_PORT:', process.env.POSTGRES_PORT_5432_TCP_PORT);
