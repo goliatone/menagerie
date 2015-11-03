@@ -1,11 +1,12 @@
 menagerie:
   build: .
-  command: node app.js --prod
+  command: node app.js
   # command: /opt/menagerie/node_modules/.bin/pm2 start app.js --name "menagerie" -i 2 --no-daemon -- --prod
   links:
       - postgres
   environment:
     - DEBUG=*
+    - NODE_ENV=${NODE_ENV}
     - NODE_POSTGRES_USER=${NODE_POSTGRES_USER}
     - NODE_POSTGRES_PSWD=${NODE_POSTGRES_PSWD}
     - NODE_POSTGRES_DATABASE=${NODE_POSTGRES_DATABASE}
