@@ -42,5 +42,8 @@ COPY data $TARGET_DIR/data
 COPY init-data $TARGET_DIR/init-data
 
 EXPOSE 1337
-CMD ["node", "app.js", "--prod"]
+
+#Instead of using --prod flag, we set the environment though the
+#NODE_ENV var
+CMD ["node", "app.js"]
 # CMD ["pm2", "start", "app.js", "--name", '"menagerie"', "-i", "2", "--", "--prod", "--no-daemon"]
