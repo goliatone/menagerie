@@ -4,6 +4,9 @@ menagerie:
   environment:
     - DEBUG=*
     - NODE_ENV=${NODE_ENV}
+    - NODE_CLIENT_BASE_URL=${NODE_CLIENT_BASE_URL}
+    - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+    - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
     - NODE_POSTGRES_USER=${NODE_POSTGRES_USER}
     - NODE_POSTGRES_PSWD=${NODE_POSTGRES_PSWD}
     - NODE_POSTGRES_DATABASE=${NODE_POSTGRES_DATABASE}
@@ -16,4 +19,4 @@ menagerie:
       max-size: "1g"
       max-file: "4"
   ports:
-    - "1337:1337"
+    - "80:1337"
