@@ -32,7 +32,7 @@
         <!-- Left Nav Section -->
         <ul class="left">
             <li class="has-dropdown">
-            <a href="#"><%= user.username %></a>
+            <a href="#"><%= user.username ? user.username : 'User' %></a>
             <ul class="dropdown">
               <li><a href="/logout">Log out</a></li>
               <li><a href="/profile">Profile</a></li>
