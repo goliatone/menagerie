@@ -1,6 +1,161 @@
 # menagerie
 Manage things... all the things. WeeThings!
 
+---
+
+## Docker
+
+Currently we are using three docker environments:
+- Development 
+- Staging
+- Production
+
+Each environment has a different set of environmental variables with different values for things like the `postgres` connection data or the google oauth client information.
+
+The environment variables currently used:
+
+* DEBUG
+* NODE_ENV
+* NODE_CLIENT_BASE_URL
+* GOOGLE_CLIENT_ID
+* GOOGLE_CLIENT_SECRET
+* NODE_POSTGRES_USER
+* NODE_POSTGRES_PSWD
+* NODE_POSTGRES_DATABASE
+* NODE_POSTGRES_ENDPOINT
+
+You can build a `docker-compose.yml` file dynamically. You can use the bundled `expand` bash script to expand the tokens in the `docker-compose.tpl.yml` file. It will replace any of the tokens used in the template with an environmental variable with the same name.
+
+```
+$ ./expand -t docker-compose.tpl.yml
+```
+
+So, if the template has a ${MY_VAR} token and the current environment has a MY_VAR variable of "my_value", ${MY_VAR} will get replaced with "my_value".
+
+You can use [envset][envset] to dynamically inject environmental variables into your shell before executing the `expand` script.
+
+```
+$ envset development ./expand -t docker-compose.tpl.yml
+```
+
+`envset` uses an `.envset` config file holding env vars definitions. You can check the [tpl.envset][tplenvset] for an example.
+
+To install `envset`:
+
+```
+npm i -g envset
+```
+
+
+### Deployment
+
+Select prod:
+
+```
+docker-compose -f docker-compose.prod.yml up -d
+```
+
+Development:
+```
+docker-compose up -d
+```
+
+After compose up, you can start a bash terminal into the container:
+```
+docker exec -ti menagerie_menagerie_1 /bin/bash
+```
+
+
+## Build process
+
+#### Travis CI
+
+If you don't have the `travis` CLI [client][travis-ci] installed, then follow the [instructions][instructions].
+
+Also, you might want to configure the client with a [github token][gtoken], it will make working with the client easier.
+
+In order to push `docker` images to `docker hub` you have to setup environmental variables for `travis`:
+
+```
+travis env set DOCKER_EMAIL me@example.com
+travis env set DOCKER_USERNAME myusername
+travis env set DOCKER_PASSWORD secretsecret
+```
+
+
+#### Docker
+
+All build commands are in the `.travis.yml` file, but basically:
+
+Build and tag image:
+```
+docker build -t goliatone/menagerie .
+```
+
+Then, we run tests:
+```
+docker run goliatone/menagerie  /bin/sh -c "cd /opt/menagerie; npm test"
+```
+
+
+
+NODE_POSTGRES_USER=menagerie NODE_POSTGRES_PSWD=menagerie NODE_POSTGRES_DATABASE=menagerie NODE_POSTGRES_ENDPOINT=menagerie-devel.c1vocxbad8zi.us-east-1.rds.amazonaws.com 
+
+
+User.create({username:"goliat", email:"hello@goliatone.com"}).exec(console.log)
+
+
+Passport.create({"protocol": "local","password": "$2a$10$eLP4Wh/apu0QMYwH5t0SX.wEcPG5r1WmSADZtZjJJYlQP.G4dwIzq","user": 1,"accessToken": "qVKUJ7/Os8eSCyjFf86j31rwbRavRBwM214GOJ+kcvQg4uSjq1WoZ5YNb71MsDit","createdAt": "2015-10-26T19:55:40.382Z","updatedAt": "2015-10-26T19:55:40.382Z","id": 1}).exec(console.log)
+
+
+
+## Google OAuth
+To use Google OAuth, you need to create and configure a project in the google development environment.
+
+Go to the [google developer console][gdc], and create a new project.
+
+Configure OAuth consent screen- configure Domain Verification if needed.
+
+Create client [ID credentials][credentials]. Select OAuth 2.0 client IDs option. I created three clients, one for each `docker` environment:
+
+- Web Local
+- Web Staging
+- Web Production
+
+For each environment, we need to create the following environment variables:
+- GOOGLE_CLIENT_ID:Credentials screen.
+- GOOGLE_CLIENT_SECRET: Credentials screen.
+- NODE_CLIENT_BASE_URL
+
+The first two you get from the Credentials screen, by clicking on the specific client.
+
+The third is the base URL the oauth callbacks should redirect to. IPs are not valid callbacks, `localhost` is a valid domain. 
+
+Your local development docker environment will not work with oauth since you access the container through an IP address. You can create an entry on the `hosts` file in your Mac computer.
+
+Enable APIs, [here][eapi]
+
+### Docker: Development
+
+A) Get your docker's env IP:
+
+```
+docker-machine ip dev
+```
+
+B) Add an entry to your hosts table routing the previous IP to the `things.menagerie.dev` domain:
+```
+sudo nano /etc/hosts
+```
+
+
+```
+##### LOCAL DEV
+192.168.99.100     things.menagerie.dev
+```
+
+
+
 ### TODO:
 * Replace `autoPK`, use UUID as main id instead.
 * Add model validations
@@ -72,57 +227,15 @@ CREATE TABLE "category"
 ```
 
 
-### Deployment
-
-Select prod:
-
-```
-docker-compose -f docker-compose.prod.yml up -d
-```
-
-Development:
-```
-docker-compose up -d
-```
-
-
 [1]: http://stackoverflow.com/questions/23446484/sails-js-populate-nested-associations
 [2]: http://stackoverflow.com/questions/26535727/sails-js-waterline-populate-deep-nested-association
 [3]: http://stackoverflow.com/questions/32594628/use-bluebird-to-deep-populate-objects-in-sailsjs
 [4]: http://stackoverflow.com/questions/23995813/sails-beta-0-10-0-rc7-populate-a-b-c-association
-
-
-## Build process
-
-#### Travis CI
-
-If you don't have the `travis` CLI [client][1] installed, then follow the [instructions][2].
-
-Also, you might want to configure the client with a [github token][3], it will make working with the client easier.
-
-In order to push `docker` images to `docker hub` you have to setup environmental variables for `travis`:
-
-```
-travis env set DOCKER_EMAIL me@example.com
-travis env set DOCKER_USERNAME myusername
-travis env set DOCKER_PASSWORD secretsecret
-```
-
-
-#### Docker
-
-All build commands are in the `.travis.yml` file, but basically:
-
-Build and tag image:
-```
-docker build -t goliatone/menagerie .
-```
-
-Then, we run tests:
-```
-docker run goliatone/menagerie  /bin/sh -c "cd /opt/menagerie; npm test"
-```
-
-[1]: https://github.com/travis-ci/travis.rb
-[2]: https://github.com/travis-ci/travis.rb#installation
-[3]: https://github.com/settings/tokens
+[envset]: https://github.com/goliatone/envset
+[travis-ci]: https://github.com/travis-ci/travis.rb
+[instructions]: https://github.com/travis-ci/travis.rb#installation
+[gtoken]: https://github.com/settings/tokens
+[credentials]: https://console.developers.google.com/apis/credentials
+[gdc]: https://console.developers.google.com
+[eapi]: https://console.developers.google.com/apis/library
+[tplenvset]: https://github.com/goliatone/envset/blob/master/example/tpl.envset
