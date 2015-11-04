@@ -55,7 +55,7 @@ test:
 	@$(eval TARGETS=$(TARGETS:/%=%))
 	@$(eval TARGETS=$(addprefix $(TEST_DIR),$(TARGETS)))
 	@$(eval TARGET=$(shell [ -z $(firstword ${TARGETS}) ] && echo ${TEST_DIR}))
-	@$(ENV_VARS) $(MOCHA_BIN) $(MOCHA_DEFAULT_OPTS) $(MOCHA_OPTS) $(TARGET) $(TARGETS)
+	@$(ENV_VARS) time $(MOCHA_BIN) $(MOCHA_DEFAULT_OPTS) $(MOCHA_OPTS) $(TARGET) $(TARGETS)
 
 clean:
 	@echo 'deleting node_modules...'
