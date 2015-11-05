@@ -1,6 +1,6 @@
 menagerie:
   build: .
-  command: node app.js
+  command: /opt/menagerie/node_modules/.bin/ pm2 start app.js --name "menagerie" --no-daemon
   environment:
     - DEBUG=*
     - NODE_ENV=${NODE_ENV}
