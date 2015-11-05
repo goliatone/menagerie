@@ -167,8 +167,9 @@ sudo nano /etc/hosts
 * Invite to register user, token table/validation
 * Print QR codes
 * ~~Add support for multiple identifiers:~~
-    * Barcode
-    * QR code
+    * ~~Barcode~~
+    * ~~QR code~~
+* Add route per model to show schema (build forms)
 
 <!--
 http://stackoverflow.com/questions/17929307/how-to-serve-a-bootstrap-template-in-sails-0-9

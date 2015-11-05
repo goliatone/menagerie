@@ -7,6 +7,7 @@ module.exports = function treehugger(sails){
         var filepath = path.join(base, key);
         delete require.cache[require.resolve(filepath)];
         sails.config[key] = require(filepath)[key];
+        debug('Reloading %s key, from %s base...', key, base);
     }
 
     function loadEnvironmentVariables(data){
@@ -21,7 +22,8 @@ module.exports = function treehugger(sails){
             treehugger: {
                 envCheck: /dev/,
                 reload: [
-                    'passport'
+                    'passport',
+                    'connections'
                 ]
             }
         },
@@ -51,7 +53,7 @@ module.exports = function treehugger(sails){
                 cf.treehugger.reload.map(function(key){
                     reload(key, basePath);
                 });
-
+                console.log('JSON', JSON.stringify(sails.config.connections));
                 done();
             }).once('error', function(e){
                 debug('TreeHugger error %e', e);
