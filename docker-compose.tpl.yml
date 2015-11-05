@@ -1,7 +1,6 @@
 menagerie:
   build: .
-  command: node app.js
-  # command: /opt/menagerie/node_modules/.bin/pm2 start app.js --name "menagerie" -i 2 --no-daemon -- --prod
+  command: /opt/menagerie/node_modules/.bin/pm2 start app.js --name "menagerie" -i 2 --no-daemon
   #links:
   #    - postgres
   environment:
