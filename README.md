@@ -3,6 +3,16 @@ Manage things... all the things. WeeThings!
 
 ---
 
+This project is run using `docker`. However, if you want to run it [locally] outside of docker you will need to install `libqrencode` and ensure that `libpng` is installed.
+
+In Mac OS using brew:
+
+```
+brew install libqrencode
+```
+
+Also, note that the project is developed using node v0.12.4 and npm 2.11.3 and that most recent versions of node/npm might not work.
+
 ## Docker
 
 Currently we are using three docker environments:
