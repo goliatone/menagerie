@@ -1,0 +1,59 @@
+#!/usr/bin/env node
+'use strict';
+
+require('shelljs/global');
+
+var program = require('commander'),
+    resolve = require('path').resolve,
+    format = require('string-template');
+
+function list(val) {return val.split(',');}
+
+function verbose(val){ return val ? '--verbose' : ''}
+
+var ctx = process.env;
+
+program
+    .version('0.0.1')
+    .description('import all JSON files into a postgres table with a JSON column')
+    .description('envset production ./data/postgres/bin/csv-tables-import -t device,location,devicetype --verbose')
+    .option('-t, --tables [tables]', 'List of tables to import', list, [])
+    .option('-d, --database [database]', 'Postgres database e.g. postgres', ctx.NODE_POSTGRES_DATABASE)
+    .option('-h, --host [host]', 'Postgres host', ctx.NODE_POSTGRES_ENDPOINT)
+    .option('-u, --username [uri]', 'Postgres username', ctx.NODE_POSTGRES_USER)
+    .option('-p, --port [port]', 'Postgres port', ctx.NODE_POSTGRES_PORT || 5432)
+    .option('-V, --verbose [verbose]', 'Verbose mode', verbose)
+    .option('-P, --basepath [basepath]', 'Base path to csv files', resolve(__dirname, '../data'))
+    .parse(process.argv);
+
+console.log('you executed an table-csv-import with:');
+
+if (program.tables) console.log(program.tables + '  - tables');
+if (program.database) console.log(program.database +'  - database');
+if (program.table) console.log(program.table +'  - table');
+if (program.host) console.log(program.host +'  - host');
+if (program.username) console.log(program.username +'  - username');
+if (program.port) console.log(program.port +'  - port');
+
+program.verbose = program.verbose ? '-a -e -E' : '';
+
+if (program.verbose) console.log(program.verbose +'  - verbose');
+
+program.tables.forEach(function(table) {
+    console.log('importing table %s', table);
+    var cmd = format('psql -h {host}  -p {port} -U {username} -d {database} {verbose} -c "COPY public.{table} TO STDOUT WITH CSV HEADER;" > {basepath}/{table}.csv',
+        {
+            database: program.database,
+            username: program.username,
+            host: program.host,
+            port: program.port,
+            verbose: program.verbose,
+            table: table,
+            basepath: program.basepath
+        });
+    console.log(cmd);
+    exec(cmd);
+});
+
+
+
