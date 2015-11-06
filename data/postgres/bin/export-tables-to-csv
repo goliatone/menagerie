@@ -15,7 +15,7 @@ var ctx = process.env;
 var desc = [
     'Export specified tables into CSV files. Recommended to use with "envset".',
     '  Use "envset" to manage environmental variables.',
-    '  envset production ./data/postgres/bin/csv-tables-import -t device,location,devicetype --verbose'
+    '  envset production ./data/postgres/bin/export-tables-to-csv -t device,location,devicetype --verbose'
 ];
 
 program
@@ -28,6 +28,7 @@ program
     .option('-p, --port [port]', 'Postgres port', ctx.NODE_POSTGRES_PORT || 5432)
     .option('-V, --verbose [verbose]', 'Verbose mode', verbose)
     .option('-P, --basepath [basepath]', 'Base path to csv files', resolve(__dirname, '../data'))
+    .option('-D, --dry-run [dry run]', 'Show commands but do not execute', false)
     .parse(process.argv);
 
 console.log('you executed an "export-tables-to-csv" with:');
@@ -59,6 +60,7 @@ program.tables.forEach(function(table) {
             basepath: program.basepath
         });
     console.log(cmd);
+    if(program.dryRun) return console.log('dry run, exit');
     exec(cmd);
 });
 
