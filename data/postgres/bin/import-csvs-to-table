@@ -9,29 +9,35 @@ var program = require('commander'),
 
 function list(val) {return val.split(',');}
 
-function verbose(val){ return val ? '--verbose' : ''}
+function verbose(val){ return (val ? '--verbose' : '');}
 
 var ctx = process.env;
 var desc = [
-    'Export specified tables into CSV files. Recommended to use with "envset".',
+    'Import CSV files into matching tables. Recommended to use with "envset".',
     '  Use "envset" to manage environmental variables.',
-    '  envset production ./data/postgres/bin/csv-tables-import -t device,location,devicetype --verbose'
+    '  envset development ./data/postgres/bin/import-csvs-to-table -t device,devicetype,location'
 ];
+
+
+var dataDir = resolve(__dirname, '../data');
 
 program
     .version('0.0.1')
     .description(desc.join('\n'))
     .option('-t, --tables [tables]', 'List of tables to import', list, [])
+    .option('-f, --files [filePath]', 'Path to CSV files location e.g. ../tmp/data/*.json'/*, dataDir + '/*.csv'*/)
     .option('-d, --database [database]', 'Postgres database e.g. postgres', ctx.NODE_POSTGRES_DATABASE)
     .option('-h, --host [host]', 'Postgres host', ctx.NODE_POSTGRES_ENDPOINT)
     .option('-u, --username [uri]', 'Postgres username', ctx.NODE_POSTGRES_USER)
     .option('-p, --port [port]', 'Postgres port', ctx.NODE_POSTGRES_PORT || 5432)
     .option('-V, --verbose [verbose]', 'Verbose mode', verbose)
-    .option('-P, --basepath [basepath]', 'Base path to csv files', resolve(__dirname, '../data'))
+    .option('-P, --basepath [basepath]', 'Base path to csv files', dataDir)
+    .option('-D, --dry-run [dry run]', 'Show commands but do not execute', false)
     .parse(process.argv);
 
 console.log('you executed an "export-tables-to-csv" with:');
 
+if (program.files) console.log(program.files + '  - files');
 if (program.tables) console.log(program.tables + '  - tables');
 if (program.database) console.log(program.database +'  - database');
 if (program.table) console.log(program.table +'  - table');
@@ -46,9 +52,11 @@ program.verbose = program.verbose ? '-a -e -E' : '';
 
 console.log('');
 
+// var tables = ls(program.files) || program.tables;
+
 program.tables.forEach(function(table) {
-    console.log('importing table %s', table);
-    var cmd = format('psql -h {host}  -p {port} -U {username} -d {database} {verbose} -c "COPY public.{table} TO STDOUT WITH CSV HEADER;" > {basepath}/{table}.csv',
+    console.log('- Importing CSV %s', table);
+    var cmd = format('psql -h {host}  -p {port} -U {username} -d {database} {verbose} -c "COPY public.{table} FROM STDOUT WITH CSV HEADER;" < {basepath}/{table}.csv',
         {
             database: program.database,
             username: program.username,
@@ -59,6 +67,7 @@ program.tables.forEach(function(table) {
             basepath: program.basepath
         });
     console.log(cmd);
+    if(program.dryRun) return console.log('dry run, exit');
     exec(cmd);
 });
 
