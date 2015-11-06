@@ -36,6 +36,8 @@
     "passport-google-oauth": "^0.2.0",
     "passport-http-bearer": "^1.0.1",
     "passport-local": "^1.0.0",
+    "pg": "^4.4.3",
+    "pg-copy-streams": "^0.3.0",
     "qrcodeine": "^1.0.0",
     "random-uuid-v4": "0.0.5",
     "rc": "~1.0.1",
@@ -49,11 +51,14 @@
   },
   "devDependencies": {
     "chai": "^3.4.0",
+    "commander": "^2.9.0",
     "express": "^4.13.3",
     "express-debug": "^1.1.1",
     "localtunnel": "^1.7.0",
     "pm2": "^0.15.7",
-    "sails-test-helper": "^0.5.0"
+    "sails-test-helper": "^0.5.0",
+    "shelljs": "^0.5.3",
+    "string-template": "^0.2.1"
   },
   "scripts": {
     "debug": "node debug app.js",
