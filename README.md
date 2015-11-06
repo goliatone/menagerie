@@ -155,6 +155,32 @@ sudo nano /etc/hosts
 ```
 
 
+## Data 
+There are two helper scripts to manage data:
+- `export-tables-to-csv`
+- `import-csvs-to-table`
+
+It is recommend to use `envset` to manage credentials by injecting them into a shell's environment.
+
+`export-tables-to-csv`:
+From the **menagerie** project directory, export the tables from the **production** environment to CSV format. The command would be:
+
+```
+$ envset production ./data/postgres/bin/export-tables-to-csv -t device,location,devicetype --verbose
+```
+
+You list all tables to be exported with the `-t` flag. This will generate a CSV file per table inside the **data/postgres/data** directory.
+
+`import-csvs-to-table`:
+
+The following command would import data from each CSV file into a table with a matching name in the **development** environment:
+
+```
+envset development ./data/postgres/bin/import-csvs-to-table -t device,devicetype,location
+```
+
+
+
 
 ### TODO:
 * Replace `autoPK`, use UUID as main id instead.
