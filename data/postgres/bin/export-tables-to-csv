@@ -47,7 +47,7 @@ program.verbose = program.verbose ? '-a -e -E' : '';
 console.log('');
 
 program.tables.forEach(function(table) {
-    console.log('importing table %s', table);
+    console.log('- Exporting table %s', table);
     var cmd = format('psql -h {host}  -p {port} -U {username} -d {database} {verbose} -c "COPY public.{table} TO STDOUT WITH CSV HEADER;" > {basepath}/{table}.csv',
         {
             database: program.database,
