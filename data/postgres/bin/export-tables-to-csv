@@ -30,7 +30,7 @@ program
     .option('-P, --basepath [basepath]', 'Base path to csv files', resolve(__dirname, '../data'))
     .parse(process.argv);
 
-console.log('you executed an table-csv-import with:');
+console.log('you executed an "export-tables-to-csv" with:');
 
 if (program.tables) console.log(program.tables + '  - tables');
 if (program.database) console.log(program.database +'  - database');
@@ -39,9 +39,12 @@ if (program.host) console.log(program.host +'  - host');
 if (program.username) console.log(program.username +'  - username');
 if (program.port) console.log(program.port +'  - port');
 
+if (program.verbose) console.log(program.verbose +'  - verbose');
+
+
 program.verbose = program.verbose ? '-a -e -E' : '';
 
-if (program.verbose) console.log(program.verbose +'  - verbose');
+console.log('');
 
 program.tables.forEach(function(table) {
     console.log('importing table %s', table);
