@@ -12,11 +12,15 @@ function list(val) {return val.split(',');}
 function verbose(val){ return val ? '--verbose' : ''}
 
 var ctx = process.env;
+var desc = [
+    'Export specified tables into CSV files. Recommended to use with "envset".',
+    '  Use "envset" to manage environmental variables.',
+    '  envset production ./data/postgres/bin/csv-tables-import -t device,location,devicetype --verbose'
+];
 
 program
     .version('0.0.1')
-    .description('import all JSON files into a postgres table with a JSON column')
-    .description('envset production ./data/postgres/bin/csv-tables-import -t device,location,devicetype --verbose')
+    .description(desc.join('\n'))
     .option('-t, --tables [tables]', 'List of tables to import', list, [])
     .option('-d, --database [database]', 'Postgres database e.g. postgres', ctx.NODE_POSTGRES_DATABASE)
     .option('-h, --host [host]', 'Postgres host', ctx.NODE_POSTGRES_ENDPOINT)
