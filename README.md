@@ -179,6 +179,12 @@ The following command would import data from each CSV file into a table with a m
 envset development ./data/postgres/bin/import-csvs-to-table -t device,devicetype,location
 ```
 
+To load data in the local development environment:
+```
+envset local ./data/postgres/bin/import-csvs-to-table -t device,devicetype,location
+```
+
+
 
 
 
