@@ -1,3 +1,4 @@
+'use strict';
 /**
  * Passport Middleware
  *
@@ -21,13 +22,28 @@
  * @param {Object}   res
  * @param {Function} next
  */
+/*goliatone GENERATED CODE...*/
+var http = require('http'),
+    methods = ['login', 'logIn', 'logout', 'logOut', 'isAuthenticated', 'isUnauthenticated'];
+/*goliatone GENERATED CODE...*/
+
 module.exports = function (req, res, next) {
   // Initialize Passport
+  console.log('PASSPORT POLICY');
   passport.initialize()(req, res, function () {
     // Use the built-in sessions
     passport.session()(req, res, function () {
       // Make the user available throughout the frontend
       res.locals.user = req.user;
+
+      /*goliatone GENERATED CODE...*/
+      if(req.isSocket){
+        methods.map(function(method){
+            req[method] = http.IncomingMessage.prototype[method].bind(req);
+        });
+      }
+      /*goliatone GENERATED CODE...*/
+
       next();
     });
   });
