@@ -18,10 +18,9 @@ module.exports.passport = {
   local: {
     strategy: require('passport-local').Strategy
   },
-
-  // bearer: {
-  //   strategy: require('passport-http-bearer').Strategy
-  // },
+  bearer: {
+    strategy: require('passport-http-bearer').Strategy
+  },
   google: {
     name: 'Google',
     protocol: 'oauth2',
@@ -34,17 +33,5 @@ module.exports.passport = {
       //hostedDomain: This is also duplicated on sails.config.auth.passport
       //hd: 'wework.com'
     }
-  },
-  /*
-  cas: {
-    name: 'CAS',
-    protocol: 'cas',
-    strategy: require('passport-cas').Strategy,
-    options: {
-      ssoBaseURL: 'http://your-cas-url',
-      serverBaseURL: 'http://localhost:1337',
-      serviceURL: 'http://localhost:1337/auth/cas/callback'
-    }
   }
-  */
 };
