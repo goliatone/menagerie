@@ -13,6 +13,8 @@
     <label>UUID
         <input name="uuid" type="text" placeholder="UUID"
             value="<%= record.uuid ? record.uuid : 'UUID' %>"
+            required
+            pattern="^[0-9a-fA-F]{8}-?[0-9a-fA-F]{4}-?[0-9a-fA-F]{4}-?[0-9a-fA-F]{4}-?[0-9a-fA-F]{12}$"
             <% if(form.intent !== 'create'){ %>
             disabled="disabled"
             <%}%>
