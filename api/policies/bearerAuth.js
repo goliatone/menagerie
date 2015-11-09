@@ -13,12 +13,10 @@
  */
 
 module.exports = function (req, res, next) {
-    console.log('BEARER POLICY');
-
     /*goliatone GENERATED CODE...*/
     if(req.wantsJSON){ //TODO: we should/could add isSocket here?
         return passport.authenticate('bearer', { session: false })(req, res, next);
     }
-    /*goliatone GENERATED CODE...*/
     next();
+    /*goliatone GENERATED CODE...*/
 };

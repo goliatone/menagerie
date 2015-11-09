@@ -9,8 +9,7 @@
  */
 
 exports.authorize = function(token, done) {
-  
-  Passport.findOne({ accessToken: token }, function(err, passport) {
+  Passport.findOne({ accessToken: token }).exec(function(err, passport) {
     if (err) { return done(err); }
     if (!passport) { return done(null, false); }
     User.findOneById(passport.user, function(err, user) {
