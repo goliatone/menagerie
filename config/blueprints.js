@@ -158,5 +158,6 @@ module.exports.blueprints = {
   ****************************************************************************/
 
   // defaultLimit: 30
+  clietRecordLimit: 10
 
 };
