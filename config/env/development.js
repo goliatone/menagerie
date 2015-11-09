@@ -9,7 +9,6 @@
  * any private information to this file!
  *
  */
-
 module.exports = {
 
   /***************************************************************************
@@ -18,6 +17,7 @@ module.exports = {
    ***************************************************************************/
   models: {
       connection: 'localDiskDb'
-    //   connection: 'developmentPostgres'
+      // connection: 'remotePostgres'
+      // connection: 'developmentPostgres'
   }
 };
