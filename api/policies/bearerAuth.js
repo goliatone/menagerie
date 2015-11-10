@@ -1,3 +1,4 @@
+'use strict';
 /**
  * bearerAuth Policy
  *
@@ -11,12 +12,13 @@
  * @param {Object}   res
  * @param {Function} next
  */
-
 module.exports = function (req, res, next) {
     /*goliatone GENERATED CODE...*/
-    if(req.wantsJSON){ //TODO: we should/could add isSocket here?
+    //TODO: Move to socketAuth.js
+    if(req.isSocket && req.isAuthenticated()){
+        next();
+    } else if(req.wantsJSON){ //TODO: we should/could add isSocket here?
         return passport.authenticate('bearer', { session: false })(req, res, next);
-    }
-    next();
+    } else next();
     /*goliatone GENERATED CODE...*/
 };
