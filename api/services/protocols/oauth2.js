@@ -22,7 +22,10 @@ module.exports = function (req, accessToken, refreshToken, profile, next) {
     var query    = {
         identifier : profile.id,
         protocol   : 'oauth2',
+        
+        /*goliatone GENERATED CODE...*/
         accessToken: accessToken,
+        /*goliatone GENERATED CODE...*/
         tokens     : { accessToken: accessToken }
     };
 

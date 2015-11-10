@@ -34,8 +34,14 @@
 </div>
 <script type="text/javascript">
 function buildPagination(){
-    io.socket.get('/location/count', function(data){
-        console.log('HERE', data);
+    io.socket.get('/location/count', function(data, jwr){
+        console.log('HERE', data, jwr);
+
+        if(jwr.statusCode > 300){
+            console.error(jwr);
+            return;
+        }
+
         var previous = '<li class="arrow"><a href="#LINK#">&laquo; Previous</a></li>',
             next = '<li class="arrow"><a href="#LINK#">Next &raquo;</a></li>'
 
@@ -60,7 +66,7 @@ function buildPagination(){
             }
 
             pages = buffer.join('');
-            
+
 
             if(cursor > 0){
                 previous = previous.replace('#LINK#', '/location?skip=' + (cursor - step));
@@ -68,7 +74,7 @@ function buildPagination(){
             }
             if(cursor < data.count){
                 next = next.replace('#LINK#', '/location?skip=' + (cursor + step));
-                pages += next; 
+                pages += next;
             }
 
 
