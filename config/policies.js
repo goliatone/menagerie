@@ -31,6 +31,9 @@ module.exports.policies = {
   'auth': {
       '*': ['passport']
   },
+  'barcode':{
+    'serve': true
+  }
   //API token bearer...
   /* 'flash': {
       'remoteHome': ['passport', 'bearerAuth']
