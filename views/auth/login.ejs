@@ -10,13 +10,19 @@
               <% }) %>
             <% } %>
 
-            <!-- if (Object.keys(providers).length) { -->
+            <% if (Object.keys(providers).length) {%>
               <h5>Login using your Google Account</h5>
 
               <hr/>
-                <a href="/auth/google" role="button" class="button expand">
-                    Google
-                </a>
+
+                <% Object.keys(providers).forEach(function (key) {
+                    if(key === 'bearer') return;
+                %>
+                    <a href="/auth/<%= providers[key].slug %>" role="button" class="button expand">
+                        <%= providers[key].name %></a>
+                    </a>
+                <% }) %>
+            <% } %>
         </div>
     </div>
 </div>
