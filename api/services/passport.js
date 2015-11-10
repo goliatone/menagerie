@@ -2,6 +2,7 @@
 
 var path = require('path'),
     url = require('url'),
+    debug = require('debug')('passport:service'),
     passport = require('passport');
 
 /**
@@ -67,7 +68,7 @@ passport.protocols = require('./protocols');
 passport.connect = function(req, query, profile, next) {
     var user = {},
         provider;
-
+    debug('PASSPORT CONNECT %s', req.headers);
     // Get the authentication provider from the query.
     query.provider = req.param('provider');
 
@@ -200,11 +201,13 @@ passport.endpoint = function(req, res) {
         return res.redirect('/login');
     }
 
+    /*goliatone GENERATED CODE...*/
     // Attach scope if it has been set in the config
     ['scope', 'hd', 'display'].map(function(key){
         if(!strategies[provider].options.hasOwnProperty(key)) return;
         options[key] = strategies[provider].options[key];
     });
+    /*goliatone GENERATED CODE...*/
 
     // Redirect the user to the provider for authentication. When complete,
     // the provider will redirect the user back to the application at
