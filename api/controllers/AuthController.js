@@ -6,6 +6,8 @@
  * should look. It currently includes the minimum amount of functionality for
  * the basics of Passport.js to work.
  */
+var debug = require('debug')('passport:controller');
+
 var AuthController = {
     /**
      * Render the login page
@@ -129,8 +131,10 @@ var AuthController = {
      * @param {Object} res
      */
     callback: function(req, res) {
-        function tryAgain(err) {
+        debug('callback');
 
+        function tryAgain(err) {
+            debug('try harder', err);
             // Only certain error messages are returned via req.flash('error', someError)
             // because we shouldn't expose internal authorization errors to the user.
             // We do return a generic error and the original request body.
@@ -145,6 +149,7 @@ var AuthController = {
             // login, register or disconnect action initiator view.
             // These views should take care of rendering the error messages.
             var action = req.param('action');
+            debug('action:', action);
 
             switch (action) {
                 case 'register':
@@ -159,15 +164,21 @@ var AuthController = {
         }
 
         passport.callback(req, res, function(err, user, challenges, statuses) {
+            debug('passport.callback', err, user, challenges, statuses);
+
             if (err || !user) return tryAgain(challenges);
 
+            /*goliatone GENERATED CODE...*/
             //Once we have a user back, we should ensure the user
             //has an email that belongs to the domain we want:
             if( ! sails.config.auth.passport.authenticateDomain(user)) {
                 return res.forbidden('Invalid user domain');
             }
+            /*goliatone GENERATED CODE...*/
 
             req.login(user, function(err) {
+                debug('req.login', user);
+
                 if (err) return tryAgain(err);
 
                 // Mark the session as authenticated to work with default Sails sessionAuth.js policy
