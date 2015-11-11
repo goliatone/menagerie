@@ -2,7 +2,7 @@
 var Promise = require('bluebird');
 
 var qr = require('qrcodeine'),
-    fs = Promise.promisifyAll(require("fs")),
+    fs = Promise.promisifyAll(require('fs')),
     extend = require('gextend');
 
 var DEFAULTS = {

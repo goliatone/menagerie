@@ -23,17 +23,18 @@ module.exports = function treehugger(sails){
             debug('hook configure', sails.config.toolbar);
         },
         initialize: function(done){
+            //DISABLE TOOLBAR FOR NOW, TESTING.
+            return done();
+            // var cf = sails.config;
 
-            var cf = sails.config;
+            // if(cf.toolbar.envCheck.exec(cf.environment)){
+            //     debug('Environment matched, return: %s !== %s', cf.environment, cf.toolbar.envCheck);
+            //     return done();
+            // }
 
-            if(cf.toolbar.envCheck.exec(cf.environment)){
-                debug('Environment matched, return: %s !== %s', cf.environment, cf.toolbar.envCheck);
-                return done();
-            }
+            // toolbar(sails.hooks.http.app, cf.toolbar.options);
 
-            toolbar(sails.hooks.http.app, cf.toolbar.options);
-
-            done();
+            // done();
         }
     };
 };

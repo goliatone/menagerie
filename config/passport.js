@@ -21,6 +21,15 @@ module.exports.passport = {
   bearer: {
     strategy: require('passport-http-bearer').Strategy
   },
+  // github: {
+  //   name: 'GitHub',
+  //   protocol: 'oauth2',
+  //   strategy: require('passport-github').Strategy,
+  //   options: {
+  //     clientID: process.env.GITHUB_CLIENT_ID || 'none',
+  //     clientSecret: process.env.GITHUB_CLIENT_SECRET || 'none'
+  //   }
+  // },
   google: {
     name: 'Google',
     protocol: 'oauth2',
