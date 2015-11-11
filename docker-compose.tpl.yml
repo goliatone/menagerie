@@ -26,6 +26,6 @@ menagerie:
 #  image: postgres
 #  ports:
 #    - "5432:5432"
-  log_opt:
-    max-size: "1g"
-    max-file: "4"
+  # log_opt:
+  #   max-size: "1g"
+  #   max-file: "4"
