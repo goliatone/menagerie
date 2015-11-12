@@ -20,13 +20,28 @@ img.qr-code{
 }
 
 
-footer{
+footer {
     height: 50px;
     position: fixed;
     bottom: 0px;
     left: 0px;
     line-height: 50px;
     color: #aaa;
-    text-align: center;
+    text-align: left;
+    margin-left: 20px;
     width: 100%;
+}
+
+footer .local,
+footer .development {
+    color: red;
+}
+
+
+footer .staging {
+    color: orange;
+}
+
+footer .production {
+    color: green;
 }
