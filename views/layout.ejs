@@ -100,12 +100,12 @@
     <script>
         $(document).foundation();
     </script>
-    
+
     <% if(process.env.NODE_ENV) {%>
-    <footer>
+    <footer class="<%=process.env.NODE_ENV%>">
         <b><%=process.env.NODE_ENV%></b>
     </footer>
     <%}%>
-    
+
   </body>
 </html>
