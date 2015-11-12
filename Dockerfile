@@ -7,7 +7,6 @@ RUN mkdir $TARGET_DIR
 WORKDIR $TARGET_DIR
 
 ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update && apt-get install -q -y libqrencode-dev libpng-dev
 
 RUN npm i -g pm2@0.15.7
 
@@ -18,6 +17,7 @@ RUN npm i -g pm2@0.15.7
 # add package.json files to the /tmp director and npm install
 # each component
 COPY package.json /tmp/package.json
+RUN grep MemFree /proc/meminfo
 RUN cd /tmp && npm install --quiet
 
 # Move each of the main components node_modules files
@@ -43,7 +43,4 @@ COPY init-data $TARGET_DIR/init-data
 
 EXPOSE 1337
 
-#Instead of using --prod flag, we set the environment though the
-#NODE_ENV var
 CMD ["node", "app.js"]
-# CMD ["pm2", "start", "app.js", "--name", '"menagerie"', "-i", "2", "--", "--prod", "--no-daemon"]
