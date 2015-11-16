@@ -41,6 +41,7 @@
       <script src="/js/dependencies/sails.io.js"></script>
       <script src="/js/dependencies/jquery.min.js"></script>
       <script src="/js/dependencies/foundation.min.js"></script>
+      <script src="/js/dependencies/badge.js"></script>
       <script src="/js/dependencies/modernizr.js"></script>
       <!--SCRIPTS END-->
       <%- body %>
@@ -101,11 +102,7 @@
         $(document).foundation();
     </script>
 
-    <% if(process.env.NODE_ENV) {%>
-    <footer class="<%=process.env.NODE_ENV%>">
-        <b><%=process.env.NODE_ENV%></b>
-    </footer>
-    <%}%>
+    <% include _footer.ejs %>
 
   </body>
 </html>
