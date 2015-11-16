@@ -24,18 +24,14 @@ The environment variables currently used:
 * NODE_POSTGRES_DATABASE
 * NODE_POSTGRES_ENDPOINT
 
-You can build a `docker-compose.yml` file dynamically. You can use the bundled `expand` bash script to expand the tokens in the `docker-compose.tpl.yml` file. It will replace any of the tokens used in the template with an environmental variable with the same name.
+You can build a `docker-compose.yml` file dynamically. You can use the `solve` utility to expand the tokens in the `docker-compose.tpl.yml` file. It will replace any of the tokens used in the template with an environmental variable with the same name.
+
+If the template has a ${MY_VAR} token and the current environment has a MY_VAR variable of "my_value", ${MY_VAR} will get replaced with "my_value".
+
+You can use [envset][envset] to dynamically inject environmental variables into your shell, and [solve][solve] will pick those up.
 
 ```
-$ ./expand -t docker-compose.tpl.yml
-```
-
-So, if the template has a ${MY_VAR} token and the current environment has a MY_VAR variable of "my_value", ${MY_VAR} will get replaced with "my_value".
-
-You can use [envset][envset] to dynamically inject environmental variables into your shell before executing the `expand` script.
-
-```
-$ envset development ./expand -t docker-compose.tpl.yml
+$ envset development solve -t docker-compose.tpl.yml
 ```
 
 `envset` uses an `.envset` config file holding env vars definitions. You can check the [tpl.envset][tplenvset] for an example.
@@ -44,6 +40,11 @@ To install `envset`:
 
 ```
 npm i -g envset
+```
+
+To install `solve`:
+```
+npm i -g solve
 ```
 
 
@@ -264,6 +265,7 @@ CREATE TABLE "category"
 [3]: http://stackoverflow.com/questions/32594628/use-bluebird-to-deep-populate-objects-in-sailsjs
 [4]: http://stackoverflow.com/questions/23995813/sails-beta-0-10-0-rc7-populate-a-b-c-association
 [envset]: https://github.com/goliatone/envset
+[solve]: https://github.com/goliatone/solve
 [travis-ci]: https://github.com/travis-ci/travis.rb
 [instructions]: https://github.com/travis-ci/travis.rb#installation
 [gtoken]: https://github.com/settings/tokens
@@ -271,3 +273,8 @@ CREATE TABLE "category"
 [gdc]: https://console.developers.google.com
 [eapi]: https://console.developers.google.com/apis/library
 [tplenvset]: https://github.com/goliatone/envset/blob/master/example/tpl.envset
+
+
+
+TODO: 
+* Create Images if not present (review BarcodeController and BarcodeService)
