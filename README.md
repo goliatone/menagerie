@@ -30,9 +30,18 @@ If the template has a ${MY_VAR} token and the current environment has a MY_VAR v
 
 You can use [envset][envset] to dynamically inject environmental variables into your shell, and [solve][solve] will pick those up.
 
+This will print the rendered template to terminal:
+
 ```
 $ envset development solve -t docker-compose.tpl.yml
 ```
+
+To store the template:
+
+```
+$ envset development solve -t docker-compose.tpl.yml > docker-compose.yml
+```
+
 
 `envset` uses an `.envset` config file holding env vars definitions. You can check the [tpl.envset][tplenvset] for an example.
 
