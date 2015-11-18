@@ -30,6 +30,7 @@ program
     .option('-h, --host [host]', 'Postgres host', ctx.NODE_POSTGRES_ENDPOINT)
     .option('-u, --username [uri]', 'Postgres username', ctx.NODE_POSTGRES_USER)
     .option('-p, --port [port]', 'Postgres port', ctx.NODE_POSTGRES_PORT || 5432)
+    .option('-x, --drop', 'Append drop statement to copy', false)
     .option('-V, --verbose [verbose]', 'Verbose mode', verbose)
     .option('-P, --basepath [basepath]', 'Base path to csv files', dataDir)
     .option('-D, --dry-run [dry run]', 'Show commands but do not execute', false)
@@ -44,6 +45,7 @@ if (program.table) console.log(program.table +'  - table');
 if (program.host) console.log(program.host +'  - host');
 if (program.username) console.log(program.username +'  - username');
 if (program.port) console.log(program.port +'  - port');
+if (program.drop) console.log(program.drop +'  - drop');
 
 if (program.verbose) console.log(program.verbose +'  - verbose');
 
@@ -56,7 +58,12 @@ console.log('');
 
 program.tables.forEach(function(table) {
     console.log('- Importing CSV %s', table);
-    var cmd = format('psql -h {host}  -p {port} -U {username} -d {database} {verbose} -c "COPY public.{table} FROM STDOUT WITH CSV HEADER;" < {basepath}/{table}.csv',
+
+    var drop = 'DROP TABLE IF EXISTS public.{table};';
+    var copy = 'COPY public.{table} FROM STDOUT WITH CSV HEADER;';
+    var sql = program.drop ? (drop + ' ' + copy) : copy;
+
+    var cmd = format('psql -h {host}  -p {port} -U {username} -d {database} {verbose} -c "' + sql + '" < {basepath}/{table}.csv',
         {
             database: program.database,
             username: program.username,

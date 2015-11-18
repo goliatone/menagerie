@@ -14,7 +14,7 @@ function verbose(val){ return val ? '--verbose' : ''}
 var ctx = process.env;
 var desc = [
     'Export specified tables into CSV files. Recommended to use with "envset".',
-    '  Use "envset" to manage environmental variables.',
+    '  Use "envset" to manage environmental variables:',
     '  envset production ./data/postgres/bin/export-tables-to-csv -t device,location,devicetype --verbose'
 ];
 
