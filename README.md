@@ -33,17 +33,21 @@ You can use [envset][envset] to dynamically inject environmental variables into 
 This will print the rendered template to terminal:
 
 ```
-$ envset development solve -t docker-compose.tpl.yml
+$ envset development solve docker-compose.tpl.yml
 ```
 
 To store the template:
 
 ```
-$ envset development solve -t docker-compose.tpl.yml > docker-compose.yml
+$ envset development solve docker-compose.tpl.yml > docker-compose.yml
 ```
 
 
 `envset` uses an `.envset` config file holding env vars definitions. You can check the [tpl.envset][tplenvset] for an example.
+
+To share `.envset` files you could use something like [vcn][vcn], that uses an S3 bucket to share encrypted files between team members.
+
+[vcn]: https://github.com/goliatone/vcn
 
 To install `envset`:
 
@@ -52,17 +56,25 @@ npm i -g envset
 ```
 
 To install `solve`:
+
 ```
 npm i -g solve
 ```
 
 
-### Deployment
+### Development
 
-Select prod:
+We use docker and docker-machine. The basic work-flow is a build and up cycle.
+Ensure that your desired docker machine is up and running. 
 
 ```
-docker-compose -f docker-compose.prod.yml up -d
+docker-machine start dev
+```
+
+
+Build image:
+```
+docker-compose build
 ```
 
 Development:
@@ -70,7 +82,13 @@ Development:
 docker-compose up -d
 ```
 
-After compose up, you can start a bash terminal into the container:
+If the container is not showing the changes you expect to see, you might have to re-build the image:
+
+```
+docker-compose build --no-cache
+```
+
+When your container is running, you can start a bash terminal into the container:
 ```
 docker exec -ti menagerie_menagerie_1 /bin/bash
 ```
@@ -109,14 +127,14 @@ docker run goliatone/menagerie  /bin/sh -c "cd /opt/menagerie; npm test"
 
 
 
-NODE_POSTGRES_USER=menagerie NODE_POSTGRES_PSWD=menagerie NODE_POSTGRES_DATABASE=menagerie NODE_POSTGRES_ENDPOINT=menagerie-devel.c1vocxbad8zi.us-east-1.rds.amazonaws.com 
-
-
+```
 User.create({username:"goliat", email:"hello@goliatone.com"}).exec(console.log)
+```
 
 
+```
 Passport.create({"protocol": "local","password": "$2a$10$eLP4Wh/apu0QMYwH5t0SX.wEcPG5r1WmSADZtZjJJYlQP.G4dwIzq","user": 1,"accessToken": "qVKUJ7/Os8eSCyjFf86j31rwbRavRBwM214GOJ+kcvQg4uSjq1WoZ5YNb71MsDit","createdAt": "2015-10-26T19:55:40.382Z","updatedAt": "2015-10-26T19:55:40.382Z","id": 1}).exec(console.log)
-
+```
 
 
 ## Google OAuth
