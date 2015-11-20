@@ -23,7 +23,7 @@ RUN cd /tmp && npm install --quiet
 # Move each of the main components node_modules files
 RUN cp -a /tmp/node_modules $TARGET_DIR
 
-ENV DEBUG *
+ENV DEBUG menagerie
 
 #COPY . $TARGET_DIR <= we copy everything, including node_modules :(
 COPY api $TARGET_DIR/api
@@ -43,4 +43,4 @@ COPY init-data $TARGET_DIR/init-data
 
 EXPOSE 1337
 
-CMD ["node", "app.js"]
+CMD ["/opt/menagerie/node_modules/.bin/pm2", "start", "app.js", "--name", "menagerie", "--no-daemon"]
