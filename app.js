@@ -22,6 +22,14 @@
 // no matter where we actually lift from.
 process.chdir(__dirname);
 
+
+try{
+    require('./api/hooks/newrelic/init');
+}catch(e){
+    console.error('NewRelic initialization failed');
+    console.error(e);
+}
+
 // Ensure a "sails" can be located:
 (function() {
     var sails;
