@@ -7,6 +7,15 @@ module.exports = function treehugger(sails){
     return {
         ready: false,
         initialize: function(done){
+            
+            var envCheck = sails.config.environment === 'production';
+
+            sails.newRelicBrowserHeader = function(){
+                if(envCheck) sails.newrelic.getBrowserTimingHeader();
+            };
+
+            if(!envCheck) return done();
+
             sails.newrelic = global.newrelic;
             delete global.newrelic;
             sails.on('router:route', function(route){
