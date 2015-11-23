@@ -25,14 +25,7 @@ module.exports = {
         //TODO: Ensure that we are following a schema
         console.log('Preload data from JSON Export');
 
-        var datasource = [];
-
-        try {
-            datasource = require('../../init-data/device-import.json');
-        } catch(e){
-            console.log('Error importing datasource');
-            return;
-        }
+        var datasource = getDataSource('device');
 
         //Here we assume that all devices are of the same type:
 
@@ -46,3 +39,17 @@ module.exports = {
 
     }
 };
+
+function getDataSource(entity){
+    var datasource = [],
+        filepath = '../../data/seed/json/' + entity + '-import.json';;
+
+    try {
+        
+        datasource = require(filepath);
+    } catch(e){
+        console.log('Error importing datasource: %s', filepath);
+        return datasource;
+    }
+    return datasource;
+}
