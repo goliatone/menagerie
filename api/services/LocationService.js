@@ -17,13 +17,17 @@ module.exports = {
         });
     },
     preloadDataFromSeed:function(cb){
-        module.exports.preloadData(datasource.records, cb);
+        var datasource = getDataSource('location');
+        module.exports.preloadData(datasource, cb);
     },
     preloadFromJSONExport: function(outputdir){
         //TODO: Ensure that we are following a schema
         console.log('Preload data from JSON Export');
 
         var datasource = getDataSource('location');
+
+        console.log('data: ', datasource);
+        console.log('Preloading data...');
 
         module.exports.preloadData(datasource).then(function(){
             console.log('Complete');
@@ -36,10 +40,9 @@ module.exports = {
 
 function getDataSource(entity){
     var datasource = [],
-        filepath = '../../data/seed/json/' + entity + '-import.json';;
+        filepath = '../../data/seed/json/' + entity + '-import.json';
 
     try {
-        
         datasource = require(filepath);
     } catch(e){
         console.log('Error importing datasource: %s', filepath);
