@@ -28,10 +28,9 @@ module.exports = {
 
         var datasource = getDataSource('device');
 
-        //Here we assume that all devices are of the same type:
-
         console.log('data: ', datasource);
         console.log('Preloading data...');
+
         module.exports.preloadData(datasource).then(function(){
             console.log('Complete');
         }).catch(function(err){
