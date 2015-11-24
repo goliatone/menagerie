@@ -1,8 +1,5 @@
 'use strict';
 
-var datasource = require('../../init-data/location.js');
-//import contactsList from '/init-data/contacts';
-
 module.exports = {
     preloadData: function (data, cb) {
         console.log('>>>>>>>>>>>>>>> preloading data.......');
@@ -22,39 +19,31 @@ module.exports = {
     preloadDataFromSeed:function(cb){
         module.exports.preloadData(datasource.records, cb);
     },
-    preloadFromJSONExport: function(){
+    preloadFromJSONExport: function(outputdir){
         //TODO: Ensure that we are following a schema
         console.log('Preload data from JSON Export');
 
-        var datasource = {locations:[]};
+        var datasource = getDataSource('location');
 
-        try {
-            datasource = require('../../init-data/location-import-json');
-        } catch(e){
-            console.log('Error importing datasource');
-            return;
-        }
-
-        var data = [], record;
-        datasource.locations.map(function(raw){
-            data.push({
-                uuid: raw.roomUuid.toUpperCase(),
-                name: [raw.bldg, pad(raw.level, 3), raw.roomNumber].join('-'),
-                description: 'Room Number ' + raw.roomNumber + ', cable id ' + raw.cableId
-            });
-        });
-
-        function pad(char, len){
-            var mask = '000';
-            return (mask + char).slice(-1 * mask.length);
-        }
-
-        console.log('data: ', data);
-        console.log('Preloading data...');
-        module.exports.preloadData(data).then(function(){
+        module.exports.preloadData(datasource).then(function(){
             console.log('Complete');
         }).catch(function(err){
             console.log('Error');
         });
     }
 };
+
+
+function getDataSource(entity){
+    var datasource = [],
+        filepath = '../../data/seed/json/' + entity + '-import.json';;
+
+    try {
+        
+        datasource = require(filepath);
+    } catch(e){
+        console.log('Error importing datasource: %s', filepath);
+        return datasource;
+    }
+    return datasource;
+}
