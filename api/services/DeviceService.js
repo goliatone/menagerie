@@ -18,6 +18,7 @@ module.exports = {
         });
     },
     preloadDataFromSeed:function(cb){
+        var datasource = getDataSource('device');
         module.exports.preloadData(datasource, cb);
     },
     //TODO: Rename!!
@@ -42,10 +43,9 @@ module.exports = {
 
 function getDataSource(entity){
     var datasource = [],
-        filepath = '../../data/seed/json/' + entity + '-import.json';;
+        filepath = '../../data/seed/json/' + entity + '-import.json';
 
     try {
-        
         datasource = require(filepath);
     } catch(e){
         console.log('Error importing datasource: %s', filepath);
