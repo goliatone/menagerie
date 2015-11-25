@@ -3,7 +3,7 @@
 module.exports = function(grunt) {
 
     //TODO: We might want to do add a migrating true prop
-    var uc = require('sails/lib/hooks/moduleloader')({
+    var sailsLoader = require('sails/lib/hooks/moduleloader')({
             config:{
                 environment: process.env.NODE_ENV || 'development',
                 paths:{},
@@ -48,25 +48,27 @@ module.exports = function(grunt) {
         var data = buildArguments(self.data);
         var done = self.async();
 
-        var stmt = 'CREATE USER ' + data.user;
+        sailsLoader.loadUserConfig(function(err, out){
+            var stmt = 'CREATE USER ' + data.user;
 
-        if (data.roles) {
-            stmt += ' ' + data.roles.join(', ');
-        }
+            if (data.roles) {
+                stmt += ' ' + data.roles.join(', ');
+            }
 
-        if (data.password) {
-            stmt += ' WITH PASSWORD \'' + data.password + '\'';
-        }
+            if (data.password) {
+                stmt += ' WITH PASSWORD \'' + data.password + '\'';
+            }
 
-        stmt += ';';
+            stmt += ';';
 
-        if(data.superuser) {
-            stmt += ' WITH superuser';
-        }
+            if(data.superuser) {
+                stmt += ' WITH superuser';
+            }
 
-        exec_db(data.connection, stmt, function(err, res) {
-            grunt.log.writeln('Database user "' + data.user + '" created' + (data.roles ? ' with roles: ' + data.roles.join(', ') : '') + '.');
-            done();
+            exec_db(data.connection, stmt, function(err, res) {
+                grunt.log.writeln('Database user "' + data.user + '" created' + (data.roles ? ' with roles: ' + data.roles.join(', ') : '') + '.');
+                done();
+            });
         });
     });
 
@@ -75,21 +77,23 @@ module.exports = function(grunt) {
         var data = self.data;
         var done = self.async();
 
-        // do DB name and owner here:
-        // * http://www.postgresql.org/docs/8.1/static/sql-createdatabase.html
-        var stmt = 'CREATE DATABASE ' + data.name;
+        sailsLoader.loadUserConfig(function(err, out){
+            // do DB name and owner here:
+            // * http://www.postgresql.org/docs/8.1/static/sql-createdatabase.html
+            var stmt = 'CREATE DATABASE ' + data.name;
 
-        if (data.owner) {
-            stmt += ' WITH OWNER ' + data.owner;
-        }
+            if (data.owner) {
+                stmt += ' WITH OWNER ' + data.owner;
+            }
 
-        if(!data.encoding) data.encoding = 'UTF-8';
+            if(!data.encoding) data.encoding = 'UTF-8';
 
-        stmt += 'ENCODING=\''+data.encoding+'\'';
+            stmt += 'ENCODING=\''+data.encoding+'\'';
 
-        exec_db(data.connection, stmt, function(err, res) {
-            grunt.log.writeln('Database "' + data.name + '" created.');
-            done();
+            exec_db(data.connection, stmt, function(err, res) {
+                grunt.log.writeln('Database "' + data.name + '" created.');
+                done();
+            });
         });
     });
 
@@ -99,10 +103,12 @@ module.exports = function(grunt) {
         var data = self.data;
         var done = self.async();
 
-        var stmt = 'ALTER DATABASE ' + data.name + ' OWNER TO ' + data.owner;
-        exec_db(data.connection, stmt, function(err, res) {
-            grunt.log.writeln('Database "' + data.name + '" created.');
-            done();
+        sailsLoader.loadUserConfig(function(err, out){
+            var stmt = 'ALTER DATABASE ' + data.name + ' OWNER TO ' + data.owner;
+            exec_db(data.connection, stmt, function(err, res) {
+                grunt.log.writeln('Database "' + data.name + '" created.');
+                done();
+            });
         });
     });
 
@@ -111,10 +117,12 @@ module.exports = function(grunt) {
         var done = this.async();
         var data = this.data;
 
-        //http://www.postgresql.org/docs/current/static/sql-dropdatabase.html
-        exec_db(data.connection, 'DROP DATABASE IF EXISTS ' + data.name + ';', function(err, res) {
-            grunt.log.writeln('Database "' + data.name + '" dropped.');
-            done();
+        sailsLoader.loadUserConfig(function(err, out){
+            //http://www.postgresql.org/docs/current/static/sql-dropdatabase.html
+            exec_db(data.connection, 'DROP DATABASE IF EXISTS ' + data.name + ';', function(err, res) {
+                grunt.log.writeln('Database "' + data.name + '" dropped.');
+                done();
+            });
         });
     });
 
@@ -123,11 +131,13 @@ module.exports = function(grunt) {
         var data = self.data;
         var done = self.async();
 
-        var stmt = 'DROP ROLE IF EXISTS ' + data.user;
+        sailsLoader.loadUserConfig(function(err, out){
+            var stmt = 'DROP ROLE IF EXISTS ' + data.user;
 
-        exec_db(data.connection, stmt, function(err, res) {
-            grunt.log.writeln('Database user "' + data.user + '" dropped.');
-            done();
+            exec_db(data.connection, stmt, function(err, res) {
+                grunt.log.writeln('Database user "' + data.user + '" dropped.');
+                done();
+            });
         });
     });
 
@@ -138,9 +148,10 @@ module.exports = function(grunt) {
      *       --filename='pepe.json'
      */
     grunt.registerTask('pgsqlfile', 'Run a sql against a Postgres database', function() {
+
         var done = this.async();
 
-        uc.loadUserConfig(function(err, out){
+        sailsLoader.loadUserConfig(function(err, out){
 
             var connectionId = out.models.connection,
                 db = {};
