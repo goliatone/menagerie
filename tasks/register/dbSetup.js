@@ -30,70 +30,16 @@ module.exports = function(grunt) {
             return done();
         }
 
-
-
-        console.log('stdout', grunt.stdout);
-        console.log('failOnError', grunt.failOnError);
-
         sailsLoader.loadUserConfig(function(err, out){
 
             var args = getCommandOptions(out);
             args.stdout = grunt.log.oklns;
             args.stderr = grunt.log.errorlns;
 
-
-            console.log('Command', command, 'args', args);
+            console.log('Command', command, 'args', args, out.models);
             handlers.exec(command, args, done);
         });
     });
-
-    /**
-     * Create Postgres user:
-     * ```
-     * grunt pgcreateuser --user=peperone --password=Password --roles=SUPERUSER,LOGIN,REPLICATION
-     * ```
-     */
-    // grunt.registerTask('createuser', 'Add a new Postgres user.', function(){
-    //     var done = this.async(),
-    //         data = buildArguments();
-    //     handlers.createUser(data, done);
-    // });
-
-    // grunt.registerTask('pg_createdb', 'Create a new Postgres database.', function(){
-    //     var done = this.async(),
-    //         data = buildArguments();
-    //     handlers.createDb(data, done);
-    // });
-
-    // grunt.registerTask('pg_owner', 'Change the owner of a Postgres database.', function() {
-    //     var done = this.async(),
-    //         data = buildArguments();
-    //     handlers.assignOwner(data, done);
-    // });
-
-    // grunt.registerTask('pg_dropdb', 'Drop a Postgres database.', function() {
-    //     var done = this.async(),
-    //         data = buildArguments();
-    //     handlers.dropDb(data, done);
-    // });
-
-    // grunt.registerTask('pg_dropuser', 'Drop a Postgres user.', function() {
-    //     var done = this.async(),
-    //         data = buildArguments();
-    //     handlers.dropUser(data, done);
-    // });
-
-    /**
-     *
-     * grunt pgsqlfile --connection.password=pepe --connection.name=something \
-     *       --connection.host=pepe.dev --connection.port=9090 --connection.user=menagerie \
-     *       --filename='pepe.json'
-     */
-    // grunt.registerTask('pg_sqlfile', 'Run a sql against a Postgres database', function() {
-    //     var done = this.async(),
-    //         data = buildArguments();
-    //     handlers.sqlFile(data, done);
-    // });
 };
 
 
@@ -107,12 +53,22 @@ function getCommandOptions(config){
         defaults = config.connections[connectionId];
     }
 
-    return extend({}, defaults, argv);
+    defaults.connection = buildConnectionFromSailsConfig(defaults);
+
+    return extend({}, /*config, */defaults, argv);
 }
 
 function buildArguments(defaults) {
     var args = process.argv.slice(3),
         K = require('gkeypath');
+
+    function dashToCamel(str) {
+        if(!str) return '';
+
+        return str.replace(/\W+(.)/g, function (x, chr) {
+            return chr.toUpperCase();
+        });
+    }
 
     var key, value,
         argv = args.reduce(function(out, option) {
@@ -120,12 +76,14 @@ function buildArguments(defaults) {
 
             key = option.split('=')[0];
 
+            key = dashToCamel(key);
+
             if (option.indexOf('=') === -1) value = true;
             else value = option.split('=')[1];
 
-            value && (value = value.split(/,\s?/));
+            typeof value === 'string' && (value = value.split(/,\s?/));
 
-            if(value.length === 1) value = value[0];
+            if(Array.isArray(value) && value.length === 1) value = value[0];
 
             K.set(out, key, value);
 
@@ -143,29 +101,40 @@ function usage(grunt) {
     ln('db:setup:create-user Options');
 }
 
-function exec_db(connection, statement, done) {
+function exec_db(options, statement) {
+    var connection = options.connection,
+        dryRun = options.dryRun;
+
+    console.log('======')
     console.log('connection', connection);
+    console.log('options', options);
     console.log('QUERY\n', statement);
-    return done();
+    console.log('======')
 
     var pg = require('pg');
 
-    pg.connect(connection, function(err, client) {
+    return new Promise(function(resolve, reject){
 
-        if (err) {
-            pg.end();
-            throw new Error(err);
+        if(options.dryRun){
+            console.log('Running command with "--dry-run" option. Exiting now.');
+            return resolve();
         }
 
-        // console.log(statement);
-        client.query(statement, function(err, result) {
+        pg.connect(connection, function(err, client) {
             if (err) {
                 pg.end();
-                throw err;
+                return reject(err);
             }
-            // console.log('Result:', result);
 
-            done();
+            client.query(statement, function(err, result) {
+                if (err) {
+                    pg.end();
+                    return reject(err);
+                }
+                options.stdout('Result:', result);
+
+                resolve(result);
+            });
         });
     });
 }
@@ -187,27 +156,30 @@ function createHanlders(grunt){
         cmd(args, done);
     }
 
+    /**
+     * Create Postgres user:
+     * ```
+     * grunt pgcreateuser --user=peperone --password=Password --roles=SUPERUSER,LOGIN,REPLICATION
+     * ```
+     */
     function createUser(data, callback) {
         //http://www.postgresql.org/docs/current/static/sql-createuser.html
 
         var stmt = 'CREATE USER ' + data.user;
 
-        if (data.roles) {
-            stmt += ' ' + data.roles.join(', ');
-        }
+        if (data.roles) stmt += ' ' + data.roles.join(', ');
 
-        if (data.password) {
-            stmt += ' WITH PASSWORD \'' + data.password + '\'';
-        }
+        if (data.password) stmt += ' WITH PASSWORD \'' + data.password + '\'';
 
         stmt += ';';
 
-        if(data.superuser) {
-            stmt += ' WITH superuser';
-        }
+        if(data.superuser) stmt += 'ALTER ROLE "' + data.user + '" WITH superuser;';
 
-        exec_db(data.connection, stmt, function(err, res) {
+        exec_db(data, stmt).then(function(res) {
             grunt.log.writeln('Database user "' + data.user + '" created' + (data.roles ? ' with roles: ' + data.roles.join(', ') : '') + '.');
+            callback();
+        }).catch(function(err){
+            console.err('ERROR', err);
             callback();
         });
     }
@@ -225,42 +197,59 @@ function createHanlders(grunt){
 
         stmt += 'ENCODING=\''+data.encoding+'\'';
 
-        exec_db(data.connection, stmt, function(err, res) {
+        exec_db(data, stmt).then(function(res) {
             grunt.log.writeln('Database "' + data.name + '" created.');
+            callback();
+        }).catch(function(err){
+            console.err('ERROR', err);
             callback();
         });
     }
 
     function assignOwner(data, callback){
         var stmt = 'ALTER DATABASE ' + data.name + ' OWNER TO ' + data.owner;
-        exec_db(data.connection, stmt, function(err, res) {
+        exec_db(data, stmt).then(function(res) {
             grunt.log.writeln('Database "' + data.name + '" created.');
+            callback();
+        }).catch(function(err){
+            console.err('ERROR', err);
             callback();
         });
     }
 
     function dropDb(data, done){
         //http://www.postgresql.org/docs/current/static/sql-dropdatabase.html
-        exec_db(data.connection, 'DROP DATABASE IF EXISTS ' + data.name + ';', function(err, res) {
+        exec_db(data, 'DROP DATABASE IF EXISTS ' + data.name + ';').then(function(res) {
             grunt.log.writeln('Database "' + data.name + '" dropped.');
+            done();
+        }).catch(function(err){
+            console.err('ERROR', err);
             done();
         });
     }
     function dropUser(data, done){
         var stmt = 'DROP ROLE IF EXISTS ' + data.user;
-        exec_db(data.connection, stmt, function(err, res) {
+        exec_db(data, stmt).then(function(res) {
             grunt.log.writeln('Database user "' + data.user + '" dropped.');
+            done();
+        }).catch(function(err){
+            console.err('ERROR', err);
             done();
         });
     }
 
+    /**
+     *
+     * grunt pgsqlfile --connection.password=pepe --connection.name=something \
+     *       --connection.host=pepe.dev --connection.port=9090 --connection.user=menagerie \
+     *       --filename='pepe.json'
+     */
     function sqlFile(data, done){
         var dataOut = data.stdout;
         var dataErr = data.stderr;
 
         var exec = require('child_process').exec;
 
-        // var db = data.connection;
         var command = (data.password ? 'PGPASSWORD=\'' + data.password + '\'' : '') +
             ' psql ' +
             ' -d ' + data.database +
@@ -271,8 +260,10 @@ function createHanlders(grunt){
             ' -f ' + data.filename;
 
         //TODO: Add --dry-run
-        console.log(grunt.template.process(command));
-        return done();
+        if(data.dryRun){
+            console.log(grunt.template.process(command));
+            return done();
+        }
 
         exec(grunt.template.process(command), data.execOptions, function(err, stdout, stderr) {
             if (stdout) {
@@ -311,3 +302,38 @@ function createHanlders(grunt){
 
 
 
+function buildConnectionFromSailsConfig(options) {
+    // return the options url if one is configured
+    if (options.url) return options.url;
+
+    var scheme,
+        url;
+
+    switch (options.adapter) {
+        case 'sails-mysql':
+            scheme = 'mysql';
+        break;
+        case 'sails-postgresql':
+            scheme = 'postgres';
+        break;
+        default:
+            throw new Error('migrations not supported for ' + options.adapter);
+    }
+
+    url = scheme + '://';
+
+    if (options.user) {
+        url += options.user;
+            if (options.password) {
+                url += ':' + encodeURIComponent(options.password);
+            }
+        url += '@';
+    }
+
+    url += options.host || 'localhost';
+    if (options.port) url += ':' + options.port;
+
+    if (options.database) url += '/' + encodeURIComponent(options.database);
+
+    return url;
+}
