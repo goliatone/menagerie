@@ -25,6 +25,7 @@ module.exports = function(grunt) {
     grunt.registerTask('db:setup', 'Setup database', function(command) {
         var done = this.async();
 
+        console.log('HELP', grunt.option('help'));
         if (!command) {
             usage(grunt);
             return done();
@@ -41,8 +42,6 @@ module.exports = function(grunt) {
             handlers.exec(command, args, done);
         });
     });
-
-    var _ = grunt.util._;
 
     /**
      * Create Postgres user:
@@ -133,7 +132,11 @@ function buildArguments(defaults) {
 }
 
 function usage(grunt) {
-
+    var ln = grunt.log.writeln;
+    var commands = Object.keys(createHanlders({}).commandMap).join('|');
+    ln('usage: grunt db:setup:<'+commands+'> [options]');
+    ln('');
+    ln('db:setup:create-user Options');
 }
 
 function exec_db(connection, statement, done) {
