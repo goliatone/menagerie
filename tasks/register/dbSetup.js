@@ -22,14 +22,15 @@ module.exports = function(grunt) {
 
     var handlers = createHanlders(grunt);
 
-    grunt.registerTask('db:setup', 'Setup database', function(command) {
+    grunt.registerTask('db:setup', 'Setup database. Run without options to get more info.', function(command) {
         var done = this.async();
 
-        console.log('HELP', grunt.option('help'));
         if (!command) {
             usage(grunt);
             return done();
         }
+
+
 
         console.log('stdout', grunt.stdout);
         console.log('failOnError', grunt.failOnError);
@@ -37,6 +38,9 @@ module.exports = function(grunt) {
         sailsLoader.loadUserConfig(function(err, out){
 
             var args = getCommandOptions(out);
+            args.stdout = grunt.log.oklns;
+            args.stderr = grunt.log.errorlns;
+
 
             console.log('Command', command, 'args', args);
             handlers.exec(command, args, done);
@@ -49,35 +53,35 @@ module.exports = function(grunt) {
      * grunt pgcreateuser --user=peperone --password=Password --roles=SUPERUSER,LOGIN,REPLICATION
      * ```
      */
-    grunt.registerTask('pg_createuser', 'Add a new Postgres user.', function(){
-        var done = this.async(),
-            data = buildArguments();
-        handlers.createUser(data, done);
-    });
+    // grunt.registerTask('createuser', 'Add a new Postgres user.', function(){
+    //     var done = this.async(),
+    //         data = buildArguments();
+    //     handlers.createUser(data, done);
+    // });
 
-    grunt.registerTask('pg_createdb', 'Create a new Postgres database.', function(){
-        var done = this.async(),
-            data = buildArguments();
-        handlers.createDb(data, done);
-    });
+    // grunt.registerTask('pg_createdb', 'Create a new Postgres database.', function(){
+    //     var done = this.async(),
+    //         data = buildArguments();
+    //     handlers.createDb(data, done);
+    // });
 
-    grunt.registerTask('pg_owner', 'Change the owner of a Postgres database.', function() {
-        var done = this.async(),
-            data = buildArguments();
-        handlers.assignOwner(data, done);
-    });
+    // grunt.registerTask('pg_owner', 'Change the owner of a Postgres database.', function() {
+    //     var done = this.async(),
+    //         data = buildArguments();
+    //     handlers.assignOwner(data, done);
+    // });
 
-    grunt.registerTask('pg_dropdb', 'Drop a Postgres database.', function() {
-        var done = this.async(),
-            data = buildArguments();
-        handlers.dropDb(data, done);
-    });
+    // grunt.registerTask('pg_dropdb', 'Drop a Postgres database.', function() {
+    //     var done = this.async(),
+    //         data = buildArguments();
+    //     handlers.dropDb(data, done);
+    // });
 
-    grunt.registerTask('pg_dropuser', 'Drop a Postgres user.', function() {
-        var done = this.async(),
-            data = buildArguments();
-        handlers.dropUser(data, done);
-    });
+    // grunt.registerTask('pg_dropuser', 'Drop a Postgres user.', function() {
+    //     var done = this.async(),
+    //         data = buildArguments();
+    //     handlers.dropUser(data, done);
+    // });
 
     /**
      *
@@ -85,11 +89,11 @@ module.exports = function(grunt) {
      *       --connection.host=pepe.dev --connection.port=9090 --connection.user=menagerie \
      *       --filename='pepe.json'
      */
-    grunt.registerTask('pg_sqlfile', 'Run a sql against a Postgres database', function() {
-        var done = this.async(),
-            data = buildArguments();
-        handlers.sqlFile(data, done);
-    });
+    // grunt.registerTask('pg_sqlfile', 'Run a sql against a Postgres database', function() {
+    //     var done = this.async(),
+    //         data = buildArguments();
+    //     handlers.sqlFile(data, done);
+    // });
 };
 
 
