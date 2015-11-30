@@ -195,7 +195,7 @@ function createHanlders(grunt){
 
         if(!data.encoding) data.encoding = 'UTF-8';
 
-        stmt += 'ENCODING=\''+data.encoding+'\'';
+        stmt += ' ENCODING=\''+data.encoding+'\'';
 
         exec_db(data, stmt).then(function(res) {
             grunt.log.writeln('Database "' + data.name + '" created.');
