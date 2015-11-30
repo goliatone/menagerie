@@ -165,17 +165,17 @@ function createHanlders(grunt){
     function createUser(data, callback) {
         //http://www.postgresql.org/docs/current/static/sql-createuser.html
 
-        var stmt = 'CREATE USER ' + data.user;
+        var sql = 'CREATE USER ' + data.user;
 
-        if (data.roles) stmt += ' ' + data.roles.join(', ');
+        if (data.roles) sql += ' ' + data.roles.join(', ');
 
-        if (data.password) stmt += ' WITH PASSWORD \'' + data.password + '\'';
+        if (data.password) sql += ' WITH PASSWORD \'' + data.password + '\'';
 
-        stmt += ';';
+        sql += ';';
 
-        if(data.superuser) stmt += 'ALTER ROLE "' + data.user + '" WITH superuser;';
+        if(data.superuser) sql += 'ALTER ROLE "' + data.user + '" WITH superuser;';
 
-        exec_db(data, stmt).then(function(res) {
+        exec_db(data, sql).then(function(res) {
             grunt.log.writeln('Database user "' + data.user + '" created' + (data.roles ? ' with roles: ' + data.roles.join(', ') : '') + '.');
             callback();
         }).catch(function(err){
@@ -187,17 +187,17 @@ function createHanlders(grunt){
     function createDb(data, callback) {
         // do DB name and owner here:
         // * http://www.postgresql.org/docs/8.1/static/sql-createdatabase.html
-        var stmt = 'CREATE DATABASE ' + data.name;
+        var sql = 'CREATE DATABASE ' + data.name;
 
         if (data.owner) {
-            stmt += ' WITH OWNER ' + data.owner;
+            sql += ' WITH OWNER ' + data.owner;
         }
 
         if(!data.encoding) data.encoding = 'UTF-8';
 
-        stmt += ' ENCODING=\''+data.encoding+'\'';
+        sql += ' ENCODING=\''+data.encoding+'\'';
 
-        exec_db(data, stmt).then(function(res) {
+        exec_db(data, sql).then(function(res) {
             grunt.log.writeln('Database "' + data.name + '" created.');
             callback();
         }).catch(function(err){
@@ -207,8 +207,8 @@ function createHanlders(grunt){
     }
 
     function assignOwner(data, callback){
-        var stmt = 'ALTER DATABASE ' + data.name + ' OWNER TO ' + data.owner;
-        exec_db(data, stmt).then(function(res) {
+        var sql = 'ALTER DATABASE ' + data.name + ' OWNER TO ' + data.owner;
+        exec_db(data, sql).then(function(res) {
             grunt.log.writeln('Database "' + data.name + '" created.');
             callback();
         }).catch(function(err){
@@ -228,8 +228,8 @@ function createHanlders(grunt){
         });
     }
     function dropUser(data, done){
-        var stmt = 'DROP ROLE IF EXISTS ' + data.user;
-        exec_db(data, stmt).then(function(res) {
+        var sql = 'DROP ROLE IF EXISTS ' + data.user;
+        exec_db(data, sql).then(function(res) {
             grunt.log.writeln('Database user "' + data.user + '" dropped.');
             done();
         }).catch(function(err){
@@ -251,12 +251,12 @@ function createHanlders(grunt){
         var exec = require('child_process').exec;
 
         var command = (data.password ? 'PGPASSWORD=\'' + data.password + '\'' : '') +
-            ' psql ' +
+            ' psql' +
             ' -d ' + data.database +
             (data.host ? ' -h ' + data.host : '' ) +
-            ' -p ' + data.port +
+            ' -p ' + (data.port || 5432) +
             ' -U ' + data.user +
-            ' -w ' +
+            ' -w' +
             ' -f ' + data.filename;
 
         //TODO: Add --dry-run
