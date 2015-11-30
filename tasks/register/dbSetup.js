@@ -41,7 +41,7 @@ module.exports = function(grunt) {
      * grunt pgcreateuser --user=peperone --password=Password --roles=SUPERUSER,LOGIN,REPLICATION
      * ```
      */
-    grunt.registerTask('pgcreateuser', 'Add a new Postgres user.', function() {
+    grunt.registerTask('pg_createuser', 'Add a new Postgres user.', function() {
         //http://www.postgresql.org/docs/current/static/sql-createuser.html
     // grunt.registerMultiTask('pgcreateuser', 'Add a new Postgres user.', function() {
         var self = this;
@@ -72,7 +72,7 @@ module.exports = function(grunt) {
         });
     });
 
-    grunt.registerTask('pgcreatedb', 'Create a new Postgres database.', function() {
+    grunt.registerTask('pg_createdb', 'Create a new Postgres database.', function() {
         var self = this;
         var data = self.data;
         var done = self.async();
@@ -98,7 +98,7 @@ module.exports = function(grunt) {
     });
 
 
-    grunt.registerTask('pgowner', 'Change the owner of a Postgres database.', function() {
+    grunt.registerTask('pg_owner', 'Change the owner of a Postgres database.', function() {
         var self = this;
         var data = self.data;
         var done = self.async();
@@ -112,7 +112,7 @@ module.exports = function(grunt) {
         });
     });
 
-    grunt.registerTask('pgdropdb', 'Drop a Postgres database.', function() {
+    grunt.registerTask('pg_dropdb', 'Drop a Postgres database.', function() {
         var self = this;
         var done = this.async();
         var data = this.data;
@@ -126,7 +126,7 @@ module.exports = function(grunt) {
         });
     });
 
-    grunt.registerTask('pgdropuser', 'Drop a Postgres user.', function() {
+    grunt.registerTask('pg_dropuser', 'Drop a Postgres user.', function() {
         var self = this;
         var data = self.data;
         var done = self.async();
@@ -147,7 +147,7 @@ module.exports = function(grunt) {
      *       --connection.host=pepe.dev --connection.port=9090 --connection.user=menagerie \
      *       --filename='pepe.json'
      */
-    grunt.registerTask('pgsqlfile', 'Run a sql against a Postgres database', function() {
+    grunt.registerTask('pg_sqlfile', 'Run a sql against a Postgres database', function() {
 
         var done = this.async();
 
@@ -176,6 +176,7 @@ module.exports = function(grunt) {
                 ' -w ' +
                 ' -f ' + data.filename;
 
+            //TODO: Add --dry-run
             console.log(grunt.template.process(command));
             return done();
 
