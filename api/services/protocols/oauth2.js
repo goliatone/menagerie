@@ -29,7 +29,7 @@ module.exports = function (req, accessToken, refreshToken, profile, next) {
         tokens     : { accessToken: accessToken }
     };
 
-        console.log('OAUTH2', accessToken, refreshToken, profile);
+    console.log('OAUTH2', accessToken, refreshToken, profile);
 
     if (refreshToken !== undefined) {
         query.tokens.refreshToken = refreshToken;
