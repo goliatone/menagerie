@@ -39,7 +39,6 @@ COPY package.json $TARGET_DIR/package.json
 COPY app.js $TARGET_DIR/app.js
 
 COPY data $TARGET_DIR/data
-COPY init-data $TARGET_DIR/init-data
 
 EXPOSE 1337
 
