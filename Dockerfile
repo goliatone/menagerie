@@ -7,8 +7,6 @@ RUN mkdir $TARGET_DIR
 WORKDIR $TARGET_DIR
 
 ENV DEBIAN_FRONTEND noninteractive
-ENV POSTGRES_USER menagerie
-ENV POSTGRES_PASSWORD menagerie
 
 RUN npm i -g pm2@0.15.7
 
