@@ -286,6 +286,34 @@ CREATE TABLE "category"
 ```
 
 
+
+### Grunt tasks
+
+There are several custom grunt tasks:
+* db:setup:*
+* menagerie:*
+
+`db:setup` handles common **postgres** operations like creating a database user, droping a database, or executing a custom sql file.
+
+`menagerie:*` provides different tasks:
+
+
+Under the hood both uses sails, we can reuse the same _connection_ configurations without having them duplicated in the _tasks/config_ directory.
+
+This also means that we can use `envset` to manage connection environmental variables:
+
+To create a user:
+```
+envset development -- grunt menagerie:user:create --username=test_user --email=test_user@menagerie.io
+```
+
+To create a token:
+```
+envset development -- grunt menagerie:token:create --userid=3
+```
+
+
+
 [1]: http://stackoverflow.com/questions/23446484/sails-js-populate-nested-associations
 [2]: http://stackoverflow.com/questions/26535727/sails-js-waterline-populate-deep-nested-association
 [3]: http://stackoverflow.com/questions/32594628/use-bluebird-to-deep-populate-objects-in-sailsjs
