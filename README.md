@@ -332,3 +332,9 @@ envset development -- grunt menagerie:token:create --userid=3
 
 TODO: 
 * Create Images if not present (review BarcodeController and BarcodeService)
+
+
+
+<!--
+https://www.digitalocean.com/community/tutorials/how-to-use-roles-and-manage-grant-permissions-in-postgresql-on-a-vps--2
+-->
