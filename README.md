@@ -9,10 +9,10 @@ Manage things... all the things. WeeThings!
 ### Grunt Tasks
 
 There are several custom grunt tasks:
-* db:setup:*
+* db:manage:*
 * menagerie:*
 
-Under the hood both uses sails, we can reuse the same _connection_ configurations without having them duplicated in the _tasks/config_ directory.
+Under the hood both tasks load Sails configuration, so we can reuse the same _connection_ options without having to duplicate them in the _tasks/config_ directory.
 
 This also means that we can use [envset][envset] to manage connection environmental variables:
 
@@ -27,19 +27,27 @@ envset development -- grunt menagerie:token:create --userid=3
 ```
 
 
-#### db:setup:*
+#### db:manage:*
 
-`db:setup` handles common **postgres** operations like creating a database user, dropping a database, or executing a custom `sql` file. You can run any of the commands with the `--dry-run` to see the generated `sql` but without executing the query against the database.
+`db:manage` handles common **postgres** operations like creating a database user, dropping a database, or executing a custom `sql` file. You can run any of the commands with the `--dry-run` to see the generated `sql` but without executing the query against the database.
 
 The available commands are:
-* db:setup:create-user: --roles, --user, --password, --superuser
-* db:setup:create-db: --name, --owner, --encoding
-* db:setup:assign-owner: --name, --owner
-* db:setup:drop-db: --name
-* db:setup:drop-user: --user
-* db:setup:sql-file: --database, --host, --port, --user, --filename
+* db:manage:create-user: --roles, --user, --password, --superuser
+* db:manage:create-db: --database, --owner, --encoding
+* db:manage:assign-owner: --database, --owner
+* db:manage:drop-db: --database
+* db:manage:drop-user: --user
+* db:manage:sql-file: --database, --host, --port, --user, --filename
 
-You can get more information about the commands by using grunt's help.
+You can get more information about the commands by running the task without a subcommand: `$ grunt db:manage`.
+
+Example 
+```
+grunt db:manage:sql-file --connection.password=pepe --connection.name=something \
+    --connection.host=things.menagerie.dev --connection.port=5432 --connection.user=menagerie \
+    --filename=migration_file.sql
+```
+
 
 #### menagerie:*
 
