@@ -1,7 +1,7 @@
 
 <form id="menagerie" action="<%= form.action %>" method="<%= form.method %>" enctype="application/x-www-form-urlencoded">
     <label>Name
-        <input name="name" type="text" placeholder="Name" value="<%= record.name ? record.name : 'Name' %>"/>
+        <input name="name" type="text" placeholder="Name" value="<%= record.name ? record.name : 'Name' %>" required/>
     </label>
     <label>Description
         <input name="description" type="text" placeholder="Description"  value="<%= record.description ? record.description : 'Description' %>"/>
