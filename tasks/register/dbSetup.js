@@ -23,7 +23,7 @@ module.exports = function(grunt) {
 
     var handlers = createHanlders(grunt);
 
-    grunt.registerTask('db:setup', 'Setup database. Run without options to get more info.', function(command) {
+    grunt.registerTask('db:manage', 'Setup database. Run without options to get more info.', function(command) {
         var done = this.async();
 
         if (!command) {
@@ -62,20 +62,40 @@ function getCommandOptions(config){
 function usage(grunt) {
     var ln = grunt.log.writeln;
     var commands = Object.keys(createHanlders({}).commandMap).join('|');
-    ln('usage: grunt db:setup:<'+commands+'> [options]');
     ln('');
-    ln('db:setup:create-user Options');
+    ln('usage: grunt db:manage:<'+commands+'> [options]');
+    ln('');
+    ln('Available subcommands are:');
+    ln('');
+    ln('  create-db: --database, --owner, --encoding');
+    ln('  create-user: --roles, --user, --password, --superuser');
+    ln('  assign-owner: --database, --owner');
+    ln('  drop-db: --database');
+    ln('  drop-user: --user');
+    ln('  sql-file: --connection.database, --connection.host, --connection.port, --connection.user, --connection.filename');
+    ln('');
+    ln('The tasks merges Sails config.models.connection into a configuration object that can be');
+    ln('overridden through terminal options.');
+    ln('');
+    ln('');
+    ln('Examples:');
+    ln('');
+    ln('  grunt db:manage:create-user --user=peperone --password=Password --roles=SUPERUSER,LOGIN,REPLICATION');
+    ln('');
+    ln('  grunt db:manage:sql-file --connection.password=pepe --connection.name=something \\');
+    ln('\t--connection.host=things.menagerie.dev --connection.port=5432 --connection.user=menagerie \\');
+    ln('\t--filename=migration_file.sql');
 }
 
 function exec_db(options, statement) {
     var connection = options.connection,
         dryRun = options.dryRun;
 
-    console.log('======')
+    console.log('======');
     console.log('connection', connection);
     console.log('options', options);
     console.log('QUERY\n', statement);
-    console.log('======')
+    console.log('======');
 
     var pg = require('pg');
 
@@ -125,7 +145,7 @@ function createHanlders(grunt){
     /**
      * Create Postgres user:
      * ```
-     * grunt pgcreateuser --user=peperone --password=Password --roles=SUPERUSER,LOGIN,REPLICATION
+     * grunt db:manage:create-user --user=peperone --password=Password --roles=SUPERUSER,LOGIN,REPLICATION
      * ```
      */
     function createUser(data, callback) {
@@ -153,7 +173,7 @@ function createHanlders(grunt){
     function createDb(data, callback) {
         // do DB name and owner here:
         // * http://www.postgresql.org/docs/8.1/static/sql-createdatabase.html
-        var sql = 'CREATE DATABASE ' + data.name;
+        var sql = 'CREATE DATABASE ' + data.database;
 
         if (data.owner) {
             sql += ' WITH OWNER ' + data.owner;
@@ -164,7 +184,7 @@ function createHanlders(grunt){
         sql += ' ENCODING=\''+data.encoding+'\'';
 
         exec_db(data, sql).then(function(res) {
-            grunt.log.writeln('Database "' + data.name + '" created.');
+            grunt.log.writeln('Database "' + data.database + '" created.');
             callback();
         }).catch(function(err){
             console.err('ERROR', err);
@@ -173,9 +193,9 @@ function createHanlders(grunt){
     }
 
     function assignOwner(data, callback){
-        var sql = 'ALTER DATABASE ' + data.name + ' OWNER TO ' + data.owner;
+        var sql = 'ALTER DATABASE ' + data.database + ' OWNER TO ' + data.owner;
         exec_db(data, sql).then(function(res) {
-            grunt.log.writeln('Database "' + data.name + '" created.');
+            grunt.log.writeln('Database "' + data.database + '" created.');
             callback();
         }).catch(function(err){
             console.err('ERROR', err);
@@ -185,8 +205,8 @@ function createHanlders(grunt){
 
     function dropDb(data, done){
         //http://www.postgresql.org/docs/current/static/sql-dropdatabase.html
-        exec_db(data, 'DROP DATABASE IF EXISTS ' + data.name + ';').then(function(res) {
-            grunt.log.writeln('Database "' + data.name + '" dropped.');
+        exec_db(data, 'DROP DATABASE IF EXISTS ' + data.database + ';').then(function(res) {
+            grunt.log.writeln('Database "' + data.database + '" dropped.');
             done();
         }).catch(function(err){
             console.err('ERROR', err);
@@ -206,7 +226,7 @@ function createHanlders(grunt){
 
     /**
      *
-     * grunt pgsqlfile --connection.password=pepe --connection.name=something \
+     * grunt db:manage:sql-file --connection.password=pepe --connection.name=something \
      *       --connection.host=pepe.dev --connection.port=9090 --connection.user=menagerie \
      *       --filename='pepe.json'
      */
