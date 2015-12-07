@@ -3,66 +3,106 @@ Manage things... all the things. WeeThings!
 
 ---
 
-## Docker
 
-Currently we are using three docker environments:
-- Development 
-- Staging
-- Production
+## Development
 
-Each environment has a different set of environmental variables with different values for things like the `postgres` connection data or the google oauth client information.
+### Grunt Tasks
 
-The environment variables currently used:
+There are several custom grunt tasks:
+* db:setup:*
+* menagerie:*
 
-* DEBUG
-* NODE_ENV
-* NODE_CLIENT_BASE_URL
-* GOOGLE_CLIENT_ID
-* GOOGLE_CLIENT_SECRET
-* NODE_POSTGRES_USER
-* NODE_POSTGRES_PSWD
-* NODE_POSTGRES_DATABASE
-* NODE_POSTGRES_ENDPOINT
+Under the hood both uses sails, we can reuse the same _connection_ configurations without having them duplicated in the _tasks/config_ directory.
 
-You can build a `docker-compose.yml` file dynamically. You can use the `slv` utility to expand the tokens in the `docker-compose.tpl.yml` file. It will replace any of the tokens used in the template with an environmental variable with the same name.
+This also means that we can use [envset][envset] to manage connection environmental variables:
 
-If the template has a ${MY_VAR} token and the current environment has a MY_VAR variable of "my_value", ${MY_VAR} will get replaced with "my_value".
-
-You can use [envset][envset] to dynamically inject environmental variables into your shell, and [slv][slv] will pick those up.
-
-This will print the rendered template to terminal:
-
+To create a user in the development environment:
 ```
-$ envset development slv docker-compose.tpl.yml
+envset development -- grunt menagerie:user:create --username=test_user --email=test_user@menagerie.io
 ```
 
-To store the template:
-
+To create a token:
 ```
-$ envset development slv docker-compose.tpl.yml > docker-compose.yml
+envset development -- grunt menagerie:token:create --userid=3
 ```
 
 
-`envset` uses an `.envset` config file holding env vars definitions. You can check the [tpl.envset][tplenvset] for an example.
+#### db:setup:*
 
-To share `.envset` files you could use something like [vcn][vcn], that uses an S3 bucket to share encrypted files between team members.
+`db:setup` handles common **postgres** operations like creating a database user, dropping a database, or executing a custom `sql` file. You can run any of the commands with the `--dry-run` to see the generated `sql` but without executing the query against the database.
 
-[vcn]: https://github.com/goliatone/vcn
+The available commands are:
+* db:setup:create-user: --roles, --user, --password, --superuser
+* db:setup:create-db: --name, --owner, --encoding
+* db:setup:assign-owner: --name, --owner
+* db:setup:drop-db: --name
+* db:setup:drop-user: --user
+* db:setup:sql-file: --database, --host, --port, --user, --filename
 
-To install `envset`:
+You can get more information about the commands by using grunt's help.
+
+#### menagerie:*
+
+`menagerie:*` provides the following tasks:
+
+* `menagerie:user:create`: --username, --email
+* `menagerie:user:update`: --id, all other options behind double dashes.
+* `menagerie:user:delete`: --id
+* `menagerie:token:create`: --userid
+* `menagerie:token:update`: --id
+* `menagerie:token:delete`: --token
+
+
+This also means that we can use [envset][envset] to manage connection environmental variables, so we can:
+
+Create a user in the development environment:
+```
+envset development -- grunt menagerie:user:create --username=test_user --email=test_user@menagerie.io
+```
+
+Create a new oauth token for a given user:
+```
+envset development -- grunt menagerie:token:create --userid=3
+```
+
+
+### Data Import/Export
+
+There are also two scripts available under **data/postgres/bin** to manage data import and export. This will be eventually ported to grunt. 
+
+The two helper scripts are:
+
+- `export-tables-to-csv`
+- `import-csvs-to-table`
+
+It is recommend to use [envset][envset] to manage credentials by injecting them into a shell's environment.
+
+#### export-tables-to-csv
+Use this scrip to export data from one environment in `CSV` format.
+
+From the **menagerie** project directory, export the tables from the **production** environment to CSV format. The command would be:
 
 ```
-npm i -g envset
+$ envset production ./data/postgres/bin/export-tables-to-csv -t device,location,devicetype --verbose
 ```
 
-To install `slv`:
+You list all tables to be exported with the `-t` flag. This will generate a CSV file per table inside the **data/postgres/data** directory.
+
+#### import-csvs-to-table
+
+The following command would import data from each CSV file into a table with a matching name in the **development** environment:
 
 ```
-npm i -g slv
+envset development ./data/postgres/bin/import-csvs-to-table -t device,devicetype,location
+```
+
+To load data in the local development environment:
+```
+envset local ./data/postgres/bin/import-csvs-to-table -t device,devicetype,location
 ```
 
 
-### Development
+### Docker
 
 We use docker and docker-machine. The basic work-flow is a build and up cycle.
 Ensure that your desired docker machine is up and running. 
@@ -93,47 +133,72 @@ When your container is running, you can start a bash terminal into the container
 docker exec -ti menagerie_menagerie_1 /bin/bash
 ```
 
+#### docker-compose
 
-## Build process
+There is a `docker-compose` template from which you can build a `docker-compose.yml` file dynamically. 
 
-#### Travis CI
+You can use the [slv][slv] utility to expand the tokens in the `docker-compose.tpl.yml` template file, `slv`  will replace any tokens used in the template with an environmental variable with the same name.
 
-If you don't have the `travis` CLI [client][travis-ci] installed, then follow the [instructions][instructions].
+You can use [envset][envset] to dynamically inject environmental variables into your shell, and [slv][slv] will pick those up.
 
-Also, you might want to configure the client with a [github token][gtoken], it will make working with the client easier.
-
-In order to push `docker` images to `docker hub` you have to setup environmental variables for `travis`:
+This will print the rendered template to terminal:
 
 ```
-travis env set DOCKER_EMAIL me@example.com
-travis env set DOCKER_USERNAME myusername
-travis env set DOCKER_PASSWORD secretsecret
+$ envset development -- slv docker-compose.tpl.yml
 ```
 
+To store the template:
 
-#### Docker
-
-All build commands are in the `.travis.yml` file, but basically:
-
-Build and tag image:
 ```
-docker build -t goliatone/menagerie .
-```
-
-Then, we run tests:
-```
-docker run goliatone/menagerie  /bin/sh -c "cd /opt/menagerie; npm test"
+$ envset development -- slv docker-compose.tpl.yml > docker-compose.yml
 ```
 
 
+`envset` uses an `.envset` configuration file holding environmental variables per environment. You can check the [tpl.envset][tplenvset] for an example.
+
+A simple way to share `.envset` files between team members is [vcn][vcn], it uses amazon's `S3` to share encrypted files.
+
+Store an `.envset` file:
+
 ```
-User.create({username:"goliat", email:"hello@goliatone.com"}).exec(console.log)
+vcn put -b <bucket_name> --password <password> --id envset --filepath .envset
 ```
 
 
+Retrieve `.envset` file:
 ```
-Passport.create({"protocol": "local","password": "$2a$10$eLP4Wh/apu0QMYwH5t0SX.wEcPG5r1WmSADZtZjJJYlQP.G4dwIzq","user": 1,"accessToken": "qVKUJ7/Os8eSCyjFf86j31rwbRavRBwM214GOJ+kcvQg4uSjq1WoZ5YNb71MsDit","createdAt": "2015-10-26T19:55:40.382Z","updatedAt": "2015-10-26T19:55:40.382Z","id": 1}).exec(console.log)
+vcn get -b <bucket_name> --password <password> --id envset --filepath .envset
 ```
+
+
+To install `envset`, `slv`, and `vcn`:
+
+```
+npm i -g envset slv vcn 
+```
+
+
+
+## Environment Variables
+
+Currently we are using three docker environments:
+- Development 
+- Staging
+- Production
+
+Each environment has a different set of environmental variables for things like the `postgres` connection data or the google oauth client information.
+
+The environment variables currently used:
+
+* NODE_ENV: Environment name; 'local', 'development', 'staging', 'production'.
+* NODE_DEBUG: '*', false, or a specific `debug` level
+* NODE_CLIENT_BASE_URL: Used to build OAuth links.
+* GOOGLE_CLIENT_ID
+* GOOGLE_CLIENT_SECRET
+* NODE_POSTGRES_USER
+* NODE_POSTGRES_PSWD
+* NODE_POSTGRES_DATABASE
+* NODE_POSTGRES_ENDPOINT
 
 
 ## Google OAuth
@@ -162,57 +227,62 @@ Your local development docker environment will not work with oauth since you acc
 
 Enable APIs, [here][eapi]
 
-### Docker: Development
+### Gooble OAuth callback on Docker Container
 
-A) Get your docker's env IP:
+To run OAuth callbacks inside the container we will configure a `hosts` entry in order to get a local domain as OAuth will not take IPs.
+
+Get your docker's env IP, here I'm using a docker machine called **dev**:
 
 ```
-docker-machine ip dev
+$ docker-machine ip dev
+192.168.99.100
 ```
 
-B) Add an entry to your hosts table routing the previous IP to the `things.menagerie.dev` domain:
+
+Add an entry to your hosts table routing the previous IP to the `things.menagerie.dev` domain:
+
 ```
 sudo nano /etc/hosts
 ```
 
 
+Add the local domain.
 ```
 ##### LOCAL DEV
 192.168.99.100     things.menagerie.dev
 ```
 
 
-## Data 
-There are two helper scripts to manage data:
-- `export-tables-to-csv`
-- `import-csvs-to-table`
+## Build process
 
-It is recommend to use `envset` to manage credentials by injecting them into a shell's environment.
+#### Travis CI
 
-`export-tables-to-csv`:
-From the **menagerie** project directory, export the tables from the **production** environment to CSV format. The command would be:
+If you don't have the `travis` CLI [client][travis-ci] installed, then follow the [instructions][instructions].
 
-```
-$ envset production ./data/postgres/bin/export-tables-to-csv -t device,location,devicetype --verbose
-```
+Also, you might want to configure the client with a [github token][gtoken], it will make working with the client easier.
 
-You list all tables to be exported with the `-t` flag. This will generate a CSV file per table inside the **data/postgres/data** directory.
-
-`import-csvs-to-table`:
-
-The following command would import data from each CSV file into a table with a matching name in the **development** environment:
+In order to push `docker` images to `docker hub` you have to setup environmental variables for `travis`:
 
 ```
-envset development ./data/postgres/bin/import-csvs-to-table -t device,devicetype,location
-```
-
-To load data in the local development environment:
-```
-envset local ./data/postgres/bin/import-csvs-to-table -t device,devicetype,location
+travis env set DOCKER_EMAIL me@example.com
+travis env set DOCKER_USERNAME myusername
+travis env set DOCKER_PASSWORD secretsecret
 ```
 
 
+#### Build Docker Images
 
+All build commands are in the `.travis.yml` file, but basically:
+
+Build and tag image:
+```
+docker build -t goliatone/menagerie .
+```
+
+Then, we run tests:
+```
+docker run goliatone/menagerie  /bin/sh -c "cd /opt/menagerie; npm test"
+```
 
 
 ### TODO:
@@ -237,6 +307,7 @@ https://github.com/cgmartin/sailsjs-angularjs-bootstrap-example/tree/master/view
 http://stackoverflow.com/questions/30671160/swagger-sails-js
 -->
 
+<!-- 
 ### Development
 
 ```js
@@ -284,34 +355,7 @@ CREATE TABLE "category"
      "sort_order"  INTEGER      NULL DEFAULT NULL,
   );
 ```
-
-
-
-### Grunt tasks
-
-There are several custom grunt tasks:
-* db:setup:*
-* menagerie:*
-
-`db:setup` handles common **postgres** operations like creating a database user, droping a database, or executing a custom sql file.
-
-`menagerie:*` provides different tasks:
-
-
-Under the hood both uses sails, we can reuse the same _connection_ configurations without having them duplicated in the _tasks/config_ directory.
-
-This also means that we can use `envset` to manage connection environmental variables:
-
-To create a user:
-```
-envset development -- grunt menagerie:user:create --username=test_user --email=test_user@menagerie.io
-```
-
-To create a token:
-```
-envset development -- grunt menagerie:token:create --userid=3
-```
-
+-->
 
 
 [1]: http://stackoverflow.com/questions/23446484/sails-js-populate-nested-associations
@@ -327,7 +371,7 @@ envset development -- grunt menagerie:token:create --userid=3
 [gdc]: https://console.developers.google.com
 [eapi]: https://console.developers.google.com/apis/library
 [tplenvset]: https://github.com/goliatone/envset/blob/master/example/tpl.envset
-
+[vcn]: https://github.com/goliatone/vcn
 
 
 TODO: 
