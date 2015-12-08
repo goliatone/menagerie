@@ -29,7 +29,7 @@ var http = require('http'),
 
 module.exports = function (req, res, next) {
   // Initialize Passport
-  console.log('PASSPORT POLICY');
+  // console.log('PASSPORT POLICY');
   passport.initialize()(req, res, function () {
     // Use the built-in sessions
     passport.session()(req, res, function () {
