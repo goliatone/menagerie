@@ -114,6 +114,8 @@ function buildPagination(){
                 index = 0,
                 pages = '';
 
+            if(data.count < step) return;
+
             for(var i = 0; i < total; i++){
                 index = i * step;
                 buffer.push('<li' + (index === cursor ? ' class="current"' : '') + '><a href="?skip=' + index + '">' + (i + 1) + '</a></li>');
@@ -126,7 +128,7 @@ function buildPagination(){
             }
 
             pages = buffer.join('');
-            
+
 
             if(cursor > 0){
                 previous = previous.replace('#LINK#', '/device?skip=' + (cursor - step));
@@ -134,7 +136,7 @@ function buildPagination(){
             }
             if(cursor < data.count){
                 next = next.replace('#LINK#', '/device?skip=' + (cursor + step));
-                pages += next; 
+                pages += next;
             }
 
 
