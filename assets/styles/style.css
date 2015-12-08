@@ -48,7 +48,6 @@ footer .production {
 
 
 input:required:invalid, input:focus:invalid {
-    -moz-box-shadow: none;
     border: 1px solid red;
 }
 input:required:valid {
