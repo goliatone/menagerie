@@ -34,9 +34,30 @@ module.exports = {
         }).catch(function(err){
             console.log('Error');
         });
+    },
+    generateSeedFromData: function(filename){
+        filename = filename || 'location_seed.json';
+
+        console.log('>>>>>>>>>>> Generating data <<<<<<<<<<<');
+        return Location.find().then(function(records){
+            console.log(records);
+            if(!records) records = [];
+
+            var fs = require('fs');
+
+            records.map(function(item){
+                delete item.createdAt;
+                delete item.updatedAt;
+            });
+
+            fs.writeFileSync(filename, JSON.stringify(records));
+        }).catch(function(err){
+            console.log('Error on LocationService.generateSeedFromData');
+            console.log(err.message);
+            return err;
+        });
     }
 };
-
 
 function getDataSource(entity){
     var datasource = [],
