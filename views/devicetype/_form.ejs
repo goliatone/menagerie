@@ -1,13 +1,13 @@
 
 <form id="menagerie" action="<%= form.action %>" method="<%= form.method %>" enctype="application/x-www-form-urlencoded">
     <label>Name
-        <input name="name" type="text" placeholder="Name" value="<%= record.name ? record.name : 'Name' %>"/>
+        <input name="name" type="text" placeholder="Name" value="<%= record.name ? record.name : '' %>" required/>
     </label>
     <label>Description
-        <input name="description" type="text" placeholder="Description"  value="<%= record.description ? record.description : 'Description' %>"/>
+        <input name="description" type="text" placeholder="Description"  value="<%= record.description ? record.description : '' %>"/>
     </label>
     <label>Label
-        <input name="label" type="text" placeholder="Label"  value="<%= record.label ? record.label : 'Label' %>"/>
+        <input name="label" type="text" placeholder="Label"  value="<%= record.label ? record.label : '' %>"/>
     </label>
     <label>Metadata
         <textarea name="metadata"><%= record.metadata ? JSON.stringify(record.metadata) : '' %></textarea>
