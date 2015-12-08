@@ -10,13 +10,13 @@
         />
     </label>
     <label>Name
-        <input name="name" type="text" placeholder="Name" value="<%= record.name ? record.name : 'Name' %>" required/>
+        <input name="name" type="text" placeholder="Name" value="<%= record.name ? record.name : '' %>" required/>
     </label>
     <label>Description
-        <input name="description" type="text" placeholder="Description"  value="<%= record.description ? record.description : 'Description' %>"/>
+        <input name="description" type="text" placeholder="Description"  value="<%= record.description ? record.description : '' %>"/>
     </label>
     <% if(record.id){%>
-        <input hidden="true" name="id" value="<%= record.id %>" />
+        <input hidden="true" name="id" value="<%= record.id %>" required/>
     <%}%>
     <button id="submit" class="success expand radius">Send</button>
 </form>
