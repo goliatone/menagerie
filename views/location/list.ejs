@@ -54,6 +54,10 @@ function buildPagination(){
                 index = 0,
                 pages = '';
 
+            if(data.count < step) return;
+
+            console.log('pagination', total, step, data.count);
+
             for(var i = 0; i < total; i++){
                 index = i * step;
                 buffer.push('<li' + (index === cursor ? ' class="current"' : '') + '><a href="?skip=' + index + '">' + (i + 1) + '</a></li>');
