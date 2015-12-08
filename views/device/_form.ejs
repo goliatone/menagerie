@@ -20,19 +20,19 @@
         <input name="name" type="text" placeholder="Name" value="<%= record.name ? record.name : 'Name' %>"/>
     </label-->
     <label>Asset Tag
-        <input name="assetTag" type="text" placeholder="Asset Tag" value="<%= record.assetTag ? record.assetTag : 'Asset Tag' %>"/>
+        <input name="assetTag" type="text" placeholder="Asset Tag" value="<%= record.assetTag ? record.assetTag : '' %>"/>
     </label>
     <label>Alias
         <input name="alias" type="text" placeholder="Alias" value="<%= record.alias ? record.alias : 'Alias' %>"/>
     </label>
     <label>Description
-        <input name="description" type="text" placeholder="Description"  value="<%= record.description ? record.description : 'Description' %>"/>
+        <input name="description" type="text" placeholder="Description"  value="<%= record.description ? record.description : '' %>"/>
     </label>
     <label>Manufacturer
-        <input name="manufacturer" type="text" placeholder="Manufacturer"  value="<%= record.manufacturer ? record.manufacturer : 'Manufacturer' %>"/>
+        <input name="manufacturer" type="text" placeholder="Manufacturer"  value="<%= record.manufacturer ? record.manufacturer : '' %>"/>
     </label>
     <label>Model
-        <input name="model" type="text" placeholder="Model"  value="<%= record.model ? record.model : 'Model' %>"/>
+        <input name="model" type="text" placeholder="Model"  value="<%= record.model ? record.model : '' %>"/>
     </label>
     <label>Status
         <select name="status"  value="<%= record.status ? record.status : 'unknown' %>">
