@@ -59,8 +59,9 @@ program.tables.forEach(function(table) {
             table: table,
             basepath: program.basepath
         });
-    console.log(cmd);
+
     if(program.dryRun) return console.log('dry run, exit');
+
     exec(cmd);
 });
 
