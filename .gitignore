@@ -134,3 +134,4 @@ config/env/local.js
 .envset
 *.md
 .node-version
+*.csv
