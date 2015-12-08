@@ -12,7 +12,6 @@ module.exports = {
         }).catch(function (err) {
             console.error('Error on Device.preloadData');
             console.error(err);
-            // console.error(JSON.stringify(err));
             if(cb) cb(err, null);
             return err;
         });
@@ -36,7 +35,27 @@ module.exports = {
         }).catch(function(err){
             console.log('Error');
         });
+    },
+    generateSeedFromData: function(filename){
+        filename = filename || 'device_seed.json';
+        console.log('>>>>>>>>>>> Generating data <<<<<<<<<<<');
+        return Device.find().then(function(records){
+            console.log(records);
+            if(!records) records = [];
 
+            var fs = require('fs');
+
+            records.map(function(item){
+                delete item.createdAt;
+                delete item.updatedAt;
+            });
+
+            fs.writeFileSync(filename, JSON.stringify(records));
+        }).catch(function(err){
+            console.log('Error on DeviceService.generateSeedFromData');
+            console.log(err.message);
+            return err;
+        });
     }
 };
 
