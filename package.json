@@ -57,7 +57,8 @@
     "skipper-s3": "^0.5.6",
     "validator": "^4.2.0",
     "winston-cloudwatch": "git+https://github.com/lazywithclass/winston-cloudwatch.git",
-    "winston-daily-rotate-file": "^1.0.1"
+    "winston-daily-rotate-file": "^1.0.1",
+    "winston-honeybadger": "^0.5.0"
   },
   "devDependencies": {
     "chai": "^3.4.0",
