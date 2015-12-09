@@ -53,6 +53,18 @@ module.exports.log = {
         zippedArchive: true,
         level: 'silly'
       }
+    },
+    {
+      //TODO: For now, this is goliatone's fork
+      module: require('winston-cloudwatch'),
+      enabled: true,
+      config: {
+        logGroupName: pkgJSON.name + '-' +process.env.NODE_ENV,
+        logStreamName: makeLogStreamName(),
+        awsAccessKeyId: process.env.NODE_AWS_ACCESS_KEY_ID,
+        awsSecretKey: process.env.NODE_AWS_SECRET_ACCESS_KEY,
+        awsRegion: process.env.NODE_AWS_REGION || 'us-east-1'
+      }
     }
   ]
 };
