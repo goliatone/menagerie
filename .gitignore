@@ -135,3 +135,4 @@ config/env/local.js
 *.md
 .node-version
 *.csv
+data/postgres/data/*.dump
