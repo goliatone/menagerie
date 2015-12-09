@@ -9,6 +9,11 @@
  * For more information on the Sails logger, check out:
  * http://sailsjs.org/#!/documentation/concepts/Logging
  */
+'use strict';
+
+var path = require('path'),
+  pkgJSON = require(path.resolve('package.json')),
+  df = require('date-formatter');
 
 module.exports.log = {
 
@@ -24,6 +29,34 @@ module.exports.log = {
   *                                                                          *
   ***************************************************************************/
 
-  // level: 'info'
+  level: 'info',
+  enabled: true,
+  timestamp: true,
+  colorize: true,
+  prettyPrint: true,
 
+  transports: [
+    {
+      module: require('winston-daily-rotate-file'),
+      enabled: false,
+      config: {
+        dirname: path.resolve('logs'),
+        datePattern: 'yyyy-MM-dd.log',
+        filename: pkgJSON.name,
+        timestamp: true,
+        colorize: false,
+        maxsize: 1024 * 1024 * 10,
+        json: false,
+        prettyPrint: true,
+        depth: 10,
+        tailable: true,
+        zippedArchive: true,
+        level: 'silly'
+      }
+    }
+  ]
 };
+
+function makeLogStreamName() {
+    return df(new Date(), 'YYYY/MM/DD');
+}
