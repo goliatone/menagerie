@@ -32,13 +32,13 @@ module.exports.log = {
   level: 'info',
   enabled: true,
   timestamp: true,
-  colorize: true,
+  colorize: false,
   prettyPrint: true,
 
   transports: [
     {
       module: require('winston-daily-rotate-file'),
-      enabled: false,
+      enabled: Boolean((process.env.NODE_ENV || '').match(/production|staging/)),
       config: {
         dirname: path.resolve('logs'),
         datePattern: 'yyyy-MM-dd.log',
