@@ -76,6 +76,34 @@ envset development -- grunt menagerie:token:create --userid=3
 
 ### Data Import/Export
 
+#### Services
+
+There are two services, `LocationService` and `DeviceService` that dump a JSON file from data on the database and also populate a database from a JSON file.
+
+It's intended as a way to export/import data using Sails's ORM.
+
+You can access the services from the Sails `repl` interface:
+
+Access the in with credentials for the staging environment:
+```
+envset staging -- sails c
+```
+
+Once in the `repl`:
+
+```
+sails> LocationService.generateSeedFromData('./location_sed.json')
+```
+
+This will generate a json file in the project directory.
+
+To import, you need to place the generated file in the **data/seed/json/** directory and ran the following command from terminal:
+
+```
+sails> LocationService.preloadFromJSONExport()
+```
+
+
 There are also two scripts available under **data/postgres/bin** to manage data import and export. This will be eventually ported to grunt. 
 
 The two helper scripts are:
