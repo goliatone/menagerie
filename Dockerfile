@@ -40,6 +40,9 @@ COPY app.js $TARGET_DIR/app.js
 
 COPY data $TARGET_DIR/data
 
+#Create logs directory
+RUN mkdir logs $TARGET_DIR/logs && chmod 775 logs
+
 EXPOSE 1337
 
 CMD ["/opt/menagerie/node_modules/.bin/pm2", "start", "app.js", "--name", "menagerie", "--no-daemon"]
