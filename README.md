@@ -54,11 +54,16 @@ grunt db:manage:sql-file --connection.password=pepe --connection.name=something 
 `menagerie:*` provides the following tasks:
 
 * `menagerie:user:create`: --username, --email
-* `menagerie:user:update`: --id, all other options behind double dashes.
+* `menagerie:user:update`: --id, all other attributes as options behind double dashes.
 * `menagerie:user:delete`: --id
+
 * `menagerie:token:create`: --userid
 * `menagerie:token:update`: --id
 * `menagerie:token:delete`: --token
+
+* `menagerie:location:create`: --uuid (optional), --name, --description
+* `menagerie:location:update`: --id, all other attributes as options behind double dashes.
+* `menagerie:location:delete`: --id
 
 
 This also means that we can use [envset][envset] to manage connection environmental variables, so we can:
