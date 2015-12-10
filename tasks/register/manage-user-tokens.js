@@ -38,7 +38,7 @@ module.exports = function (grunt) {
                 switch(command){
                     case 'create':
                         Location.create({
-                            uuid: options.uuid,
+                            uuid: options.uuid || Location.geneateUuid(),
                             name: options.name,
                             description: options.description
                         }).exec(onDone);
