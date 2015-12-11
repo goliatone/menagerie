@@ -23,8 +23,12 @@ module.exports = function winstonlogger(sails) {
                     }
                 };
 
+            sails.log.info('Sails Hook Winston Logger initialzied');
+            
             // Console Transport
-            logger = new winston.Logger({transports: [new winston.transports.Console(consoleOptions)]});
+            logger = new winston.Logger({
+                transports: [new winston.transports.Console(consoleOptions)]
+            });
 
             var transports = captainsOptions.transports;
             // Custom Transport
@@ -32,6 +36,7 @@ module.exports = function winstonlogger(sails) {
             if (Array.isArray(transports) && transports.length > 0) {
                 transports.forEach(function(transport){
                     if(transport.hasOwnProperty('enabled') && !transport.enabled) return;
+                    sails.log.info('Enable transport %s', transport.name)
                     logger.add(transport.module, transport.config || {});
                 });
             }
