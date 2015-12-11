@@ -34,10 +34,10 @@ module.exports.log = {
   timestamp: true,
   colorize: false,
   prettyPrint: true,
-
   transports: [
     {
       module: require('winston-daily-rotate-file'),
+      name: 'DailyRotateFile',
       enabled: Boolean((process.env.NODE_ENV || '').match(/production|staging/)),
       config: {
         dirname: path.resolve('logs'),
@@ -57,6 +57,7 @@ module.exports.log = {
     {
       //TODO: For now, this is goliatone's fork
       module: require('winston-cloudwatch'),
+      name: 'CloudWatchLogs',
       enabled: process.env.NODE_ENV === 'production',
       config: {
         logGroupName: pkgJSON.name + '-' +process.env.NODE_ENV,
@@ -68,6 +69,7 @@ module.exports.log = {
     },
     {
       module: require('winston-honeybadger'),
+      name: 'Honeybadger',
       enabled: process.env.NODE_ENV === 'production',
       config: {
         apiKey: process.env.NODE_HONEYBADGER_KEY
