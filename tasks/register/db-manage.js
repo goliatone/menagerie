@@ -37,7 +37,6 @@ module.exports = function(grunt) {
             args.stdout = grunt.log.oklns;
             args.stderr = grunt.log.errorlns;
 
-            console.log('Command', command, 'args', args, out.models);
             handlers.exec(command, args, done);
         });
     });
@@ -54,9 +53,11 @@ function getCommandOptions(config){
         defaults = config.connections[connectionId];
     }
 
-    defaults.connection = buildConnectionFromSailsConfig(defaults);
+    var out = extend({}, /*config, */defaults, argv);
 
-    return extend({}, /*config, */defaults, argv);
+    out.connection = buildConnectionFromSailsConfig(out);
+
+    return out;
 }
 
 function usage(grunt) {
@@ -108,15 +109,21 @@ function exec_db(options, statement) {
 
         pg.connect(connection, function(err, client) {
             if (err) {
+                console.log('Connection Error', err);
                 pg.end();
                 return reject(err);
             }
 
+            console.log('Executing query', statement);
+
             client.query(statement, function(err, result) {
                 if (err) {
                     pg.end();
+                    console.log('Client Error', err);
+                    //This error does not propagate on Promise?
                     return reject(err);
                 }
+
                 options.stdout('Result:', result);
 
                 resolve(result);
@@ -319,7 +326,9 @@ function buildConnectionFromSailsConfig(options) {
     url += options.host || 'localhost';
     if (options.port) url += ':' + options.port;
 
-    if (options.database) url += '/' + encodeURIComponent(options.database);
+    if(options.connectionDatabase) url += '/' + encodeURIComponent(options.connectionDatabase);
+    else if (options.database) url += '/' + encodeURIComponent(options.database);
+    console.log('options', options.connectionDatabase)
 
     return url;
 }
