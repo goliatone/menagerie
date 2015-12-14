@@ -119,7 +119,18 @@ function exec_db(options, statement) {
             client.query(statement, function(err, result) {
                 if (err) {
                     pg.end();
-                    console.log('Client Error', err);
+                    console.log('Client Error:', err.message);
+
+                    if(err.detail && err.detail === 'There is 1 other session using the database.'){
+                        console.log('There is 1 other session using the database.');
+                        console.log('Close other clients before dropping the database.');
+                    } else if(err.message && err.message.indexOf('cannot drop the currently open database') !== -1){
+                        console.log('You are opening a connection to the database you want to delete.');
+                        console.log('Close other clients before dropping the database.');
+                        console.log('One quick way to get around this is to connect to a different database.');
+                        console.log('Override the connection database by adding --connection.database=postgres');
+                    }
+
                     //This error does not propagate on Promise?
                     return reject(err);
                 }
