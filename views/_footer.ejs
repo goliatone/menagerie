@@ -1,0 +1,16 @@
+
+<% if(process.env.NODE_ENV) {%>
+  <footer class="<%=process.env.NODE_ENV%>">
+  </footer>
+  <script>
+        window.NODE_ENV = "<%=process.env.NODE_ENV%>";
+        var myBadge = new badge.Boolean({
+          text: "Env",
+          status: window.NODE_ENV === 'production', //we should check the different domains against location.href
+          statusText: window.NODE_ENV
+        });
+
+        document.getElementsByTagName('footer')[0].appendChild(myBadge.asDOMNode());
+    </script>
+  <%}%>
+

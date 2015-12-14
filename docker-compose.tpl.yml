@@ -1,31 +1,39 @@
 menagerie:
   build: .
-  command: /opt/menagerie/node_modules/.bin/pm2 start app.js --name "menagerie" -i 2 --no-daemon
-  #links:
-  #    - postgres
+  hostname: menagerie-{{NODE_ENV}}
+  command: /opt/menagerie/node_modules/.bin/pm2 start app.js --name "menagerie" --no-daemon
+{% if NODE_ENV === 'development' %}
+  links:
+     - postgres
+{% endif %}
   environment:
-    - DEBUG=*
-    - NODE_ENV=${NODE_ENV}
-    - NODE_CLIENT_BASE_URL=${NODE_CLIENT_BASE_URL}
-    - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-    - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-    - NODE_POSTGRES_USER=${NODE_POSTGRES_USER}
-    - NODE_POSTGRES_PSWD=${NODE_POSTGRES_PSWD}
-    - NODE_POSTGRES_DATABASE=${NODE_POSTGRES_DATABASE}
-    - NODE_POSTGRES_ENDPOINT=${NODE_POSTGRES_ENDPOINT}
-    - NODE_HONEYBADGER_KEY=${NODE_HONEYBADGER_KEY}
-    - NODE_AWS_ACCESS_KEY_ID=${NODE_AWS_ACCESS_KEY_ID}
-    - NODE_AWS_SECRET_ACCESS_KEY=${NODE_AWS_SECRET_ACCESS_KEY}
+    - DEBUG={{NODE_DEBUG}}
+    - NODE_ENV={{NODE_ENV}}
+    - NODE_CLIENT_BASE_URL={{NODE_CLIENT_BASE_URL}}
+    - GOOGLE_CLIENT_ID={{GOOGLE_CLIENT_ID}}
+    - GOOGLE_CLIENT_SECRET={{GOOGLE_CLIENT_SECRET}}
+    - POSTGRES_USER={{NODE_POSTGRES_USER}}
+    - POSTGRES_PASSWORD={{NODE_POSTGRES_PSWD}}
+    - NODE_NEWRELIC_KEY={{NODE_NEWRELIC_KEY}}
+    - NODE_POSTGRES_USER={{NODE_POSTGRES_USER}}
+    - NODE_POSTGRES_PSWD={{NODE_POSTGRES_PSWD}}
+    - NODE_POSTGRES_DATABASE={{NODE_POSTGRES_DATABASE}}
+    - NODE_POSTGRES_ENDPOINT={{NODE_POSTGRES_ENDPOINT}}
+    - NODE_HONEYBADGER_KEY={{NODE_HONEYBADGER_KEY}}
+    - NODE_AWS_ACCESS_KEY_ID={{NODE_AWS_ACCESS_KEY_ID}}
+    - NODE_AWS_SECRET_ACCESS_KEY={{NODE_AWS_SECRET_ACCESS_KEY}}
   restart: always
   log_opt:
       max-size: "1g"
       max-file: "4"
   ports:
     - "80:1337"
-#postgres:
-#  image: postgres
-#  ports:
-#    - "5432:5432"
-  log_opt:
-    max-size: "1g"
-    max-file: "4"
+{% if NODE_ENV === 'development' %}
+postgres:
+    image: postgres
+    ports:
+        - "5432:5432"
+    log_opt:
+        max-size: "1g"
+        max-file: "4"
+{% endif %}

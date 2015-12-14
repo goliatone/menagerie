@@ -1,0 +1,69 @@
+#!/usr/bin/env node
+'use strict';
+
+require('shelljs/global');
+
+var program = require('commander'),
+    resolve = require('path').resolve,
+    format = require('string-template');
+
+function list(val) {return val.split(',');}
+
+function verbose(val){ return val ? '--verbose' : ''}
+
+var ctx = process.env;
+var desc = [
+    'Export specified tables into CSV files. Recommended to use with "envset".',
+    '  Use "envset" to manage environmental variables:',
+    '  envset production ./data/postgres/bin/export-tables-to-csv -t device,location,devicetype --verbose'
+];
+
+program
+    .version('0.0.1')
+    .description(desc.join('\n'))
+    .option('-t, --tables [tables]', 'List of tables to import', list, [])
+    .option('-d, --database [database]', 'Postgres database e.g. postgres', ctx.NODE_POSTGRES_DATABASE)
+    .option('-h, --host [host]', 'Postgres host', ctx.NODE_POSTGRES_ENDPOINT)
+    .option('-u, --username [uri]', 'Postgres username', ctx.NODE_POSTGRES_USER)
+    .option('-p, --port [port]', 'Postgres port', ctx.NODE_POSTGRES_PORT || 5432)
+    .option('-V, --verbose [verbose]', 'Verbose mode', verbose)
+    .option('-P, --basepath [basepath]', 'Base path to csv files', resolve(__dirname, '../data'))
+    .option('-D, --dry-run [dry run]', 'Show commands but do not execute', false)
+    .parse(process.argv);
+
+console.log('you executed an "export-tables-to-csv" with:');
+
+if (program.tables) console.log(program.tables + '  - tables');
+if (program.database) console.log(program.database +'  - database');
+if (program.table) console.log(program.table +'  - table');
+if (program.host) console.log(program.host +'  - host');
+if (program.username) console.log(program.username +'  - username');
+if (program.port) console.log(program.port +'  - port');
+
+if (program.verbose) console.log(program.verbose +'  - verbose');
+
+
+program.verbose = program.verbose ? '-a -e -E' : '';
+
+console.log('');
+
+program.tables.forEach(function(table) {
+    console.log('- Exporting table %s', table);
+    var cmd = format('psql -h {host}  -p {port} -U {username} -d {database} {verbose} -c "COPY public.{table} TO STDOUT WITH CSV HEADER;" > {basepath}/{table}.csv',
+        {
+            database: program.database,
+            username: program.username,
+            host: program.host,
+            port: program.port,
+            verbose: program.verbose,
+            table: table,
+            basepath: program.basepath
+        });
+
+    if(program.dryRun) return console.log('dry run, exit');
+
+    exec(cmd);
+});
+
+
+

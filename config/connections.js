@@ -56,12 +56,5 @@ module.exports.connections = {
     user: process.env.NODE_POSTGRES_USER,
     password: process.env.NODE_POSTGRES_PSWD,
     database: process.env.NODE_POSTGRES_DATABASE
-  },
-
-  /***************************************************************************
-  *                                                                          *
-  * More adapters: https://github.com/balderdashy/sails                      *
-  *                                                                          *
-  ***************************************************************************/
-
+  }
 };

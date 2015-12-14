@@ -12,7 +12,9 @@
 <form id="menagerie" action="<%= form.action %>" method="<%= form.method %>">
     <label>UUID
         <input name="uuid" type="text" placeholder="UUID"
-            value="<%= record.uuid ? record.uuid : 'UUID' %>"
+            value="<%= record.uuid ? record.uuid : '' %>"
+            required
+            pattern="^[0-9a-fA-F]{8}-?[0-9a-fA-F]{4}-?[0-9a-fA-F]{4}-?[0-9a-fA-F]{4}-?[0-9a-fA-F]{12}$"
             <% if(form.intent !== 'create'){ %>
             disabled="disabled"
             <%}%>
@@ -20,13 +22,13 @@
     </label>
 
     <label>Name
-        <input name="name" type="text" placeholder="Name" value="<%= record.name ? record.name : 'Name' %>"/>
+        <input name="name" type="text" placeholder="Name" value="<%= record.name ? record.name : '' %>"/>
     </label>
     <label>Version
         <input name="version" type="text" placeholder="Version" value="<%= record.assetTag == null ? 0 : record.assetTag %>"/>
     </label>
     <label>Description
-        <input name="description" type="text" placeholder="Description" value="<%= record.description ? record.description : 'Description' %>"/>
+        <input name="description" type="text" placeholder="Description" value="<%= record.description ? record.description : '' %>"/>
     </label>
     <label>Device
         <select name="device"  value="<%= record.device %>">

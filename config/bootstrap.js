@@ -43,8 +43,8 @@ ngrok http port -subdomain=subdomain
     console.log('| POGSTRESS STUFF:');
     console.log('| POSTGRES_PORT_5432_TCP_ADDR:', process.env.POSTGRES_PORT_5432_TCP_ADDR);
     console.log('| POSTGRES_PORT_5432_TCP_PORT:', process.env.POSTGRES_PORT_5432_TCP_PORT);
-    console.log('| POSTGRESQL_USER:', process.env.POSTGRESQL_USER);
-    console.log('| POSTGRESQL_PASSWORD:', process.env.POSTGRESQL_PASSWORD);
+    console.log('| POSTGRES_USER:', process.env.POSTGRES_USER);
+    console.log('| POSTGRES_PASSWORD:', process.env.POSTGRES_PASSWORD);
     console.log('|');
     console.log('=============================');
 

@@ -1,3 +1,4 @@
+'use strict';
 /*
  * Bearer Authentication Protocol
  *
@@ -7,17 +8,17 @@
  * API requests.
  *
  */
-
+var debug = require('debug')('passport:bearer');
 exports.authorize = function(token, done) {
-  
-  Passport.findOne({ accessToken: token }, function(err, passport) {
-    if (err) { return done(err); }
-    if (!passport) { return done(null, false); }
-    User.findOneById(passport.user, function(err, user) {
-      if (err) { return done(err); }
-      if (!user) { return done(null, false); }
-      return done(null, user, { scope: 'all' });
+    debug('BEARER, GET TOKEN ', token);
+
+    Passport.findOne({ accessToken: token }).exec(function(err, passport) {
+        if (err) { return done(err); }
+        if (!passport) { return done(null, false); }
+        User.findOneById(passport.user, function(err, user) {
+            if (err) { return done(err); }
+            if (!user) { return done(null, false); }
+            return done(null, user, { scope: 'all' });
+        });
     });
-  });
-  
 };

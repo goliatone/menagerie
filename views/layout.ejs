@@ -5,7 +5,7 @@
 
     <!-- Viewport mobile tag for sensible mobile support -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
+    <%- sails.newRelicBrowserHeader() %>
 
     <!--
         Stylesheets and Preprocessors
@@ -36,11 +36,11 @@
   </head>
 
   <body>
-
       <!--SCRIPTS-->
       <script src="/js/dependencies/sails.io.js"></script>
       <script src="/js/dependencies/jquery.min.js"></script>
       <script src="/js/dependencies/foundation.min.js"></script>
+      <script src="/js/dependencies/badge.js"></script>
       <script src="/js/dependencies/modernizr.js"></script>
       <!--SCRIPTS END-->
       <%- body %>
@@ -100,12 +100,8 @@
     <script>
         $(document).foundation();
     </script>
-    
-    <% if(process.env.NODE_ENV) {%>
-    <footer>
-        <b><%=process.env.NODE_ENV%></b>
-    </footer>
-    <%}%>
-    
+
+    <% include _footer.ejs %>
+
   </body>
 </html>

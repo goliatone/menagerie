@@ -9,17 +9,19 @@
                 <%= __(error) %>
               <% }) %>
             <% } %>
+
             <% if (Object.keys(providers).length) {%>
-              
               <h5>Login using your Google Account</h5>
-              
+
               <hr/>
 
-              <% Object.keys(providers).forEach(function (key) { %>
-                <a href="/auth/<%= providers[key].slug %>" role="button" class="button expand">
-                    <%= providers[key].name %>
-                </a>
-              <% }) %>
+                <% Object.keys(providers).forEach(function (key) {
+                    if(key === 'bearer') return;
+                %>
+                    <a href="/auth/<%= providers[key].slug %>" role="button" class="button expand">
+                        <%= providers[key].name %></a>
+                    </a>
+                <% }) %>
             <% } %>
         </div>
     </div>

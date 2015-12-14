@@ -67,18 +67,7 @@
                     <%});%>
             </tbody>
         </table>
-        <ul class="pagination" role="menubar" aria-label="Pagination">
-          <li class="arrow unavailable" aria-disabled="true"><a href="">&laquo; Previous</a></li>
-          <li class="current[inactivated]"><a href="?skip=0">1</a></li>
-          <li><a href="?skip=5">2</a></li>
-          <li><a href="?skip=10">3</a></li>
-          <li><a href="?skip=15">4</a></li>
-          <!--% <li class="unavailable" aria-disabled="true"><a href="">&hellip;</a></li>%-->
-          <li><a href="?skip=20">5</a></li>
-          <li><a href="?skip=25">6</a></li>
-          <li><a href="?skip=30">7</a></li>
-          <li><a href="?skip=35">8</a></li>
-          <li class="arrow"><a href="">Next &raquo;</a></li>
+        <ul id="table-pagination" class="pagination" role="menubar">
         </ul>
         <a href="/<%= nicename %>/new" class="button success">Add Record</a>
         <a href="#" data-reveal-id="csv-modal" class="button">CSV</a>
@@ -109,4 +98,62 @@ io.socket.on('/things/pair/true', function(payload){
     $(selector, context).attr('href', href);
     $(selector, context).html(payload.location.name + ': ' + payload.location.description);
 });
+
+function buildPagination(){
+    io.socket.get('/device/count', function(data){
+        console.log('HERE', data);
+        var previous = '<li class="arrow"><a href="#LINK#">&laquo; Previous</a></li>',
+            next = '<li class="arrow"><a href="#LINK#">Next &raquo;</a></li>'
+
+        if(data.count){
+            var query = getQueryString(),
+                cursor = parseInt(query.skip) || 0,
+                step = data.step,
+                total = data.count / step,
+                buffer = [],
+                index = 0,
+                pages = '';
+
+            if(data.count < step) return;
+
+            for(var i = 0; i < total; i++){
+                index = i * step;
+                buffer.push('<li' + (index === cursor ? ' class="current"' : '') + '><a href="?skip=' + index + '">' + (i + 1) + '</a></li>');
+            }
+
+            //TODO: we should have a window around the current item.
+            if(buffer.length > 20){
+                buffer = (buffer.slice(0, 5)).concat(buffer.slice(-5));
+                buffer.splice(5, 0, '<li class="unavailable" aria-disabled="true"><a href="">&hellip;</a></li>');
+            }
+
+            pages = buffer.join('');
+
+
+            if(cursor > 0){
+                previous = previous.replace('#LINK#', '/device?skip=' + (cursor - step));
+                pages = previous + pages;
+            }
+            if(cursor < data.count){
+                next = next.replace('#LINK#', '/device?skip=' + (cursor + step));
+                pages += next;
+            }
+
+
+            $('#table-pagination').html(pages);
+        }
+    });
+}
+buildPagination();
+
+function getQueryString() {
+  var result = {}, queryString = location.search.slice(1),
+      re = /([^&=]+)=([^&]*)/g, m;
+
+  while (m = re.exec(queryString)) {
+    result[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+  }
+
+  return result;
+}
 </script>

@@ -1,3 +1,4 @@
+'use strict';
 /**
  * OAuth 2.0 Authentication Protocol
  *
@@ -19,15 +20,20 @@
  * @param {Function} next
  */
 module.exports = function (req, accessToken, refreshToken, profile, next) {
-  var query    = {
-      identifier : profile.id
-    , protocol   : 'oauth2'
-    , tokens     : { accessToken: accessToken }
+    var query    = {
+        identifier : profile.id,
+        protocol   : 'oauth2',
+        /*goliatone GENERATED CODE...*/
+        accessToken: accessToken,
+        /*goliatone GENERATED CODE...*/
+        tokens     : { accessToken: accessToken }
     };
 
-  if (refreshToken !== undefined) {
-    query.tokens.refreshToken = refreshToken;
-  }
+    console.log('OAUTH2', accessToken, refreshToken, profile);
 
-  passport.connect(req, query, profile, next);
+    if (refreshToken !== undefined) {
+        query.tokens.refreshToken = refreshToken;
+    }
+    //TODO: We should update user profile here
+    passport.connect(req, query, profile, next);
 };

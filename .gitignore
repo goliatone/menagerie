@@ -66,7 +66,7 @@ config/local.js
 #
 ################################################
 
-#node_modules
+node_modules
 bower_components
 
 
@@ -129,6 +129,10 @@ docker-compose.prod.yml
 *.secrets
 data/*.csv
 data/*.json
-
+config/env/local.js
 
 .envset
+*.md
+.node-version
+*.csv
+data/postgres/data/*.dump
