@@ -4,7 +4,8 @@ var dbm;
 var type;
 var seed;
 var TABLE;
-var KEY;
+var IKEY;
+var CKEY;
 
 /**
   * We receive the dbmigrate dependency from dbmigrate initially.
@@ -16,13 +17,21 @@ exports.setup = function(options, seedLink) {
     seed = seedLink;
 
     TABLE = 'location';
-    KEY = 'location_uuid_unique';
+    CKEY = 'location_uuid_unique';
+    IKEY = 'location_uuid_index';
 };
 
 exports.up = function(db, callback) {
-    db.addIndex(TABLE, KEY, ['uuid'], callback);
+    // db.addIndex(TABLE, IKEY, ['uuid'], true, callback);
+    var sql = 'ALTER TABLE ONLY "?"  ADD CONSTRAINT ? UNIQUE (uuid);CREATE INDEX ? ON ? USING btree (uuid);',
+        params = [TABLE, CKEY, IKEY, TABLE];
+
+    db.runSql(sql, params, callback);
 };
 
 exports.down = function(db, callback) {
-    db.removeIndex(TABLE, KEY, callback);
+    var sql = 'ALTER TABLE ONLY "?" DROP CONSTRAINT IF EXISTS ?; DROP INDEX IF EXISTS ?;',
+        params = [TABLE, CKEY, IKEY];
+
+    db.runSql(sql, params, callback);
 };
