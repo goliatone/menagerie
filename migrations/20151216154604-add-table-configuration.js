@@ -21,7 +21,7 @@ exports.up = function(db, callback) {
     db.createTable(TABLE, {
         columns: {
             id: { type: type.INTEGER, primaryKey: true, autoIncrement: true },
-            uuid: {type: 'text'},
+            uuid: { type: 'text'},
             version: {type: 'text'},
             name: {type: 'text'},
             description: {type: 'text'},
