@@ -8,18 +8,17 @@
 */
 var extend = require('gextend');
 var BaseModel = require('../../lib/BaseModel');
+var uuid = BaseModel._uuidGenerator;
 
 var Configuration = {
     autoPK: true,
     nicename: 'Configuration',
     attributes: {
         uuid : {
-            // primaryKey: true,
-            type: 'string',
-            uuid: true,
+            uuidv4: true,
             unique: true,
             index: true,
-            // defaultsTo: function(){ return uuid().toUpperCase();},
+            defaultsTo: function(){ return uuid().toUpperCase();},
             required: true
         },
         version: {
