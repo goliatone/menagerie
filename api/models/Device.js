@@ -8,6 +8,7 @@
 */
 var extend = require('gextend');
 var BaseModel = require('../../lib/BaseModel');
+var uuid = BaseModel._uuidGenerator;
 
 var Device = {
     autoPK: true,
@@ -19,7 +20,10 @@ var Device = {
         */
         uuid: {
             type: 'string',
-            // primaryKey: true,
+            uuidv4: true,
+            unique: true,
+            index: true,
+            defaultsTo: function(){ return uuid().toUpperCase();},
             required: true
         },
         /**
@@ -75,7 +79,7 @@ var Device = {
             console.error('THIS SHOULD NEVER HAPPEN. We cannot have a Location instance without an UUID');
             return done();
         }
-        
+
         var url = record.uuid,
             filename = record.uuid;
 
