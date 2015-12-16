@@ -13,8 +13,10 @@ var Location = {
     autoPK: true,
     attributes: {
         uuid : {
-            type: 'string',
-            // primaryKey: true,
+            uuidv4: true,
+            unique: true,
+            index: true,
+            defaultsTo: function(){ return BaseModel._uuidGenerator().toUpperCase();},
             required: true
         },
         name : {
