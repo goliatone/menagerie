@@ -37,7 +37,6 @@ module.exports = function(grunt) {
             args.stdout = grunt.log.oklns;
             args.stderr = grunt.log.errorlns;
 
-            console.log('Command', command, 'args', args, out.models);
             handlers.exec(command, args, done);
         });
     });
@@ -54,9 +53,11 @@ function getCommandOptions(config){
         defaults = config.connections[connectionId];
     }
 
-    defaults.connection = buildConnectionFromSailsConfig(defaults);
+    var out = extend({}, /*config, */defaults, argv);
 
-    return extend({}, /*config, */defaults, argv);
+    out.connection = buildConnectionFromSailsConfig(out);
+
+    return out;
 }
 
 function usage(grunt) {
@@ -87,7 +88,7 @@ function usage(grunt) {
     ln('\t--filename=migration_file.sql');
 }
 
-function exec_db(options, statement) {
+function exec_db(options, statement, command) {
     var connection = options.connection,
         dryRun = options.dryRun;
 
@@ -108,15 +109,39 @@ function exec_db(options, statement) {
 
         pg.connect(connection, function(err, client) {
             if (err) {
+                console.error('Connection Error', err.message);
+
+                if(err && err.code.toString() === '3D000'){
+                    if(command === 'create-db'){
+                        console.error('Make sure you specify a valid database to connect');
+                        console.log('Override the connection database by adding --connection.database=postgres');
+                    }
+                }
                 pg.end();
                 return reject(err);
             }
 
+            console.log('Executing query', statement);
+
             client.query(statement, function(err, result) {
                 if (err) {
                     pg.end();
+                    console.error('Client Error:', err.message);
+
+                    if(err.detail && err.detail.indexOf('There is 1 other session using the database.') !== -1){
+                        console.error('There is 1 other session using the database.');
+                        console.error('Close other clients before dropping the database.');
+                    } else if(err.message && err.message.indexOf('cannot drop the currently open database') !== -1){
+                        console.error('You are opening a connection to the database you want to delete.');
+                        console.error('Close other clients before dropping the database.');
+                        console.error('One quick way to get around this is to connect to a different database.');
+                        console.error('Override the connection database by adding --connection.database=postgres');
+                    }
+
+                    //This error does not propagate on Promise?
                     return reject(err);
                 }
+
                 options.stdout('Result:', result);
 
                 resolve(result);
@@ -161,7 +186,7 @@ function createHanlders(grunt){
 
         if(data.superuser) sql += 'ALTER ROLE "' + data.user + '" WITH superuser;';
 
-        exec_db(data, sql).then(function(res) {
+        exec_db(data, sql, 'create-user').then(function(res) {
             grunt.log.writeln('Database user "' + data.user + '" created' + (data.roles ? ' with roles: ' + data.roles.join(', ') : '') + '.');
             callback();
         }).catch(function(err){
@@ -183,7 +208,7 @@ function createHanlders(grunt){
 
         sql += ' ENCODING=\''+data.encoding+'\'';
 
-        exec_db(data, sql).then(function(res) {
+        exec_db(data, sql, 'create-db').then(function(res) {
             grunt.log.writeln('Database "' + data.database + '" created.');
             callback();
         }).catch(function(err){
@@ -194,7 +219,7 @@ function createHanlders(grunt){
 
     function assignOwner(data, callback){
         var sql = 'ALTER DATABASE ' + data.database + ' OWNER TO ' + data.owner;
-        exec_db(data, sql).then(function(res) {
+        exec_db(data, sql,  'assign-owner').then(function(res) {
             grunt.log.writeln('Database "' + data.database + '" created.');
             callback();
         }).catch(function(err){
@@ -319,7 +344,9 @@ function buildConnectionFromSailsConfig(options) {
     url += options.host || 'localhost';
     if (options.port) url += ':' + options.port;
 
-    if (options.database) url += '/' + encodeURIComponent(options.database);
+    if(options.connectionDatabase) url += '/' + encodeURIComponent(options.connectionDatabase);
+    else if (options.database) url += '/' + encodeURIComponent(options.database);
+    console.log('options', options.connectionDatabase)
 
     return url;
 }

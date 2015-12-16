@@ -136,3 +136,4 @@ config/env/local.js
 .node-version
 *.csv
 data/postgres/data/*.dump
+data/seed/json/*.json
