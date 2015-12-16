@@ -17,7 +17,7 @@ module.exports = {
    ***************************************************************************/
   models: {
          // connection: 'localDiskDb'
-        //connection: 'remotePostgres'
-        connection: 'developmentPostgres'
+        connection: 'remotePostgres'
+        // connection: 'developmentPostgres'
   }
 };

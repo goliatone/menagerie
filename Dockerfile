@@ -41,7 +41,7 @@ COPY app.js $TARGET_DIR/app.js
 COPY data $TARGET_DIR/data
 
 #Create logs directory
-RUN mkdir logs $TARGET_DIR/logs && chmod 775 logs
+RUN mkdir $TARGET_DIR/logs && chmod 775 $TARGET_DIR/logs
 
 EXPOSE 1337
 
