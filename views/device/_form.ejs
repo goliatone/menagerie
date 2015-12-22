@@ -89,7 +89,7 @@ function populateOption(name, selector){
     });
 }
 populateOption('devicetype', 'type');
-populateOption('location', 'location');
+populateOption('location?limit=1000', 'location');
 $('[name="status"]').val("<%= record.status%>");
 </script>
 <script type="text/javascript">
