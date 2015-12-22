@@ -124,7 +124,7 @@ Use this scrip to export data from one environment in `CSV` format.
 From the **menagerie** project directory, export the tables from the **production** environment to CSV format. The command would be:
 
 ```
-$ envset production ./data/postgres/bin/export-tables-to-csv -t device,location,devicetype --verbose
+$ envset production -- ./data/postgres/bin/export-tables-to-csv -t device,location,devicetype --verbose
 ```
 
 You list all tables to be exported with the `-t` flag. This will generate a CSV file per table inside the **data/postgres/data** directory.
@@ -134,12 +134,12 @@ You list all tables to be exported with the `-t` flag. This will generate a CSV 
 The following command would import data from each CSV file into a table with a matching name in the **development** environment:
 
 ```
-envset development ./data/postgres/bin/import-csvs-to-table -t device,devicetype,location
+envset development -- ./data/postgres/bin/import-csvs-to-table -t device,devicetype,location
 ```
 
 To load data in the local development environment:
 ```
-envset local ./data/postgres/bin/import-csvs-to-table -t device,devicetype,location
+envset local -- ./data/postgres/bin/import-csvs-to-table -t device,devicetype,location
 ```
 
 
