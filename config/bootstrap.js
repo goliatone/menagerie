@@ -32,6 +32,11 @@ ngrok http port -subdomain=subdomain
         // tunnels are closed
     });
 */
+    // var package = require()
+    var join = require('path').join;
+    try {
+        sails.config.package = require(join(sails.config.appPath, 'package.json'));
+    } catch(e){}
     //Load all passport strategies
     sails.services.passport.loadStrategies();
 
