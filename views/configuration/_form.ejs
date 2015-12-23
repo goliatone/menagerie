@@ -31,8 +31,8 @@
         <input name="description" type="text" placeholder="Description" value="<%= record.description ? record.description : '' %>"/>
     </label>
     <label>Device
-        <select name="device"  value="<%= record.device %>">
-            <% if (!record.type) {%>
+        <select name="device"  value="<%= record.device ? record.device : '' %>">
+            <% if (!record.device) {%>
             <option value="">Not assigned</option>
             <% } %>
         </select>
