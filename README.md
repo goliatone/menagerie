@@ -327,6 +327,7 @@ docker run goliatone/menagerie  /bin/sh -c "cd /opt/menagerie; npm test"
 
 
 ### TODO:
+* ~~Add version to build info on page.~~
 * Replace `autoPK`, use UUID as main id instead.
 * Add model validations
 * ~~CSV import~~
