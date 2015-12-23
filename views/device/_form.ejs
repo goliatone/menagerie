@@ -46,14 +46,14 @@
         </select>
     </label>
     <label>Type
-        <select name="type"  value="<%= record.type %>">
+        <select name="type"  value="<%= record.type ? record.type.id : '' %>">
             <% if (!record.type) {%>
             <option value="">Not assigned</option>
             <% } %>
         </select>
     </label>
     <label>Location
-        <select name="location"  value="<%= record.location %>">
+        <select name="location"  value="<%= record.location ? record.location.id : '' %>">
             <% if (!record.location) {%>
             <option value="">Not assigned</option>
             <% } %>
