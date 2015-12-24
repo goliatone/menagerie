@@ -1,5 +1,5 @@
 
 
-module.exports.orm = {
+module.exports.pubsub = {
   _hookTimeout: 30000 * 4
 };
