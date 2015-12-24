@@ -41,7 +41,7 @@ The available commands are:
 
 You can get more information about the commands by running the task without a subcommand: `$ grunt db:manage`.
 
-Example 
+Example
 ```
 grunt db:manage:sql-file --connection.password=pepe --connection.name=something \
     --connection.host=things.menagerie.dev --connection.port=5432 --connection.user=menagerie \
@@ -109,7 +109,7 @@ sails> LocationService.preloadFromJSONExport()
 ```
 
 
-There are also two scripts available under **data/postgres/bin** to manage data import and export. This will be eventually ported to grunt. 
+There are also two scripts available under **data/postgres/bin** to manage data import and export. This will be eventually ported to grunt.
 
 The two helper scripts are:
 
@@ -142,11 +142,22 @@ To load data in the local development environment:
 envset local -- ./data/postgres/bin/import-csvs-to-table -t device,devicetype,location
 ```
 
+NOTE:
+
+Currently you might get an error while doing export/import CSV:
+
+>PG COPY error: invalid input syntax for integer
+
+Quick fix:
+
+```
+sed -n 's/,,,,/,,,0,/gpw data/postgres/data/location.csv' data/postgres/data/location.csv
+```
 
 ### Docker
 
 We use docker and docker-machine. The basic work-flow is a build and up cycle.
-Ensure that your desired docker machine is up and running. 
+Ensure that your desired docker machine is up and running.
 
 ```
 docker-machine start dev
@@ -176,7 +187,7 @@ docker exec -ti menagerie_menagerie_1 /bin/bash
 
 #### docker-compose
 
-There is a `docker-compose` template from which you can build a `docker-compose.yml` file dynamically. 
+There is a `docker-compose` template from which you can build a `docker-compose.yml` file dynamically.
 
 You can use the [slv][slv] utility to expand the tokens in the `docker-compose.tpl.yml` template file, `slv`  will replace any tokens used in the template with an environmental variable with the same name.
 
@@ -215,7 +226,7 @@ vcn get -b <bucket_name> --password <password> --id envset --filepath .envset
 To install `envset`, `slv`, and `vcn`:
 
 ```
-npm i -g envset slv vcn 
+npm i -g envset slv vcn
 ```
 
 
@@ -223,7 +234,7 @@ npm i -g envset slv vcn
 ## Environment Variables
 
 Currently we are using three docker environments:
-- Development 
+- Development
 - Staging
 - Production
 
@@ -262,7 +273,7 @@ For each environment, we need to create the following environment variables:
 
 The first two you get from the Credentials screen, by clicking on the specific client.
 
-The third is the base URL the oauth callbacks should redirect to. IPs are not valid callbacks, `localhost` is a valid domain. 
+The third is the base URL the oauth callbacks should redirect to. IPs are not valid callbacks, `localhost` is a valid domain.
 
 Your local development docker environment will not work with oauth since you access the container through an IP address. You can create an entry on the `hosts` file in your Mac computer.
 
@@ -327,6 +338,13 @@ docker run goliatone/menagerie  /bin/sh -c "cd /opt/menagerie; npm test"
 
 
 ### TODO:
+
+Fix connect session:
+
+>Warning: connect.session() MemoryStore is not
+designed for a production environment, as it will leak
+memory, and will not scale past a single process.
+
 * ~~Add version to build info on page.~~
 * Replace `autoPK`, use UUID as main id instead.
 * Add model validations
@@ -349,7 +367,7 @@ https://github.com/cgmartin/sailsjs-angularjs-bootstrap-example/tree/master/view
 http://stackoverflow.com/questions/30671160/swagger-sails-js
 -->
 
-<!-- 
+<!--
 ### Development
 
 ```js
@@ -416,7 +434,7 @@ CREATE TABLE "category"
 [vcn]: https://github.com/goliatone/vcn
 
 
-TODO: 
+TODO:
 * Create Images if not present (review BarcodeController and BarcodeService)
 
 
