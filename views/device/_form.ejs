@@ -80,17 +80,24 @@
 <script type="text/javascript">
 function populateOption(name, selector){
     io.socket.get('/' + name, function(data, jwres){
-        console.log(data)
+        console.log(data);
         data = data || {records:[]};
+        var $sel = $('[name="' + selector + '"]'),
+            index = 0,
+            active = $sel.attr('value');
         data.records.map(function(record){
-            console.log('CREATE OPTION FOR', selector, record.name);
-            $('[name="' + selector + '"]').append('<option value="' + record.id + '">' + record.name + '</option>');
+            $sel.append('<option value="' + record.id + '">' + record.name + '</option>');
+            if(active === ('' + record.id)) $sel.prop('selectedIndex', index);
+            index++;
         });
+
     });
 }
 populateOption('devicetype?limit=1000', 'type');
 populateOption('location?limit=1000', 'location');
+
 $('[name="status"]').val("<%= record.status%>");
+
 </script>
 <script type="text/javascript">
 $(document).ready(function () {

@@ -3,6 +3,9 @@
 module.exports = {
     preloadData: function (data, cb) {
         console.log('>>>>>>>>>>>>>>> preloading data.......');
+        data.map(function(item){
+            if(item.uuid) item.uuid = item.uuid.toUpperCase();
+        });
 
         return Location.findOrCreateEach(['uuid'], data).then(function (records) {
             console.log('Location created: ' + JSON.stringify(records));

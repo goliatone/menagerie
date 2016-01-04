@@ -6,7 +6,7 @@ module.exports = {
         console.log('>>>>>>>>>>>>>>> preloading data.......');
 
         return Device.findOrCreateEach(['uuid'], data).then(function (records) {
-            console.log('Location created: ' + JSON.stringify(records));
+            console.log('Device created: ' + JSON.stringify(records));
             if (cb) cb(null, records);
             return records;
         }).catch(function (err) {
