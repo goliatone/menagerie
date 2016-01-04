@@ -85,11 +85,9 @@ function populateOption(name, selector){
         var $sel = $('[name="' + selector + '"]'),
             index = 0,
             active = $sel.attr('value');
-
         data.records.map(function(record){
-            console.log('CREATE OPTION FOR', selector, record.name);
             $sel.append('<option value="' + record.id + '">' + record.name + '</option>');
-            if(active === record.id) $sel.prop('selectedIndex', index);
+            if(active === ('' + record.id)) $sel.prop('selectedIndex', index);
             index++;
         });
 
