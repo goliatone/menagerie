@@ -14,11 +14,13 @@ var Configuration = {
     nicename: 'Configuration',
     attributes: {
         uuid : {
-            type: 'string'
-            // primaryKey: true,
-            // required: true
+            uuidv4: true,
+            unique: true,
+            index: true,
+            defaultsTo: function(){ return BaseModel._uuidGenerator().toUpperCase();},
+            required: true
         },
-        version:{
+        version: {
             type: 'int',
             defaultsTo: 0
         },
