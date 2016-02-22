@@ -1,22 +1,57 @@
 'use strict';
 
 module.exports = {
+    status: function(req, res){
+        res.send(200);
+    },
     register: function(req, res){
         //Get the thing type
         var payload = req.params.all();
 
+        //This should be coming from URL.
         var typeName = payload.typeName,
             id = payload.id;
 
-        var query = Device.findOne();
-        query.where({alias:id});
-        query.populate('type', {where:{name:typeName}});
-        query.then(function(device){
-            console.log('DEVICE', device);
+
+        /*
+         * When we register a device we have 3 cases:
+         * - payload has a uuid
+         *     - device exists
+         *     - device does not exist
+         * - payload has no uuid:
+         *     - device does exist and has a UUID in DB
+         *     - device does _NOT_ exist and has _NO_ UUID in DB
+         *
+         * If we print QR labels, then it means that
+         * we have to tie an instance to a predefined
+         * UUID.
+         *
+         * This means that we either provision the device
+         * with this UUID or that we created a bunch of
+         * devices to generate UUID labels. If that is the
+         * case, then we need to be able to search by another
+         * criteria and then replace the UUID? If that is true
+         * then the UUID attribute can NOT be `primaryKey`.
+         *
+         */
+        var criteria = {};
+        criteria.uuid = id;
+
+        var populate = {
+            name: 'type',
+            criteria: {
+                where: {
+                    name: typeName
+                }
+            }
+        };
+
+        //TODO: We should pluck data.
+        var data = _getAttributes(payload);
+
+        Device.updateOrCreate(criteria, data, populate).then(function(device){
             res.ok({
-                status: 'OKIS',
-                type: typeName,
-                id: id,
+                status: true,
                 record: device
             });
         }).catch(function(err){
@@ -70,3 +105,14 @@ module.exports = {
     },
     _config:{}
 };
+
+
+function _getAttributes(src){
+    var out = {};
+
+    Object.keys(Device.attributes).map(function(key){
+        out[key] = src[key];
+    });
+
+    return out;
+}
