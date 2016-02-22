@@ -66,7 +66,9 @@ module.exports.routes = {
 
     // 'POST /things/pair': 'DeviceController.manage',
     'POST /thing/barcode-scann': 'ThingController.handleScann',
-    'POST /thing/:typeName/:id/status': 'ThingController.register',
+    'POST /thing/register/:id': 'ThingController.register',
+    'POST /thing/:typeName/:id': 'ThingController.register',
+    'POST /thing/:typeName/:id/status': 'ThingController.status',
 
     //TODO: We should be able to include this on blueprints
     'GET /location/count': 'LocationController.count',
