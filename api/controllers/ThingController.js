@@ -62,11 +62,11 @@ module.exports = {
         console.log('HANDLE SCANN');
         //The payload we get from BarcodeScanner app:
         //{
-		// 	location: '7DABAAC0-2CCD-4406-8FBD-27C7BB5E4DF4',
-		// 	mac: '2CC5D3230740',
-		// 	assetTag: '016685'
-		// }
-		var locationUuid = req.param('location'),
+        //  location: '7DABAAC0-2CCD-4406-8FBD-27C7BB5E4DF4',
+        //  mac: '2CC5D3230740',
+        //  assetTag: '016685'
+        // }
+        var locationUuid = req.param('location'),
             assetTag = req.param('assetTag'),
             alias = req.param('alias');
 
