@@ -65,7 +65,7 @@ var Device = {
         configuration: {
             model: 'configuration'
         },
-        metadata:{
+        metadata: {
             type:'json'
         }
     },
