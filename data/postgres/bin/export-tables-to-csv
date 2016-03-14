@@ -83,6 +83,6 @@ function getDataDirectory(){
 function _getDirName(date) {
     var d = date ? new Date(date) : new Date;
     var dt = [d.getFullYear(), d.getMonth(), d.getDay()].join('-'),
-        tm = [d.getHours(), d.getMinutes(), d.getSeconds()].join(':');
+        tm = [d.getHours(), d.getMinutes(), d.getSeconds()].join('_');
     return dt + '_' + tm;
 }
