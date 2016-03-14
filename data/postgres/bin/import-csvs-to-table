@@ -18,8 +18,8 @@ var desc = [
     '  envset development ./data/postgres/bin/import-csvs-to-table -t device,devicetype,location'
 ];
 
-
-var dataDir = resolve(__dirname, '../data');
+//TODO: We should now get the latest directory created in dumps/
+var dataDir = resolve(__dirname, '../dumps');
 
 program
     .version('0.0.1')
@@ -32,7 +32,7 @@ program
     .option('-p, --port [port]', 'Postgres port', ctx.NODE_POSTGRES_PORT || 5432)
     .option('-x, --drop', 'Append drop statement to copy', false)
     .option('-V, --verbose [verbose]', 'Verbose mode', verbose)
-    .option('-P, --basepath [basepath]', 'Base path to csv files', dataDir)
+    .option('-P, --basepath [basepath]', 'Base path to csv files'/*, dataDir*/)
     .option('-D, --dry-run [dry run]', 'Show commands but do not execute', false)
     .parse(process.argv);
 
