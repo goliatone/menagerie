@@ -4,6 +4,7 @@
 require('shelljs/global');
 
 var program = require('commander'),
+    join = require('path').join,
     resolve = require('path').resolve,
     format = require('string-template');
 
@@ -27,7 +28,7 @@ program
     .option('-u, --username [uri]', 'Postgres username', ctx.NODE_POSTGRES_USER)
     .option('-p, --port [port]', 'Postgres port', ctx.NODE_POSTGRES_PORT || 5432)
     .option('-V, --verbose [verbose]', 'Verbose mode', verbose)
-    .option('-P, --basepath [basepath]', 'Base path to csv files', resolve(__dirname, '../data'))
+    .option('-P, --basepath [basepath]', 'Base path to csv files', getDataDirectory())
     .option('-D, --dry-run [dry run]', 'Show commands but do not execute', false)
     .parse(process.argv);
 
@@ -66,4 +67,22 @@ program.tables.forEach(function(table) {
 });
 
 
+/******************************************
+ * Helper functions.
+ * getDataDirectory: creates a new dir with
+ * a timestamp in data
+ *****************************************/
+function getDataDirectory(){
+    var dir = _getDirName();
+    var basepath = resolve(__dirname, '../dumps');
+    var dataDir = join(basepath, dir);
+    require('mkdirp').sync(dataDir);
+    return dataDir;
+}
 
+function _getDirName(date) {
+    var d = date ? new Date(date) : new Date;
+    var dt = [d.getFullYear(), d.getMonth(), d.getDay()].join('-'),
+        tm = [d.getHours(), d.getMinutes(), d.getSeconds()].join(':');
+    return dt + '_' + tm;
+}
