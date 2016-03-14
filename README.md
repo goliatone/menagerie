@@ -127,19 +127,21 @@ From the **menagerie** project directory, export the tables from the **productio
 $ envset production -- ./data/postgres/bin/export-tables-to-csv -t device,location,devicetype --verbose
 ```
 
-You list all tables to be exported with the `-t` flag. This will generate a CSV file per table inside the **data/postgres/data** directory.
+You list all tables to be exported with the `-t` flag. The command exports all listed tables to the directory specified in `--basepathh`.
+If `basepath` is not specified then a directory with a normalized timestamp as name will be create inside the **data/postgres/dumps** directory. i.e:
+* data/postgres/dumps/2016-2-1_16_13_33/
 
 #### import-csvs-to-table
 
 The following command would import data from each CSV file into a table with a matching name in the **development** environment:
 
 ```
-envset development -- ./data/postgres/bin/import-csvs-to-table -t device,devicetype,location
+envset development -- ./data/postgres/bin/import-csvs-to-table -t device,devicetype,location --basepath=./data/postgres/dumps/2016-2-1_16_13_33
 ```
 
 To load data in the local development environment:
 ```
-envset local -- ./data/postgres/bin/import-csvs-to-table -t device,devicetype,location
+envset local -- ./data/postgres/bin/import-csvs-to-table -t device,devicetype,location --basepath=./data/postgres/dumps/2016-2-1_16_13_33
 ```
 
 NOTE:
