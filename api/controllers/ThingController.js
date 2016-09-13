@@ -68,7 +68,14 @@ module.exports = {
         // }
         var locationUuid = req.param('location'),
             assetTag = req.param('assetTag'),
-            alias = req.param('alias');
+            /*
+             * We renamed the attribute from
+             * "alias" to "deviceId". Some
+             * clients might be sending the old
+             * name.
+             */
+            deviceId = req.param('deviceId');
+            if(!deviceId) deviceId = req.param('alias');
 
         //A) Let's find a location with the given uuid.
         Location.findOne({where:{uuid:locationUuid}}).then(function(location){
@@ -77,7 +84,7 @@ module.exports = {
 
             Device.update({assetTag: assetTag}, {
                 location: location.id,
-                alias: alias
+                deviceId: deviceId
             }).then(function(devices){
                 //TODO: Send valid KO
                 if(!devices || !devices.length) return res.ok({success: false, message: 'assetTag did not match any records'});
