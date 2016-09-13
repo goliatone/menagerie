@@ -36,13 +36,8 @@ var Device = {
         * It should be unique within a device type
         * but not necessarily within a device instance.
         */
-        alias: {
-            type: 'string'
-        },
-        manufacturer: {
-            type: 'string'
-        },
-        model: {
+       //alias
+        deviceId: {
             type: 'string'
         },
         name: {
@@ -75,7 +70,7 @@ var Device = {
             console.error('THIS SHOULD NEVER HAPPEN. We cannot have a Location instance without an UUID');
             return done();
         }
-        
+
         var url = record.uuid,
             filename = record.uuid;
 
