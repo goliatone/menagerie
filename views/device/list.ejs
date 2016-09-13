@@ -35,13 +35,13 @@
                             <%= record.name %>
                         </td-->
                         <td>
-                            <%= record.model %>
+                            <%= record.type ? record.type.model : '---' %>
                         </td>
                         <td>
                             <%= record.assetTag %>
                         </td>
                         <td>
-                            <%= record.alias ? record.alias : '---' %>
+                            <%= record.deviceId ? record.deviceId : '---' %>
                         </td>
                         <td>
                             <%= record.description %>
