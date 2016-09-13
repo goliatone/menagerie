@@ -23,18 +23,44 @@ var Location = {
         description : {
             type: 'string'
         },
+        //Does this make sense here?
         geolocation_lng : {
             type: 'number',
         },
         geolocation_lat : {
             type: 'number',
         },
+        floorplan: {
+            //eventually this will be an image/file
+            type: 'string'
+        },
         devices: {
             collection: 'device',
             via: 'location'
         },
-        sublocation: {
-            model: 'location'
+        sublocations: {
+            collection: 'location',
+            via: 'parent'
+        },
+        parent: {
+            model: 'location',
+            via: 'sublocations'
+        },
+        assignParentLocation: function(parent){
+            var L = sails.models.location;
+            var updates = [
+                L.update({id:this.id}, {parent: parent}),
+                L.update({id: parent}, {sublocation: this.id})
+            ];
+            return Promise.all(updates);
+        },
+        assignSublocation: function(sub){
+            var L = sails.models.location;
+            var updates = [
+                L.update({id: sub}, {parent: this.id}),
+                L.update({id:this.id}, {sublocation: sub}),
+            ];
+            return Promise.all(updates);
         }
     },
     afterCreate: function(record, done){
