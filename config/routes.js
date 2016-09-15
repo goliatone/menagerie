@@ -147,6 +147,7 @@ module.exports.routes = {
     'GET /files/:id': 'FilesController.find',
     'POST /files': 'FilesController.create',
     'POST /files/update': 'FilesController.update',
+    'POST /files/upload': 'FilesController.upload',
     // 'PUT /devicetype': 'ConfigurationController.update',
     'DELETE /files': 'FilesController.delete',
 };
