@@ -32,7 +32,7 @@
 </div>
 <script type="text/javascript">
 function buildPagination(){
-    io.socket.get('/location/count', function(data, jwr){
+    io.socket.get('/files/count', function(data, jwr){
         console.log('HERE', data, jwr);
 
         if(jwr.statusCode > 300){
@@ -71,11 +71,11 @@ function buildPagination(){
 
 
             if(cursor > 0){
-                previous = previous.replace('#LINK#', '/location?skip=' + (cursor - step));
+                previous = previous.replace('#LINK#', '/files?skip=' + (cursor - step));
                 pages = previous + pages;
             }
             if(cursor < data.count){
-                next = next.replace('#LINK#', '/location?skip=' + (cursor + step));
+                next = next.replace('#LINK#', '/files?skip=' + (cursor + step));
                 pages += next;
             }
 
