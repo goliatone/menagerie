@@ -7,10 +7,11 @@
 * @description :: TODO: You might write a short summary of how this model works and what it represents here.
 * @docs        :: http://sailsjs.org/#!documentation/models
 */
+var extend = require('gextend');
 var BaseModel = require('../../lib/BaseModel');
 
-module.exports = {
-
+var Files = {
+    nicename: 'Files',
     attributes: {
         uuid : {
             uuidv4: true,
@@ -33,6 +34,12 @@ module.exports = {
         },
         uri: {
             type: 'string'
+        },
+        toJSON: function(){
+            this.name = this.filename;
+            return this;
         }
     }
 };
+
+module.exports = extend({}, BaseModel, Files);
