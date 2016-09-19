@@ -31,7 +31,7 @@
                       <td><%= record.manufacturer %></td>
                       <td><%= record.description %></td>
                       <td><%= record.label %></td>
-                      <td><%= record.devices ? record.devices.length : 0 %></td>
+                      <td class="device-count" data-typeid="<%= record.id%>">--</td>
                   </tr>
               <%});%>
           </tbody>
@@ -39,3 +39,21 @@
         <a href="/<%= nicename %>/new" class="button success">Add Record</a>
     </div>
 </div>
+
+<script>
+    function countDevicesForType($el, typeId){
+        var url = '/device/count?where={"type":"'+typeId+'"}';
+        console.log('typeId', typeId, url);
+        io.socket.get(url, function(re){
+            $el.text(re.count);
+        });
+    }
+    function countDevices(){
+        $('.device-count').each(function(){
+            var id = $(this).data('typeid');
+            countDevicesForType($(this), id);
+        });
+    }
+
+    countDevices()
+</script>
