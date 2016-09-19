@@ -16,8 +16,9 @@ module.exports = {
    * environment (see config/connections.js and config/models.js )           *
    ***************************************************************************/
   models: {
-         // connection: 'localDiskDb'
-        connection: 'remotePostgres'
+        connection: 'mongodb'
+        // connection: 'localDiskDb'
+        // connection: 'remotePostgres'
         // connection: 'developmentPostgres'
   }
 };

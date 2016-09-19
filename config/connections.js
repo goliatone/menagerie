@@ -34,6 +34,22 @@ module.exports.connections = {
 
   /***************************************************************************
   *                                                                          *
+  * MongoDB is the leading NoSQL database.                                   *
+  * http://en.wikipedia.org/wiki/MongoDB                                     *
+  *                                                                          *
+  * Run: npm install sails-mongo                                             *
+  *                                                                          *
+  ***************************************************************************/
+  mongodb: {
+    adapter: 'sails-mongo',
+    host: process.env.NODE_MONGO_ENDPOINT,
+    port: process.env.NODE_MONGO_PORT || 27017,
+    user: process.env.NODE_MONGO_USERNAME, //optional
+    password: process.env.NODE_MONGO_PASSWORD, //optional
+    database: process.env.NODE_MONGO_DATABASE || 'menagerie' //optional
+  },
+  /***************************************************************************
+  *                                                                          *
   * PostgreSQL is another officially supported relational database.          *
   * http://en.wikipedia.org/wiki/PostgreSQL                                  *
   *                                                                          *
