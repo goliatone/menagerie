@@ -22,6 +22,15 @@
             <% } %>
         </select>
     </label>
+
+    <label>Floorpaln
+        <select name="floorplan"  value="<%= record.floorplan ? record.floorplan.id : '' %>">
+            <% if (!record.floorplan) {%>
+            <option value="">Not assigned</option>
+            <% } %>
+        </select>
+    </label>
+
     <% if(record.id){%>
         <input hidden="true" name="id" value="<%= record.id %>" required/>
     <%}%>
@@ -46,4 +55,5 @@ function populateOption(name, selector){
 }
 
 populateOption('location?limit=1000', 'parent');
+populateOption('files?limit=1000', 'floorplan');
 </script>

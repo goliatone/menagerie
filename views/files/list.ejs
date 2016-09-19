@@ -1,0 +1,99 @@
+<% include ../_header.ejs %>
+
+<div class="content row">
+    <div class="large-12 large-centered small-11 small-centered columns">
+        <h3>Files</h3>
+        <table>
+          <thead>
+            <tr>
+                <th>Name</th>
+              <th width="400">UUID</th>
+              <th width="150">QR Code</th>
+            </tr>
+          </thead>
+          <tbody>
+              <% records.map(function(record){%>
+                  <tr>
+                      <td>
+                          <a href="/<%= nicename %>/<%= record.id %>">
+                              <%= record.filename %>
+                          </a>
+                      </td>
+                      <td><%= record.uuid %></td>
+                      <td><img class="location qr-code" src="<%=record.uri%>"/></td>
+                  </tr>
+              <%});%>
+          </tbody>
+        </table>
+        <ul id="table-pagination" class="pagination" role="menubar">
+        </ul>
+        <a href="/<%= nicename %>/new" class="button success">Add Record</a>
+    </div>
+</div>
+<script type="text/javascript">
+function buildPagination(){
+    io.socket.get('/files/count', function(data, jwr){
+        console.log('HERE', data, jwr);
+
+        if(jwr.statusCode > 300){
+            console.error(jwr);
+            return;
+        }
+
+        var previous = '<li class="arrow"><a href="#LINK#">&laquo; Previous</a></li>',
+            next = '<li class="arrow"><a href="#LINK#">Next &raquo;</a></li>'
+
+        if(data.count){
+            var query = getQueryString(),
+                cursor = parseInt(query.skip) || 0,
+                step = data.step,
+                total = data.count / step,
+                buffer = [],
+                index = 0,
+                pages = '';
+
+            if(data.count < step) return;
+
+            console.log('pagination', total, step, data.count);
+
+            for(var i = 0; i < total; i++){
+                index = i * step;
+                buffer.push('<li' + (index === cursor ? ' class="current"' : '') + '><a href="?skip=' + index + '">' + (i + 1) + '</a></li>');
+            }
+
+            //TODO: we should have a window around the current item.
+            if(buffer.length > 20){
+                buffer = (buffer.slice(0, 5)).concat(buffer.slice(-5));
+                buffer.splice(5, 0, '<li class="unavailable" aria-disabled="true"><a href="">&hellip;</a></li>');
+            }
+
+            pages = buffer.join('');
+
+
+            if(cursor > 0){
+                previous = previous.replace('#LINK#', '/files?skip=' + (cursor - step));
+                pages = previous + pages;
+            }
+            if(cursor < data.count){
+                next = next.replace('#LINK#', '/files?skip=' + (cursor + step));
+                pages += next;
+            }
+
+
+            $('#table-pagination').html(pages);
+        }
+    });
+}
+buildPagination();
+
+function getQueryString() {
+  var result = {}, queryString = location.search.slice(1),
+      re = /([^&=]+)=([^&]*)/g, m;
+
+  while (m = re.exec(queryString)) {
+    result[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+  }
+
+  return result;
+}
+</script>

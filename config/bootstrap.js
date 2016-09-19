@@ -53,8 +53,18 @@ ngrok http port -subdomain=subdomain
     console.log('|');
     console.log('=============================');
 
+    /*
+     * Intercept all file uploads, we care about csv files.
+     * We are triggering a custom event "file:upload" in FileController.
+     */
     var locationCSVUpload = require('../api/commands/LocationCSVUpload');
     sails.on(locationCSVUpload.eventType, locationCSVUpload.handler);
+
+    /*
+     * After files have been uploaded, we create a new Files record.
+     */
+    var fileUpload = require('../api/commands/CreateFileFromUploadCommand');
+    sails.on(fileUpload.eventType, fileUpload.handler);
 
     // It's very important to trigger this callback method when you are finished
     // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)

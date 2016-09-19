@@ -1,0 +1,13 @@
+<form id="file-uploader" action="/files/upload" enctype="multipart/form-data" method="POST">
+    <label for="uploaded-file" class="button">Select File</label>
+    <input  name="uploaded-file" type="file" id="uploaded-file" class="show-for-sr">
+    <% if(record.id){%>
+        <input hidden="true" name="id" value="<%= record.id %>" required/>
+
+        <a class="th" href="<%=record.uri%>"/>
+            <img src="<%=record.uri%>"/>
+        </a>
+
+    <%}%>
+    <button id="submit" class="success expand radius">Upload</button>
+</form>

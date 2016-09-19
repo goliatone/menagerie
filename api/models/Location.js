@@ -32,7 +32,7 @@ var Location = {
         },
         floorplan: {
             //eventually this will be an image/file
-            type: 'string'
+            model: 'files',
         },
         devices: {
             collection: 'device',

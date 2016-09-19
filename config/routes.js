@@ -70,6 +70,9 @@ module.exports.routes = {
     'POST /thing/:typeName/:id': 'ThingController.register',
     'POST /thing/:typeName/:id/status': 'ThingController.status',
 
+    /******************************************************
+     * Location
+     ******************************************************/
     //TODO: We should be able to include this on blueprints
     'GET /location/count': 'LocationController.count',
 
@@ -83,6 +86,9 @@ module.exports.routes = {
     // 'PUT /location': 'LocationController.update',
     'DELETE /location': 'LocationController.delete',
 
+    /******************************************************
+     * Device
+     ******************************************************/
     //TODO: We should be able to include this on blueprints
     'GET /device/count': 'DeviceController.count',
 
@@ -96,6 +102,9 @@ module.exports.routes = {
     'POST /device/update': 'DeviceController.update',
     'DELETE /device': 'DeviceController.delete',
 
+    /******************************************************
+     * DeviceType
+     ******************************************************/
     //TODO: We should be able to include this on blueprints
     'GET /devicetype/count': 'DeviceTypeController.count',
 
@@ -109,6 +118,9 @@ module.exports.routes = {
     // 'PUT /devicetype': 'DeviceTypeController.update',
     'DELETE /devicetype': 'DeviceTypeController.delete',
 
+    /******************************************************
+     * Configuration
+     ******************************************************/
     //TODO: We should be able to include this on blueprints
     'GET /configuration/count': 'ConfigurationController.count',
 
@@ -121,4 +133,21 @@ module.exports.routes = {
     'POST /configuration/update': 'ConfigurationController.update',
     // 'PUT /devicetype': 'ConfigurationController.update',
     'DELETE /configuration': 'ConfigurationController.delete',
+
+    /******************************************************
+     * Configuration
+     ******************************************************/
+    //TODO: We should be able to include this on blueprints
+    'GET /files/count': 'FilesController.count',
+
+    'GET /files': 'FilesController.findall',
+    'GET /files/new': 'FilesController.new',
+    'GET /files/find': 'FilesController.showFind',
+    'GET /files/reset': 'FilesController.resetData',
+    'GET /files/:id': 'FilesController.find',
+    'POST /files': 'FilesController.create',
+    'POST /files/update': 'FilesController.update',
+    'POST /files/upload': 'FilesController.upload',
+    // 'PUT /devicetype': 'ConfigurationController.update',
+    'DELETE /files': 'FilesController.delete',
 };

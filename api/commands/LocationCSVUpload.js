@@ -27,9 +27,12 @@ function backgroundTask(data){
 }
 
 function handleLocationCSVUpload(f){
-    console.log('FILE UPLOADED', f);
+    console.log('- csv upload: FILE UPLOADED', f);
+    var file = f.files[0];
 
-    var filepath = f.files[0].fd;
+    if(file.type !== 'text/csv') return;
+
+    var filepath = file.fd;
 
     var task = new AsyncTask({
         doInBackground: backgroundTask
@@ -39,9 +42,9 @@ function handleLocationCSVUpload(f){
     CSVService.toJSON(filepath).then(function(dataset){
         task.execute(dataset)
         .then(function( result ) {
-            console.log('RESULT', result);
+            console.log('- csv upload: RESULT', result);
             LocationService.preloadData(result, function(err, result){
-                console.log('DONE!');
+                console.log('- csv upload: DONE!');
             });
         })
         .catch( function(){
