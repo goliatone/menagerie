@@ -15,8 +15,35 @@
     <label>Description
         <input name="description" type="text" placeholder="Description"  value="<%= record.description ? record.description : '' %>"/>
     </label>
+    <label>Parent
+        <select name="parent"  value="<%= record.parent ? record.parent.id : '' %>">
+            <% if (!record.parent) {%>
+            <option value="">Not assigned</option>
+            <% } %>
+        </select>
+    </label>
     <% if(record.id){%>
         <input hidden="true" name="id" value="<%= record.id %>" required/>
     <%}%>
     <button id="submit" class="success expand radius">Send</button>
 </form>
+
+<script type="text/javascript">
+function populateOption(name, selector){
+    io.socket.get('/' + name, function(data, jwres){
+        console.log(data);
+        data = data || {records:[]};
+        var $sel = $('[name="' + selector + '"]'),
+            index = 0,
+            active = $sel.attr('value');
+        data.records.map(function(record){
+            $sel.append('<option value="' + record.id + '">' + record.name + '</option>');
+            if(active === ('' + record.id)) $sel.prop('selectedIndex', index);
+            index++;
+        });
+
+    });
+}
+
+populateOption('location?limit=1000', 'parent');
+</script>

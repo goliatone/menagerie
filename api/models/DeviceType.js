@@ -24,6 +24,12 @@ var DeviceType = {
             type: 'string',
             //   trim: true, index: true
         },
+        manufacturer: {
+            type: 'string'
+        },
+        model: {
+            type: 'string'
+        },
         metadata : {
             type: 'json'
         },
