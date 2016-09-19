@@ -23,17 +23,16 @@ module.exports = {
             function step(items, done){
                 var record = items.pop();
                 if(!record) return done();
-                //If we store a string, it will crapola...
-                record._id =
-                record.id = new ObjectID(record.id);
+
+                record = fixPrimaryKey(record);
+                record = fixRelationshipKeys(record);
+
+                //Since we use native we are loosing sails-mongo reconciliation
+                //of id:string to _id:ObjectId
                 Model.native(function(err, Collection){
                     Collection.update({
-                        id: record.id
-                    },
-                    { $set: record },
-                    {
-                        upsert:true
-                    }).then(function(){
+                        _id: record._id
+                    },record, {upsert: true, w: 1}).then(function(){
                         step(items, done);
                     }).catch(function(err){
                         console.log('err', err.message);
@@ -52,3 +51,21 @@ module.exports = {
         });
     }
 };
+
+function fixPrimaryKey(record){
+    record._id = new ObjectID(record.id);
+    delete record.id;
+    return record;
+}
+
+function fixRelationshipKeys(record){
+    var value;
+    Object.keys(record).map(function(attr){
+
+        value = record[attr];
+        if(!value || !value.hasOwnProperty('__rel__')) return;
+        record[attr] = new ObjectID(value.__rel__);
+    });
+
+    return record;
+}
