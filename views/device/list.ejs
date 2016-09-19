@@ -15,7 +15,7 @@
                     <!--th width="150">Name</th-->
                     <th width="150">Model</th>
                     <th width="150">Asset Tag</th>
-                    <th width="150">Alias</th>
+                    <th width="150">Device Id</th>
                     <th width="250">Description</th>
                     <th width="150">Location</th>
                     <th width="150">Type</th>
@@ -74,18 +74,22 @@
     </div>
 </div>
 <script type="text/javascript">
-function populateOption(name, selector){
+function populateFilters(name, selector){
     io.socket.get('/' + name, function(data, jwres){
         console.log(data)
+        function getId(id){
+            if(typeof id === 'string') return '"' + id + '"';
+            return id;
+        }
         data = data || {records:[]};
         data.records.map(function(record){
-            var value = '<dd><a href=\'/<%= nicename %>?where={"type":' + record.id;
+            var value = '<dd><a href=\'/<%= nicename %>?where={"type":' + getId(record.id);
             value += '}\'>'+ record.name+'</a></dd>'
             $(selector).append(value);
         });
     });
 }
-populateOption('devicetype', '.sub-nav');
+populateFilters('devicetype', '.sub-nav');
 
 io.socket.on('/things/pair/true', function(payload){
     var context = '#record-' + payload.device.id;
