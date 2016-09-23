@@ -19,6 +19,7 @@
                     <th width="250">Description</th>
                     <th width="150">Location</th>
                     <th width="150">Type</th>
+                    <th width="150">Status</th>
                     <th width="150">QR Code</th>
                     <th width="150"></th>
                 </tr>
@@ -57,6 +58,9 @@
                         </td>
                         <td>
                             <%= record.type ? record.type.name : '---' %>
+                        </td>
+                        <td>
+                            <%= record.status %>
                         </td>
                         <td><img class="device qr-code" src="/images/qrs/<%=record.uuid%>.png" /></td>
                         <td>
@@ -103,8 +107,11 @@ io.socket.on('/things/pair/true', function(payload){
     $(selector, context).html(payload.location.name + ': ' + payload.location.description);
 });
 
-function buildPagination(){
-    io.socket.get('/device/count', function(data){
+function buildPagination(endpoint, criteria){
+    console.log('criteria', criteria);
+    if(typeof criteria === 'object') criteria = JSON.stringify(criteria);
+    var url = endpoint + (criteria ? '?' + criteria : '');
+    io.socket.get(url, function(data){
         console.log('HERE', data);
         var previous = '<li class="arrow"><a href="#LINK#">&laquo; Previous</a></li>',
             next = '<li class="arrow"><a href="#LINK#">Next &raquo;</a></li>'
@@ -148,7 +155,7 @@ function buildPagination(){
         }
     });
 }
-buildPagination();
+buildPagination('/device/count', <%= locals.criteria %>);
 
 function getQueryString() {
   var result = {}, queryString = location.search.slice(1),
