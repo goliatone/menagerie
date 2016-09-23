@@ -38,6 +38,10 @@ var Location = {
             collection: 'device',
             via: 'location'
         },
+        deployments: {
+            collection: 'deployment',
+            via: 'location'
+        },
         sublocations: {
             collection: 'location',
             via: 'parent'
