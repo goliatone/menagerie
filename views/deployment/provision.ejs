@@ -1,0 +1,208 @@
+<% include ../_header.ejs %>
+
+<div class="row">
+    <div class="large-12 large-centered small-11 small-centered columns">
+
+        <div class="clearfix">
+            <h3 class="left">Provisioning Devices</h3>
+            <a id="provision-btn" href="/deployment/<%= record.id %>/provision" class="button tiny radius right">Provision</a>
+        </div>
+        <dl class="sub-nav">
+            <dt>Filter:</dt>
+            <%= records.length %>
+            <dd class="active-implement"><a href="<%= req.fullUrl %>">All</a></dd>
+        </dl>
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th width="350">UUID</th>
+                    <!--th width="150">Name</th-->
+                    <th>Model</th>
+                    <th>Asset Tag</th>
+                    <th>Device Id</th>
+                    <th>Description</th>
+                    <th>Location</th>
+                    <th width="150">Type</th>
+                    <th width="150">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% records.map(function(record){%>
+                    <tr id="record-<%= record.id %>">
+                        <td>
+                            <input class="selected-record" type="checkbox">
+                        </td>
+                        <td>
+                            <a href="/<%= nicename %>/<%= record.id %>">
+                                <%= record.uuid %>
+                            </a>
+                        </td>
+                        <!--td>
+                            <%= record.name %>
+                        </td-->
+                        <td>
+                            <%= record.type ? record.type.model : '---' %>
+                        </td>
+                        <td>
+                            <%= record.assetTag %>
+                        </td>
+                        <td>
+                            <%= record.deviceId ? record.deviceId : '---' %>
+                        </td>
+                        <td>
+                            <%= record.description %>
+                        </td>
+                        <td>
+                            <% if(record.location){ %>
+                                <a class="location" href="/location/<%= record.location.id %>">
+                                    <%= record.location.name %>
+                                </a>
+                            <% } else { %>
+                                ---
+                            <%}%>
+                        </td>
+                        <td>
+                            <%= record.type ? record.type.name : '---' %>
+                        </td>
+                        <td>
+                            <%= record.status %>
+                        </td>
+                    </tr>
+                    <%});%>
+            </tbody>
+        </table>
+        <ul id="table-pagination" class="pagination" role="menubar">
+        </ul>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+
+$('#provision-btn').click(function(){
+    //TODO: Change!!!
+    var endpoint = 'http://localhost:9090/deployment/57e16acb1743d1083ee8bab8/provision';
+    var payload = getIDS();
+
+    $.ajax({
+        url: endpoint,
+        data: payload,
+        type: "POST",
+        crossDomain: true,
+        dataType: "json",
+        // beforeSend : setAuthorizationToken
+    }).done(function(res){
+        console.log('AJAX response: ', JSON.stringify(res));
+        // if(res.success) resultDiv.innerHTML = 'Transaction complete';
+        // else resultDiv.innerHTML = res.message;
+    }).fail(function(e){
+        console.error('ERROR %s', e, JSON.stringify(e));
+        // resultDiv.innerHTML = '<h4>Error</h4><br/><code>' + JSON.stringify(e, null, 4) + '</code>';
+    }).always(function(){
+        updateUI();
+    });
+});
+
+function getIDS(){
+    $('.selected-record').parent().parent().attr('id')
+}
+
+function updateUI(){}
+
+function populateFilters(name, selector){
+    io.socket.get('/' + name, function(data, jwres){
+        console.log(data)
+        function getId(id){
+            if(typeof id === 'string') return '"' + id + '"';
+            return id;
+        }
+        data = data || {records:[]};
+        data.records.map(function(record){
+            var value = '<dd><a href=\'<%= req.fullUrl %>?where={"type":' + getId(record.id);
+            value += '}\'>'+ record.name+'</a></dd>'
+            $(selector).append(value);
+        });
+    });
+}
+populateFilters('devicetype', '.sub-nav');
+
+function populateOption(name, selector){
+    io.socket.get('/' + name, function(data, jwres){
+        console.log(data);
+        data = data || {records:[]};
+        var $sel = $('[name="' + selector + '"]'),
+            index = 0,
+            active = $sel.attr('value');
+        data.records.map(function(record){
+            $sel.append('<option value="' + record.id + '">' + record.label + '</option>');
+            if(active === ('' + record.id)) $sel.prop('selectedIndex', index);
+            index++;
+        });
+
+    });
+}
+
+populateOption('device?limit=1000', 'devices');
+
+/*
+ * Pagination
+ */
+ function buildPagination(){
+     io.socket.get('/device/count', function(data){
+         console.log('HERE', data);
+         var previous = '<li class="arrow"><a href="#LINK#">&laquo; Previous</a></li>',
+             next = '<li class="arrow"><a href="#LINK#">Next &raquo;</a></li>'
+
+         if(data.count){
+             var query = getQueryString(),
+                 cursor = parseInt(query.skip) || 0,
+                 step = data.step,
+                 total = data.count / step,
+                 buffer = [],
+                 index = 0,
+                 pages = '';
+
+             if(data.count < step) return;
+
+             for(var i = 0; i < total; i++){
+                 index = i * step;
+                 buffer.push('<li' + (index === cursor ? ' class="current"' : '') + '><a href="?skip=' + index + '">' + (i + 1) + '</a></li>');
+             }
+
+             //TODO: we should have a window around the current item.
+             if(buffer.length > 20){
+                 buffer = (buffer.slice(0, 5)).concat(buffer.slice(-5));
+                 buffer.splice(5, 0, '<li class="unavailable" aria-disabled="true"><a href="">&hellip;</a></li>');
+             }
+
+             pages = buffer.join('');
+
+
+             if(cursor > 0){
+                 previous = previous.replace('#LINK#', '/device?skip=' + (cursor - step));
+                 pages = previous + pages;
+             }
+             if(cursor < data.count){
+                 next = next.replace('#LINK#', '/device?skip=' + (cursor + step));
+                 pages += next;
+             }
+
+
+             $('#table-pagination').html(pages);
+         }
+     });
+ }
+ buildPagination();
+
+ function getQueryString() {
+   var result = {}, queryString = location.search.slice(1),
+       re = /([^&=]+)=([^&]*)/g, m;
+
+   while (m = re.exec(queryString)) {
+     result[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+   }
+
+   return result;
+ }
+</script>

@@ -1,0 +1,64 @@
+<% include ../_header.ejs %>
+
+<div class="row">
+    <div class="large-12 large-centered small-11 small-centered columns">
+        <h3>Update Deployment</h3>
+        <%if(status === "Error") { %>
+        <div class="alert alert-danger" role="alert"><%=statusDescription%></div>
+        <% } %>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Location</th>
+              <th># Devices</th>
+            </tr>
+          </thead>
+          <tbody>
+              <% records.map(function(record){%>
+                  <tr>
+                      <td>
+                          <a href="/<%= nicename %>/<%= record.id %>">
+                              <%= record.name %>
+                          </a>
+                      </td>
+                      <td><%= record.description %></td>
+                      <td><%= record.startDate %></td>
+                      <td><%= record.endDate %></td>
+                      <td>
+                          <% if(record.location){ %>
+                              <a class="location" href="/location/<%= record.location.id %>">
+                                  <%= record.location.name %>
+                              </a>
+                          <% } else { %>
+                              ---
+                          <%}%>
+                      </td>
+                      <td class="device-count" data-typeid="<%= record.id%>">--</td>
+                  </tr>
+              <%});%>
+          </tbody>
+        </table>
+        <a href="/<%= nicename %>/new" class="button success">Add Record</a>
+    </div>
+</div>
+
+<script>
+    function countDevicesForType($el, typeId){
+        var url = '/deployeddevice/count?where={"type":"'+typeId+'"}';
+        io.socket.get(url, function(re){
+            $el.text(re.count);
+        });
+    }
+    function countDevices(){
+        $('.device-count').each(function(){
+            var id = $(this).data('typeid');
+            countDevicesForType($(this), id);
+        });
+    }
+
+    countDevices()
+</script>

@@ -1,0 +1,62 @@
+
+<form id="menagerie" action="<%= form.action %>" method="<%= form.method %>" enctype="application/x-www-form-urlencoded">
+    <label>UUID
+        <input name="uuid" type="text" placeholder="UUID"
+            value="<%= record.uuid ? record.uuid : 'UUID' %>"
+            required
+            pattern="^[0-9a-fA-F]{8}-?[0-9a-fA-F]{4}-?[0-9a-fA-F]{4}-?[0-9a-fA-F]{4}-?[0-9a-fA-F]{12}$"
+            <% if(form.intent !== 'create'){ %>
+            disabled="disabled"
+            <%}%>
+        />
+    </label>
+    <label>Name
+        <input name="name" type="text" placeholder="Name" value="<%= record.name ? record.name : '' %>" required/>
+    </label>
+    <label>Description
+        <input name="description" type="text" placeholder="Description"  value="<%= record.description ? record.description : '' %>"/>
+    </label>Start Date
+        <input name="startDate" data-date-time data-date-format="%m/%d/%Y" type="text" placeholder="Start Date"  value="<%= record.startDate ? record.startDate : '' %>"/>
+    </label>
+    <label>End Date
+        <input name="endDate" data-date-time data-date-format="%m/%d/%Y" type="text" placeholder="End Date"  value="<%= record.endDate ? record.endDate : '' %>"/>
+    </label>
+    <label>Location
+        <select name="location"  value="<%= record.location ? record.location.id : '' %>">
+            <% if (!record.location) {%>
+            <option value="">Not assigned</option>
+            <% } %>
+        </select>
+    </label>
+    <% if(record.id){%>
+        <input hidden="true" name="id" value="<%= record.id %>" />
+    <%}%>
+    <button id="submit" class="success expand radius">Send</button>
+</form>
+<!--code>
+    < % = JSON.stringify(record, null, 4) %>
+</code -->
+<%= record.data ? JSON.stringify(record.data) : '' %>
+
+<script type="text/javascript">
+$('input[name=endDate]').fdatepicker({format: 'mm-dd-yyyy',});
+$('input[name=startDate]').fdatepicker({format: 'mm-dd-yyyy'});
+
+function populateOption(name, selector){
+    io.socket.get('/' + name, function(data, jwres){
+        console.log(data);
+        data = data || {records:[]};
+        var $sel = $('[name="' + selector + '"]'),
+            index = 0,
+            active = $sel.attr('value');
+        data.records.map(function(record){
+            $sel.append('<option value="' + record.id + '">' + record.name + '</option>');
+            if(active === ('' + record.id)) $sel.prop('selectedIndex', index);
+            index++;
+        });
+
+    });
+}
+
+populateOption('location?limit=1000', 'location');
+</script>
