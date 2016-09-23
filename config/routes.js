@@ -135,7 +135,7 @@ module.exports.routes = {
     'DELETE /configuration': 'ConfigurationController.delete',
 
     /******************************************************
-     * Configuration
+     * Files
      ******************************************************/
     //TODO: We should be able to include this on blueprints
     'GET /files/count': 'FilesController.count',
@@ -150,4 +150,22 @@ module.exports.routes = {
     'POST /files/upload': 'FilesController.upload',
     // 'PUT /devicetype': 'ConfigurationController.update',
     'DELETE /files': 'FilesController.delete',
+
+    /******************************************************
+     * Deployments
+     ******************************************************/
+    //TODO: We should be able to include this on blueprints
+    'GET /deployment/count': 'ConfigurationController.count',
+
+    'GET /deployment': 'DeploymentController.findall',
+    'GET /deployment/new': 'DeploymentController.new',
+    'GET /deployment/find': 'DeploymentController.showFind',
+    'GET /deployment/reset': 'DeploymentController.resetData',
+    'GET /deployment/:id': 'DeploymentController.find',
+    'POST /deployment': 'DeploymentController.create',
+    'POST /deployment/update': 'DeploymentController.update',
+    // 'PUT /devicetype': 'ConfigurationController.update',
+    'DELETE /deployment': 'DeploymentController.delete',
+
+    'GET /deployment/:id/provision': 'DeploymentController.provision',
 };
