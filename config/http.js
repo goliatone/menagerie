@@ -73,11 +73,26 @@ module.exports.http = {
     // bodyParser: require('skipper')
 
   },
-  customMiddleware: function(app){
-    var express = require('express');
-    var staticpath = require('path').join(sails.config.paths.tmp, 'uploads');
-    app.use('/uploads', express.static(staticpath));
-  }
+    customMiddleware: function(app){
+        /*
+        * Serve custom static directory.
+        */
+        var express = require('express');
+        var staticpath = require('path').join(sails.config.paths.tmp, 'uploads');
+        app.use('/uploads', express.static(staticpath));
+
+        /*
+         *
+         */
+        app.use(function(req, res, next){
+            if(!res.locals) res.locals = {};
+            
+            var requestedUrl = req.protocol + '://' + req.get('Host') + req.originalUrl;
+            req.requestedUrl = res.requestedUrl = requestedUrl;
+            req.fullUrl = res.fullUrl = req.protocol + '://' + req.get('Host') + req.url;
+            next();
+        });
+    }
   /***************************************************************************
   *                                                                          *
   * The number of seconds to cache flat files on disk being served by        *
