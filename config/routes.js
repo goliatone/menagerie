@@ -155,8 +155,11 @@ module.exports.routes = {
      * Deployments
      ******************************************************/
     //TODO: We should be able to include this on blueprints
-    'GET /deployment/count': 'ConfigurationController.count',
+    'GET /deployment/:id/provision': 'DeploymentController.provision',
+    'POST /deployment/:id/provision': 'DeploymentController.addDevices',
+    'GET /deployment/:id/devices/count': 'DeploymentController.countDevices',
 
+    'GET /deployment/count': 'DeploymentController.count',
     'GET /deployment': 'DeploymentController.findall',
     'GET /deployment/new': 'DeploymentController.new',
     'GET /deployment/find': 'DeploymentController.showFind',
@@ -167,5 +170,8 @@ module.exports.routes = {
     // 'PUT /devicetype': 'ConfigurationController.update',
     'DELETE /deployment': 'DeploymentController.delete',
 
-    'GET /deployment/:id/provision': 'DeploymentController.provision',
+
+    /******************************************************
+     * DeployedDevice
+     ******************************************************/
 };
