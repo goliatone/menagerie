@@ -18,7 +18,7 @@
     <label>Device Id
         <input name="deviceId" type="text" placeholder="deviceId" value="<%= record.deviceId ? record.deviceId : '' %>"/>
     </label>
-    
+
     <label>Name
         <input name="name" type="text" placeholder="Name" value="<%= record.name ? record.name : '' %>"/>
     </label>
@@ -31,12 +31,18 @@
     <label>Status
         <select name="status"  value="<%= record.status ? record.status : 'unknown' %>">
             <option value="unknown">Unknown</option>
-            <option value="not_inuse">Not In Use</option>
+            <option value="available">Available</option>
+            <option value="reserved">Reserved</option>
+            <option value="deployed">Deployed</option>
+            <option value="broken">Broken</option>
+
+
+            <--option value="not_inuse">Not In Use</option>
             <option value="inuse">In Use</option>
             <option value="online">Online</option>
             <option value="offline">Offline</option>
             <option value="unavailable">Unavailable</option>
-            <option value="operative">Operative</option>
+            <option value="operative">Operative</option-->
         </select>
     </label>
     <label>Type
