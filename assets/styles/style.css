@@ -30,6 +30,7 @@ footer {
     text-align: left;
     margin-left: 20px;
     width: 100%;
+    z-index: -10;
 }
 
 footer .local,
@@ -52,4 +53,18 @@ input:required:invalid, input:focus:invalid {
 }
 input:required:valid {
     border: 1px solid green;
+}
+
+
+.overflow {
+    width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.overflow .clip {
+    text-overflow: clip;
+}
+
+.overflow-ellipsis {
+    text-overflow: ellipsis;
 }
