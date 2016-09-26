@@ -9,8 +9,8 @@
         <table>
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Description</th>
+              <th with="200">Name</th>
+              <!--th>Description</th-->
               <th>Start Date</th>
               <th>End Date</th>
               <th>Location</th>
@@ -25,7 +25,7 @@
                               <%= record.name %>
                           </a>
                       </td>
-                      <td><%= record.description %></td>
+                      <!--td><%= record.description %></td-->
                       <td><%= record.startDate %></td>
                       <td><%= record.endDate %></td>
                       <td>
@@ -48,9 +48,11 @@
 
 <script>
     function countDevicesForType($el, typeId){
-        var url = '/deployeddevice/count?where={"type":"'+typeId+'"}';
-        io.socket.get(url, function(re){
-            $el.text(re.count);
+        var url = '/deployment/' + typeId + '/devices/count';
+        console.log('count devices', url);
+        io.socket.get(url, function(re, jwt){
+            console.log('response', re, jwt);
+            re && $el.text(re.count);
         });
     }
     function countDevices(){
