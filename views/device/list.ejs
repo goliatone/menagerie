@@ -107,10 +107,10 @@ io.socket.on('/things/pair/true', function(payload){
     $(selector, context).html(payload.location.name + ': ' + payload.location.description);
 });
 
-function buildPagination(endpoint, criteria){
+function buildPagination(resource, criteria){
     console.log('criteria', criteria);
     if(typeof criteria === 'object') criteria = JSON.stringify(criteria);
-    var url = endpoint + (criteria ? '?' + criteria : '');
+    var url = ('/' + resource + '/count') + (criteria ? '?' + criteria : '');
     io.socket.get(url, function(data){
         console.log('HERE', data);
         var previous = '<li class="arrow"><a href="#LINK#">&laquo; Previous</a></li>',
@@ -142,11 +142,13 @@ function buildPagination(endpoint, criteria){
 
 
             if(cursor > 0){
-                previous = previous.replace('#LINK#', '/device?skip=' + (cursor - step));
+                //TODO: need to include criteria here
+                previous = previous.replace('#LINK#', '?skip=' + (cursor - step));
                 pages = previous + pages;
             }
             if(cursor < data.count){
-                next = next.replace('#LINK#', '/device?skip=' + (cursor + step));
+                //TODO: need to include criteria here
+                next = next.replace('#LINK#', '?skip=' + (cursor + step));
                 pages += next;
             }
 
@@ -155,7 +157,7 @@ function buildPagination(endpoint, criteria){
         }
     });
 }
-buildPagination('/device/count', <%= locals.criteria %>);
+buildPagination('device', <%= locals.criteria %>);
 
 function getQueryString() {
   var result = {}, queryString = location.search.slice(1),
