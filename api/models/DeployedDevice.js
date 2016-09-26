@@ -1,3 +1,4 @@
+'use strict';
 /**
  * DeployedDevice.js
  *
@@ -15,6 +16,31 @@ module.exports = {
         },
         deployment: {
             model: 'deployment'
+        },
+        location: {
+            model: 'location'
+        },
+        state:{
+            type: 'string',
+            defaultsTo:'unseen',
+            enum: [
+                'unseen', //not seen yet
+                'online', //online health checkin
+                'offline', //it was online, now it's missing
+            ]
         }
+    },
+    createFromDevice: function(records, deployment){
+
+        var deployed = records.map(function(record){
+            return {
+                deployment: deployment,
+                uuid: record.uuid
+            };
+        });
+        console.log('- createFromDevice: ', deployed);
+        return DeployedDevice.create(deployed).then(function(devices){
+            return devices;
+        });
     }
 };
