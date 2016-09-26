@@ -50,9 +50,28 @@ var Device = {
             type: 'string',
             defaultsTo:'unknown',
             enum: [
+                //initial state, as entered into the system
+                //auto: default
                 'unknown',
-                'not_inuse',
-                'inuse',
+                //We make it available when we register the
+                //device into a warehousing location
+                //manual:√ Phone app ingestion | Web panel
+                'available',
+                //when it get's assigned to a deployment
+                //auto:Deployment Process
+                'reserved',
+                //when it gets deployed, UPDATE LOCATION
+                //auto:√ Phone app process | Web panel
+                'deployed',
+                //manually set to broken
+                'broken',
+
+                //TODO: Remove!!
+                'inuse', //'deployed'
+                'not_inuse', //available
+
+                //Functional status, move to
+                //DeployedDevice
                 'online',
                 'offline',
                 'unavailable',
