@@ -103,7 +103,9 @@ function getIDS(){
     return ids;
 }
 
-function updateUI(){}
+function updateUI(){
+    location.href = location.href;
+}
 
 function populateFilters(name, selector){
     io.socket.get('/' + name, function(data, jwres){
@@ -127,10 +129,10 @@ populateFilters('devicetype', '.sub-nav');
 */
 
 function buildPagination(resource, criteria){
-    console.log('criteria', criteria);
-    if(typeof criteria === 'object') criteria = JSON.stringify(criteria);
-    var url = ('/' + resource + '/count') + (criteria ? '?' + criteria : '');
 
+    if(typeof criteria === 'object') criteria = JSON.stringify(criteria.where);
+    var url = ('/' + resource + '/count') + (criteria ? '?where=' + criteria : '');
+    console.log('CRITERIA', url);
     io.socket.get(url, function(data){
         console.log('Pagination count', data);
 
@@ -178,7 +180,8 @@ function buildPagination(resource, criteria){
         }
     });
 }
-buildPagination('device', <%= locals.criteria %>);
+
+buildPagination('device', <%- JSON.stringify(criteria) %>);
 
 function getQueryString() {
     var result = {}, queryString = location.search.slice(1),
