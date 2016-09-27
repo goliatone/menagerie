@@ -6,7 +6,18 @@ function BaseResource(name){
     this.nicename = name.toLowerCase();
     this.baseView = this.nicename;
     this.label = name;
+    this.validateModel();
 }
+
+BaseResource.prototype.validateModel = function(){
+    if(!sails.models[this.nicename]){
+        throw Error('BaseResource for ' + this.nicename + ' its not a model');
+    }
+
+    if(!sails.models[this.nicename].__basemodel__){
+        throw Error('BaseResource for ' + this.nicename + ' doest not extend BaseModel');
+    }
+};
 
 BaseResource.prototype.getViewPath = function(action){
     return action ? this.baseView + '/' + action : this.baseView;
