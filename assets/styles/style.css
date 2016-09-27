@@ -56,6 +56,10 @@ input:required:valid {
 }
 
 
+table{
+    width: 100% !important;
+}
+
 .overflow {
     width: 100px;
     white-space: nowrap;
