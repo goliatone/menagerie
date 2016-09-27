@@ -172,8 +172,7 @@ module.exports.routes = {
     /******************************************************
      * DeployedDevice
      ******************************************************/
-
-    'GET /deployment/:id/devices': 'DeployedDeviceController.findall',
+    'GET /deployment/:deployment/devices': 'DeployedDeviceController.findall',
     'GET /device/deployed/new': 'DeployedDeviceController.new',
     'GET /device/deployed/find': 'DeployedDeviceController.showFind',
     'GET /device/deployed/:id': 'DeployedDeviceController.find',
@@ -182,5 +181,5 @@ module.exports.routes = {
     'DELETE /device/deployed': 'DeployedDeviceController.delete',
 
     'GET /device/deployed/count': 'DeployedDeviceController.count',
-    'GET /deployment/:id/devices/count': 'DeployedDeviceController.countDevices',
+    'GET /deployment/:deployment/devices/count': 'DeployedDeviceController.countDevices',
 };
