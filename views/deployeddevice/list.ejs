@@ -22,7 +22,7 @@
                 <% records.map(function(record){%>
                     <tr id="record-<%= record.id %>">
                         <td>
-                            <a href="/<%= nicename %>/<%= record.id %>">
+                            <a href="/device/deployed/<%= record.id %>">
                                 <%= record.uuid %>
                             </a>
                         </td>
