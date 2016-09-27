@@ -27,10 +27,18 @@ var Model = {
             defaultsTo:'unseen',
             enum: [
                 'unseen', //not seen yet
+                'checkin', //checked in
                 'online', //online health checkin
                 'offline', //it was online, now it's missing
             ]
         }
+    },
+    afterUpdate: function(record, next){
+        Device.update({uuid:record.uuid}, {location: record.location}).then(function(){
+            next();
+        }).catch(function(err){
+            next(err);
+        });
     },
     createFromDevice: function(records, deployment){
 
