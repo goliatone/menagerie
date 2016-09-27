@@ -168,6 +168,7 @@ module.exports.routes = {
     // 'PUT /devicetype': 'ConfigurationController.update',
     'DELETE /deployment': 'DeploymentController.delete',
 
+    'POST /deployment/check-in': 'DeploymentController.checkIn',
 
     /******************************************************
      * DeployedDevice
@@ -177,7 +178,7 @@ module.exports.routes = {
     'GET /device/deployed/find': 'DeployedDeviceController.showFind',
     'GET /device/deployed/:id': 'DeployedDeviceController.find',
     'POST /device/deployed': 'DeployedDeviceController.create',
-    'POST /device/deployed/update': 'DeployedDeviceController.update',
+    'POST /deployeddevice/update': 'DeployedDeviceController.update',
     'DELETE /device/deployed': 'DeployedDeviceController.delete',
 
     'GET /device/deployed/count': 'DeployedDeviceController.count',
