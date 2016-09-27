@@ -12,6 +12,7 @@
     <label>State
         <select name="state"  value="<%= record.state ? record.state : 'unseen' %>">
             <option value="unseen">Unseen</option>
+            <option value="checkin">Checked In</option>
             <option value="online">Online</option>
             <option value="offline">Offline</option>
         </select>
@@ -52,5 +53,5 @@ function populateOption(name, selector){
 
 populateOption('location?limit=1000', 'location');
 
-$('[name="status"]').val("<%= record.status%>");
+$('[name="state"]').val("<%= record.state%>");
 </script>
