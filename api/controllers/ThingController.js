@@ -1,8 +1,41 @@
 'use strict';
-
+var isUUID = require('../../lib/isUUID');
 module.exports = {
     status: function(req, res){
         res.send(200);
+    },
+    find: function(req, res){
+        var id = req.param('id');
+
+        function ok(type, result){
+            res.ok({success: true, type: type, result: result});
+        }
+        function ko(err){
+            res.sendError(err);
+        }
+        //check if it is an uuid
+        if(isUUID(id)){
+            //if so, we assume it's a device
+            return Device.findOne({uuid: id}).then(function(result){
+                //if nothing found, try locations
+                if(!result){
+                    return Location.findOne({uuid: id}).then(function(result){
+                        ok('location', result);
+                    }).catch(ko);
+                }
+                ok('device', result);
+            }).catch(ko);
+        }
+        //if its not, then try location by
+        Device.findOne({
+            where:{
+                or:[
+                    {assetTag: id},
+                    {deviceId: id}]
+                }
+            }).then(function(result){
+                ok('device', result);
+            }).catch(ko);
     },
     register: function(req, res){
         //Get the thing type
