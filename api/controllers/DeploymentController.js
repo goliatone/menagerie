@@ -13,6 +13,9 @@ var debug = require('debug')('controller:Deployment');
 var extend = require('gextend');
 
 var Controller = {
+    checkIn: function(req, res){
+        res.ok({ok:true});
+    },
     provision: function(req, res){
         if(!req.options.hasOwnProperty('limit')
             && !req.wantsJSON) req.options.limit = (sails.config.blueprints.clietRecordLimit || 10);
