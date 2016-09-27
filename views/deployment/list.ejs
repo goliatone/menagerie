@@ -37,7 +37,9 @@
                               ---
                           <%}%>
                       </td>
-                      <td class="device-count" data-typeid="<%= record.id%>">--</td>
+                      <td class="device-count" data-typeid="<%= record.id%>">
+                        --
+                      </td>
                   </tr>
               <%});%>
           </tbody>
@@ -51,8 +53,9 @@
         var url = '/deployment/' + typeId + '/devices/count';
         console.log('count devices', url);
         io.socket.get(url, function(re, jwt){
-            console.log('response', re, jwt);
-            re && $el.text(re.count);
+            re && $el.html(
+                '<a href="/deployment/'+typeId+'/devices">'+re.count+'</a>'
+            );
         });
     }
     function countDevices(){
