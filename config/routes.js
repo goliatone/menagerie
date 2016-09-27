@@ -69,6 +69,7 @@ module.exports.routes = {
     'POST /thing/register/:id': 'ThingController.register',
     'POST /thing/:typeName/:id': 'ThingController.register',
     'POST /thing/:typeName/:id/status': 'ThingController.status',
+    'GET /thing/find/:id': 'ThingController.find',
 
     /******************************************************
      * Location
