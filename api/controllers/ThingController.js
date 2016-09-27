@@ -5,7 +5,7 @@ module.exports = {
         res.send(200);
     },
     find: function(req, res){
-        var id = req.param('id');
+        var id = req.param('term');
 
         function ok(type, result){
             res.ok({success: true, type: type, result: result});
