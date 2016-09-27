@@ -88,17 +88,6 @@ var Controller = {
             res.negotiate(err);
         });
     },
-    countDevices: function(req, res){
-        var id = req.param('id');
-        console.log('count', {deployment:id});
-        DeployedDevice.count({deployment:id}).then(function(total){
-            res.ok({
-                count: total
-            });
-        }).catch(function(err){
-            res.sendError(err);
-        });
-    }
 };
 
 module.exports = extend({}, BaseController, Controller);
