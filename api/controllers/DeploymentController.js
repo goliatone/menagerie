@@ -14,7 +14,35 @@ var extend = require('gextend');
 
 var Controller = {
     checkIn: function(req, res){
-        res.ok({ok:true});
+        var locationId = req.body.location,
+            deploymentId = req.body.deployment,
+            deviceId = req.body.device;
+
+        var promises = [
+            Location.findOne({uuid: locationId}),
+            DeployedDevice.findOne({uuid:deviceId}).populateAll()
+        ];
+
+        Promise.all(promises).then(function(results){
+
+            var device = results[1];
+            var location = results[0];
+
+            if(!device) return res.ok({ok: false});
+            if(!device.deployment) return res.ok({ok: false});
+            if(device.deployment.uuid !== deploymentId) return res.ok({ok: false});
+
+            device.state = 'checkin';
+            device.location = location.id;
+            device.save(function(){
+
+                res.ok({ok:true, device: device});
+            });
+
+
+        }).catch(function(err){
+            res.sendError(err);
+        });
     },
     provision: function(req, res){
         if(!req.options.hasOwnProperty('limit')
