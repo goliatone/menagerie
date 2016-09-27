@@ -9,11 +9,11 @@
         <table>
           <thead>
             <tr>
-              <th with="200">Name</th>
+              <th with="40%">Name</th>
               <!--th>Description</th-->
-              <th>Start Date</th>
-              <th>End Date</th>
-              <th>Location</th>
+              <th with="20%">Start Date</th>
+              <th with="20%">End Date</th>
+              <th with="40%">Location</th>
               <th># Devices</th>
             </tr>
           </thead>
@@ -26,8 +26,8 @@
                           </a>
                       </td>
                       <!--td><%= record.description %></td-->
-                      <td><%= record.startDate %></td>
-                      <td><%= record.endDate %></td>
+                      <td><%=: record.startDate | formatDate %></td>
+                      <td><%=: record.endDate | formatDate %></td>
                       <td>
                           <% if(record.location){ %>
                               <a class="location" href="/location/<%= record.location.id %>">
