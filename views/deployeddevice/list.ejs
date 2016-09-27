@@ -27,7 +27,13 @@
                             </a>
                         </td>
                         <td>
-                            <%= record.deployment.name %>
+                            <% if(record.deployment){ %>
+                                <a class="location" href="/deployment/<%= record.deployment.id %>">
+                                    <%= record.deployment.name %>
+                                </a>
+                            <% } else { %>
+                                ---
+                            <%}%>
                         </td>
                         <td>
                             <% if(record.location){ %>
