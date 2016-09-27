@@ -3,7 +3,10 @@
 
 <div class="content row">
     <div class="large-12 large-centered small-11 small-centered columns">
-        <h3>Deployed Devices</h3>
+        <div class="clearfix">
+            <h3 class="left">Deployed Devices</h3>
+            <a href="/deployment/<%= deploymentId %>" class="button info tiny radius right">Back To Deployment</a>
+        </div>
         <dl class="sub-nav">
             <dt>Filter:</dt>
             <dd class="active-implement"><a href="/<%= nicename %>">All</a></dd>
@@ -12,7 +15,6 @@
             <thead>
                 <tr>
                     <th width="350">UUID</th>
-                    <th width="150">Deployment</th>
                     <th width="150">Location</th>
                     <th width="150">State</th>
                     <th width="150">QR Code</th>
@@ -25,15 +27,6 @@
                             <a href="/device/deployed/<%= record.id %>">
                                 <%= record.uuid %>
                             </a>
-                        </td>
-                        <td>
-                            <% if(record.deployment){ %>
-                                <a class="location" href="/deployment/<%= record.deployment.id %>">
-                                    <%= record.deployment.name %>
-                                </a>
-                            <% } else { %>
-                                ---
-                            <%}%>
                         </td>
                         <td>
                             <% if(record.location){ %>
