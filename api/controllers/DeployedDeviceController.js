@@ -14,7 +14,7 @@ var Controller = {
  * DeployedDevice
  ******************************************************/
     countDevices: function(req, res){
-        var id = req.param('id');
+        var id = req.param('deployment');
         console.log('count', {deployment:id});
         DeployedDevice.count({deployment:id}).then(function(total){
             res.ok({
@@ -25,7 +25,7 @@ var Controller = {
         });
     },
     findall: function(req, res){
-        var deployment = req.param('id');
+        var deployment = req.param('deployment');
 
         var Model = BaseController.Resource.getModel();
         debug('Inside findall..............');
