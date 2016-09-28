@@ -16,10 +16,10 @@ module.exports = {
         //check if it is an uuid
         if(isUUID(id)){
             //if so, we assume it's a device
-            return Device.findOne({uuid: id}).then(function(result){
+            return Device.findOne({uuid: id}).populateAll().then(function(result){
                 //if nothing found, try locations
                 if(!result){
-                    return Location.findOne({uuid: id}).then(function(result){
+                    return Location.findOne({uuid: id}).populateAll().then(function(result){
                         ok('location', result);
                     }).catch(ko);
                 }
@@ -33,7 +33,7 @@ module.exports = {
                     {assetTag: id},
                     {deviceId: id}]
                 }
-            }).then(function(result){
+            }).populateAll().then(function(result){
                 ok('device', result);
             }).catch(ko);
     },
