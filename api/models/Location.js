@@ -46,6 +46,15 @@ var Location = {
             collection: 'location',
             via: 'parent'
         },
+        //Should we map index to a label?
+        //i.e => 100 building
+        //       200 floor
+        //       300 area/space
+        //       400 room
+        index: {
+            type: 'integer',
+            defaultsTo: 400
+        },
         parent: {
             model: 'location',
             via: 'sublocations'
