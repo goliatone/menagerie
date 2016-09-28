@@ -34,7 +34,13 @@ var Model = {
         }
     },
     afterUpdate: function(record, next){
-        Device.update({uuid:record.uuid}, {location: record.location}).then(function(){
+        var update = {
+            location: record.location
+        };
+
+        if(record.state === 'checkin') update.status = 'deployed';
+
+        Device.update({uuid:record.uuid}, update).then(function(){
             next();
         }).catch(function(err){
             next(err);
