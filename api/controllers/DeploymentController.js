@@ -13,7 +13,7 @@ var debug = require('debug')('controller:Deployment');
 var extend = require('gextend');
 
 var Controller = {
-    checkIn: function(req, res){
+    checkOut: function(req, res){
         var locationId = req.body.location,
             deploymentId = req.body.deployment,
             deviceId = req.body.device;
@@ -34,15 +34,19 @@ var Controller = {
 
             device.state = 'checkin';
             device.location = location.id;
-            device.save(function(){
 
-                res.ok({ok:true, device: device});
+            device.save(function(err){
+                if(err) return res.ok({ok: false, err: err});
+                res.ok({ok:true, device: device, args: arguments});
             });
 
 
         }).catch(function(err){
             res.sendError(err);
         });
+    },
+    checkIn: function(req, res){
+        res.send({ok: false});
     },
     provision: function(req, res){
         if(!req.options.hasOwnProperty('limit')
