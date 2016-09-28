@@ -105,6 +105,12 @@ module.exports.routes = {
 
     /******************************************************
      * DeviceType
+     * TODO: should it be relative to device?
+     *  /device/type/count
+     *  /device/type/new
+     *  /device/type/find
+     *  /device/type/:id
+     *  /device/type/update
      ******************************************************/
     //TODO: We should be able to include this on blueprints
     'GET /devicetype/count': 'DeviceTypeController.count',
@@ -169,6 +175,7 @@ module.exports.routes = {
     // 'PUT /devicetype': 'ConfigurationController.update',
     'DELETE /deployment': 'DeploymentController.delete',
 
+    'POST /deployment/check-out': 'DeploymentController.checkOut',
     'POST /deployment/check-in': 'DeploymentController.checkIn',
 
     /******************************************************
