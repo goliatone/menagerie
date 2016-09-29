@@ -62,7 +62,7 @@ var $sel = $('[name="index"]');
  *
  */
 <% if(record.index) {%>
-$sel.val("<%= record.index%>");
+$sel.val(<%= record.index%>);
 <%}%>
 
 function populateOption(endpoint, selector){
@@ -75,8 +75,10 @@ function populateOption(endpoint, selector){
             index = 0,
             active = $sel.attr('value');
 
+        console.log('ACTIVE', active);
+
         $sel.empty();
-        $sel.append('<option selected disabled hidden>Select</option>');
+        if(!active) $sel.append('<option selected disabled hidden>Select</option>');
         data.records.map(function(record){
             $sel.append('<option value="' + record.id + '">' + record.name + '</option>');
             if(active === ('' + record.id)) $sel.prop('selectedIndex', index);
@@ -86,7 +88,7 @@ function populateOption(endpoint, selector){
     });
 }
 populateOption('files?limit=1000', 'floorplan');
-populateOptionWithIndex(500);
+populateOptionWithIndex(<%= record.index || 400 %>);
 
 $('[name="index"]').on('change', function(){
     var index = $sel.val();
