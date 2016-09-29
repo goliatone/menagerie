@@ -3,7 +3,19 @@
 
 <div class="content row">
     <div class="large-12 large-centered small-11 small-centered columns">
-        <h3>Devices</h3>
+        <div class="clearfix">
+            <div class="row">
+                <div class="large-9 columns">
+                    <h3 class="left">Devices</h3>
+                </div>
+                <div class="large-2 columns">
+                    <a href="/<%= nicename %>/new" class="button success tiny radius right">Add Record</a>
+                </div>
+                <div class="large-1 columns">
+                    <a href="#" data-reveal-id="csv-modal" class="button tiny radius right">CSV</a>
+                </div>
+            </div>
+        </div>
         <dl class="sub-nav">
             <dt>Filter:</dt>
             <dd class="active-implement"><a href="/<%= nicename %>">All</a></dd>
