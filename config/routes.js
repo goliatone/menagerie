@@ -52,6 +52,8 @@ module.exports.routes = {
     'GET /logout': 'AuthController.logout',
     'GET /register': 'AuthController.register',
 
+    'GET /health': 'SiteController.health',
+
     'POST /auth/local': 'AuthController.callback',
     'POST /auth/local/:action': 'AuthController.callback',
 
@@ -162,6 +164,9 @@ module.exports.routes = {
      * Deployments
      ******************************************************/
     //TODO: We should be able to include this on blueprints
+    'POST /deployment/check-out': 'DeploymentController.checkOut',
+    'POST /deployment/check-in': 'DeploymentController.checkIn',
+
     'GET /deployment/:id/provision': 'DeploymentController.provision',
     'POST /deployment/:id/provision': 'DeploymentController.addDevices',
 
@@ -174,9 +179,6 @@ module.exports.routes = {
     'POST /deployment/update': 'DeploymentController.update',
     // 'PUT /devicetype': 'ConfigurationController.update',
     'DELETE /deployment': 'DeploymentController.delete',
-
-    'POST /deployment/check-out': 'DeploymentController.checkOut',
-    'POST /deployment/check-in': 'DeploymentController.checkIn',
 
     /******************************************************
      * DeployedDevice
