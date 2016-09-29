@@ -16,7 +16,7 @@ var Controller = {
     /*
      * Check in a device with a deployment.
      *
-     * Location criteria supports:
+     * Deployment search criteria supports:
      * - full UUID
      * - partial UUID, from left to right
      * - name
