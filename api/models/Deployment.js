@@ -24,9 +24,9 @@ var Model = {
         name: {
             type: 'string'
         },
-        // slug:{
-        //     type: 'string'
-        // },
+        slug:{
+            type: 'string'
+        },
         description: {
             type: 'string'
         },
