@@ -18,6 +18,8 @@ module.exports = {
             title: 'Menagerie'
         }, 'dashboard');
     },
+	health: function(req, res){
+		res.ok({ok:true});
+	},
     _config:{}
 };
-
