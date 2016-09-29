@@ -13,24 +13,54 @@ var debug = require('debug')('controller:Deployment');
 var extend = require('gextend');
 
 var Controller = {
+    /*
+     * Check in a device with a deployment.
+     *
+     * Location criteria supports:
+     * - full UUID
+     * - partial UUID, from left to right
+     * - name
+     * - slug (norlamized name)
+     *
+     * TODO: What to do when a device is already checked-in?!
+     */
     checkOut: function(req, res){
+
         var locationId = req.body.location,
             deploymentId = req.body.deployment,
             deviceId = req.body.device;
 
         var promises = [
+            DeployedDevice.findOne({uuid:deviceId}).populateAll(),
             Location.findOne({uuid: locationId}),
-            DeployedDevice.findOne({uuid:deviceId}).populateAll()
+            Deployment.findOne(deploymentCriteria(deploymentId)).populateAll(),
         ];
 
         Promise.all(promises).then(function(results){
 
-            var device = results[1];
-            var location = results[0];
+            var device = results[0];
+            var location = results[1];
+            var deployment = results[2];
+            if(!device){
+                return res.ok({ok: false, err: new Error('No device')});
+            }
 
-            if(!device) return res.ok({ok: false});
-            if(!device.deployment) return res.ok({ok: false});
-            if(device.deployment.uuid !== deploymentId) return res.ok({ok: false});
+            if(!device.deployment){
+                return res.ok({ok: false, err: new Error('No deployment')});
+            }
+
+            if(device.deployment.uuid !== deploymentId) {
+                return res.ok({ok: false, err: new Error('Deployment does not match')});
+            }
+
+            /*
+             * If our device has a location with a lower index
+             * than the location of our deployment then we
+             * know is an error.
+             */
+            if(location.index < deployment.location.index){
+                return res.ok({ok: false, err: new Error('Location error')});
+            }
 
             device.state = 'checkin';
             device.location = location.id;
@@ -39,14 +69,14 @@ var Controller = {
                 if(err) return res.ok({ok: false, err: err});
                 res.ok({ok:true, device: device, args: arguments});
             });
-
-
         }).catch(function(err){
-            res.sendError(err);
+            console.error('here we have an error!', err.message);
+            console.log(err.stack);
+            res.serverError(err);
         });
     },
     checkIn: function(req, res){
-        res.send({ok: false});
+        res.send({ok: false, err: new Error('Not implemented')});
     },
     provision: function(req, res){
         if(!req.options.hasOwnProperty('limit')
@@ -142,4 +172,19 @@ function getCriteria(req){
     console.log('req criteria', criteria);
     criteria = extend(def, criteria);
     return criteria;
+}
+
+
+
+function deploymentCriteria(term){
+    return {
+        where:{
+            or:
+                [
+                    { uuid:{ like: term + '%' }},
+                    { name: term },
+                    { slug: term }
+                ]
+            }
+        };
 }
