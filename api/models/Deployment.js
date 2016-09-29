@@ -24,6 +24,9 @@ var Model = {
         name: {
             type: 'string'
         },
+        // slug:{
+        //     type: 'string'
+        // },
         description: {
             type: 'string'
         },
@@ -40,7 +43,22 @@ var Model = {
             collection: 'deployeddevice',
             via: 'deployment'
         }
+    },
+    beforeCreate: function(values, done){
+        console.log('before create');
+        values.slug = normalizeName(values.name);
+        done();
+    },
+    beforeUpdate: function(values, done){
+        console.log('before update');
+        values.slug = normalizeName(values.name);
+        done();
     }
 };
 
 module.exports = extend({}, BaseModel, Model);
+
+function normalizeName(name){
+    var slug = require('slug');
+    return slug(name, {lower:true});
+}
