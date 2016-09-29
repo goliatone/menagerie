@@ -5,7 +5,7 @@
  * @description :: Server-side logic for managing sites
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
-
+var pkg = require('../../package.json');
 module.exports = {
 	homepage: function(req, res){
         res.ok({
@@ -19,7 +19,7 @@ module.exports = {
         }, 'dashboard');
     },
 	health: function(req, res){
-		res.ok({ok:true});
+		res.ok({version: pkg.version});
 	},
     _config:{}
 };
