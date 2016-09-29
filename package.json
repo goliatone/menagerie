@@ -57,6 +57,7 @@
     "sails-mongo": "^0.12.1",
     "sails-postgresql": "^0.10.16",
     "skipper-s3": "^0.5.6",
+    "slug": "^0.9.1",
     "validator": "^4.2.0",
     "winston-cloudwatch": "git+https://github.com/goliatone/winston-cloudwatch.git",
     "winston-daily-rotate-file": "^1.0.1",
