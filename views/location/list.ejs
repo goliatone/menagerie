@@ -2,13 +2,16 @@
 
 <div class="content row">
     <div class="large-12 large-centered small-11 small-centered columns">
-        <h3>Locations</h3>
+        <div class="clearfix">
+            <h3 class="left">Locations</h3>
+            <a href="/<%= nicename %>/new" class="button success tiny radius right">Add Record</a>
+        </div>
         <table>
           <thead>
             <tr>
-              <th width="30%">UUID</th>
               <th width="25%">Name</th>
-              <th width="25%">Description</th>
+              <th width="25%">Parent</th>
+              <th width="40%">Description</th>
               <th width="20%">QR Code</th>
             </tr>
           </thead>
@@ -17,10 +20,16 @@
                   <tr>
                       <td>
                           <a href="/<%= nicename %>/<%= record.id %>">
-                              <%= record.uuid %>
+                              <%= record.name %>
                           </a>
                       </td>
-                      <td><%= record.name %></td>
+                      <td>
+                          <% if(record.parent){%>
+                                <a href="/<%= nicename %>/<%= record.parent.deid %>">
+                                    <%= record.parent.name %>
+                                </a>
+                          <%}else{%> --- <%}%>
+                      </td>
                       <td><%= record.description %></td>
                       <td><img class="location qr-code" src="/images/qrs/<%=record.uuid%>.png"/></td>
                   </tr>
@@ -33,9 +42,8 @@
     </div>
 </div>
 <script type="text/javascript">
-function buildPagination(){
-    io.socket.get('/location/count', function(data, jwr){
-        console.log('HERE', data, jwr);
+function buildPagination(endpoint){
+    io.socket.get(endpoint, function(data, jwr){
 
         if(jwr.statusCode > 300){
             console.error(jwr);
@@ -86,7 +94,7 @@ function buildPagination(){
         }
     });
 }
-buildPagination();
+buildPagination('/location/count');
 
 function getQueryString() {
   var result = {}, queryString = location.search.slice(1),
