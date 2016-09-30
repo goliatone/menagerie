@@ -40,15 +40,27 @@ ngrok http port -subdomain=subdomain
     //Load all passport strategies
     sails.services.passport.loadStrategies();
 
+    /*
+     * TODO: we should be bringing this from config.menagerie.frontEnd
+     */
     var locals = {
         filters: {
             formatDate: function(date){
                 return require('moment')(date).format('DD-MMM-YYYY');
+            },
+            deviceStateLabel: function(state){
+                var classes = {
+                    'unseen': 'warning', //not seen yet
+                    'checkin': 'secondary', //checked in
+                    'online': 'succes', //online health checkin
+                    'offline': 'alert', //it was onli
+                };
+                return classes[state];
             }
         }
     };
     sails.util._extend(sails.hooks.http.app.locals, locals);
-    
+
     console.log('=============================');
     console.log('|');
     console.log('| ENV STUFF:');
