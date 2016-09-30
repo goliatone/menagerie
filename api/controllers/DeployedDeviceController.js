@@ -16,12 +16,17 @@ var Controller = {
     countDevices: function(req, res){
         var id = req.param('deployment');
         console.log('count', {deployment:id});
+
+        var skip = BaseController.Resource.actionUtil.parseSkip(req);
+        var step = req.query.limit || sails.config.blueprints.clietRecordLimit || 10;
         DeployedDevice.count({deployment:id}).then(function(total){
             res.ok({
-                count: total
+                count: total,
+                skip: skip,
+                step: step
             });
         }).catch(function(err){
-            res.sendError(err);
+            res.serverError(err);
         });
     },
     findall: function(req, res){
@@ -30,8 +35,9 @@ var Controller = {
         var Model = BaseController.Resource.getModel();
         debug('Inside findall..............');
 
-        if(!req.options.hasOwnProperty('limit')
-            && !req.wantsJSON) req.options.limit = (sails.config.blueprints.clietRecordLimit || 10);
+        if(!req.options.hasOwnProperty('limit') && !req.wantsJSON){
+            req.options.limit = (sails.config.blueprints.clietRecordLimit || 10);
+        }
 
         var criteria = BaseController.Resource.actionUtil.parseCriteria(req);
 
