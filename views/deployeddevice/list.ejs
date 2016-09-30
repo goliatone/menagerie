@@ -39,7 +39,9 @@
                         </td>
 
                         <td>
-                            <%= record.state %>
+                            <span class="label <%=: record.state | deviceStateLabel %> radius">
+                                <%= record.state %>
+                            </span>
                         </td>
                         <td><img class="device qr-code" src="/images/qrs/<%=record.uuid%>.png" /></td>
                     </tr>
@@ -85,9 +87,14 @@ function buildPagination(resource, criteria){
     if(typeof criteria === 'object'){
         criteria = JSON.stringify(criteria.where);
     }
+    var query = getQueryString();
 
+    //TODO: INCLUDE limit!!
     var url = ('/' + resource + '/count') + (criteria ? '?where=' + criteria : '');
-    console.log('criteria %s URL %s', criteria, url);
+    if(query.limit) url += '&limit=' + query.limit;
+
+    console.log('CRITERIA %s URL %s', criteria, url);
+
     io.socket.get(url, function(data, jwt){
         console.log('HERE', data, jwt);
 
@@ -95,8 +102,7 @@ function buildPagination(resource, criteria){
             next = '<li class="arrow"><a href="#LINK#">Next &raquo;</a></li>'
 
         if(data.count){
-            var query = getQueryString(),
-                cursor = parseInt(query.skip) || 0,
+            var cursor = parseInt(query.skip) || 0,
                 step = data.step,
                 total = data.count / step,
                 buffer = [],
