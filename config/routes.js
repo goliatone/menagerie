@@ -84,6 +84,9 @@ module.exports.routes = {
     'GET /location/find': 'LocationController.showFind',
     // 'GET /location/reset': 'LocationController.resetData',
     'GET /location/:id': 'LocationController.find',
+
+    'GET /location/:id/devices': 'LocationController.devices',
+
     'POST /location': 'LocationController.create',
     'POST /location/update': 'LocationController.update',
     // 'PUT /location': 'LocationController.update',
@@ -102,7 +105,11 @@ module.exports.routes = {
     'GET /device/:id': 'DeviceController.find',
     'POST /device': 'DeviceController.create',
     'PUT /device': 'DeviceController.update',
+
+    //Currently we have two
     'POST /device/update': 'DeviceController.update',
+    'POST /device/:id': 'DeviceController.update',
+
     'DELETE /device': 'DeviceController.delete',
 
     /******************************************************
