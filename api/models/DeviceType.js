@@ -24,6 +24,13 @@ var DeviceType = {
             type: 'string',
             //   trim: true, index: true
         },
+        //TODO: used to style devices on floorplan
+        icon:{
+            type: 'string'
+        },
+        color:{
+            type: 'string'
+        },
         manufacturer: {
             type: 'string'
         },
