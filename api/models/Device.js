@@ -20,7 +20,7 @@ var Device = {
         uuid: {
             type: 'string',
             // primaryKey: true,
-            required: true
+            // required: true
         },
         /**
          * All devices carry an asset tag
@@ -84,12 +84,22 @@ var Device = {
         location: {
             model: 'location'
         },
+        //TODO: we might want to move this to DeployedDevice
+        coordinates:{
+            type: 'json'
+        },
         configuration: {
             model: 'configuration'
         },
         metadata: {
             type:'json'
         }
+    },
+    beforeCreate: function(record, done){
+        if(!record || !record.uuid){
+            record.uuid = BaseModel.generateUUID();
+        }
+        done();
     },
     afterCreate: function(record, done){
 
