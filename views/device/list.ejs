@@ -51,7 +51,7 @@
                             <%= record.type ? record.type.model : '---' %>
                         </td>
                         <td>
-                            <%= record.assetTag %>
+                            <%= record.assetTag ? record.assetTag : '---' %>
                         </td>
                         <td>
                             <%= record.deviceId ? record.deviceId : '---' %>
@@ -76,8 +76,12 @@
                         </td>
                         <td><img class="device qr-code" src="/images/qrs/<%=record.uuid%>.png" /></td>
                         <td>
-                            <a href="/<%= nicename %>/<%= record.id %>" class="">Edit</a>
-                            <a href="#" class="">Delete</a>
+                            <a href="/<%= nicename %>/<%= record.id %>" class="">
+                                <i class="fi-page-edit"></i>
+                            </a>
+                            <a href="#" class="">
+                                <i class="fi-page-delete"  style="color:#ff4499;"></i>
+                            </a>
                         </td>
                     </tr>
                     <%});%>
