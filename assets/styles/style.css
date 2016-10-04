@@ -88,7 +88,9 @@ table{
     width: 100%;
     max-width: 80rem;
 }
-
+.floorplan-content {
+    margin-top: 90px;
+}
 /*
  * foundation text icons
  * sizes
