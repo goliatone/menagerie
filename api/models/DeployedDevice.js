@@ -22,6 +22,9 @@ var Model = {
         location: {
             model: 'location'
         },
+        coordinates:{
+            type: 'json'
+        },
         state:{
             type: 'string',
             defaultsTo:'unseen',
