@@ -29,13 +29,7 @@
     <label>End Date
         <input name="endDate" data-date-time data-date-format="%m/%d/%Y" type="text" placeholder="End Date"  value="<%= record.endDate ? record.endDate : '' %>"/>
     </label>
-    <label>Location
-        <select name="location"  value="<%= record.location ? record.location.id : '' %>">
-            <% if (!record.location) {%>
-            <option value="">Not assigned</option>
-            <% } %>
-        </select>
-    </label>
+    
     <div class="row">
         <div class="large-2 small-1 columns">
             <label>Type
