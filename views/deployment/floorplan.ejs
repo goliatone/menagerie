@@ -95,7 +95,8 @@ app.Drag.prototype.handleUpEvent = function(e){
 // Map views always need a projection.  Here we just want to map image
 // coordinates directly to map coordinates, so we create a projection that uses
 // the image extent in pixels.
-var extent = [0, 0, 4800, 3184];
+
+var extent = [0, 0, <%=record.floorplan.width%>, <%=record.floorplan.height%>];
 var projection = new ol.proj.Projection({
     code: 'floor-image',
     units: 'pixels',
