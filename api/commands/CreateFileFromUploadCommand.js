@@ -37,7 +37,7 @@ function handleFileUploaded(f){
     function getThumbnailName(file){
         var ext = path.extname(file);
         var filename = path.basename(file);
-        filename = filename.replace(ext, '_thum' + ext);
+        filename = filename.replace(ext, '_thumb' + ext);
         var target = path.join(path.dirname(file), filename);
         return {filename: filename, target: target};
     }
@@ -48,6 +48,7 @@ function handleFileUploaded(f){
             var filename = path.basename(file.fd);
             var thumbnail = getThumbnailName(file.fd);
 
+
             record = {
                 fd: file.fd,
                 size: file.size,
@@ -56,14 +57,17 @@ function handleFileUploaded(f){
                 width: metadata.width,
                 height: metadata.height,
                 uri: '/uploads/' + filename,
-                tumb: '/uploads/' + thumbnail.filename,
+                thumb: '/uploads/' + thumbnail.filename,
             };
+
             return image
                 .resize(300)
                 .toFile(thumbnail.target);
 
         }).then(function(){
-            return sails.models.files.create([file]).then(function(res){
+            sails.log.info('-image record: ', record);
+
+            return sails.models.files.create([record]).then(function(res){
                 sails.log.info('CreateFileFromUploadCommand success...');
                 sails.log.info(res);
             }).catch(function(err){
@@ -71,27 +75,6 @@ function handleFileUploaded(f){
                 sails.log.error(err);
             });
         });
-
-    // f.files.map(function(file){
-    //     sails.log.info('- creating file %s', file);
-    //     var filename = require('path').basename(file.fd);
-    //
-    //     files.push({
-    //         fd: file.fd,
-    //         size: file.size,
-    //         type: file.type,
-    //         filename: file.filename,
-    //         uri: '/uploads/' + filename
-    //     });
-    // });
-
-    // sails.models.files.create(files).then(function(res){
-    //     sails.log.info('CreateFileFromUploadCommand success...');
-    //     sails.log.info(res);
-    // }).catch(function(err){
-    //     sails.log.error('CreateFileFromUploadCommand error!');
-    //     sails.log.error(err);
-    // });
 }
 
 module.exports =  {
