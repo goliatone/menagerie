@@ -1,0 +1,245 @@
+<% include ../_header %>
+
+<link rel="stylesheet" href="http://openlayers.org/en/v3.18.2/css/ol.css" type="text/css">
+<script src="http://openlayers.org/en/v3.18.2/build/ol.js"></script>
+<ul>
+<% detached.map(function(device){%>
+    <li>
+        <a class="js-device-pos" id="<%= device.id%>" href="/device/<%= device.id%>" target="_blank"><%= device.name %></a>
+    </li>
+<%})%>
+</ul>
+
+<div class="content row">
+    <div class="large-12 large-centered small-11 small-centered columns">
+        <div id="map" class="map"></div>
+    </div>
+</div>
+<script>
+
+var app = {};
+app.Drag = function(){
+    ol.interaction.Pointer.call(this, {
+        handleDownEvent: app.Drag.prototype.handleDownEvent,
+        handleDragEvent: app.Drag.prototype.handleDragEvent,
+        handleMoveEvent: app.Drag.prototype.handleMoveEvent,
+        handleUpEvent: app.Drag.prototype.handleUpEvent
+    });
+
+    this._coordinate = null;
+
+    this._cursor = 'move';
+
+    this._feature = null;
+
+    this._previousCursor = undefined;
+};
+ol.inherits(app.Drag, ol.interaction.Pointer);
+
+app.Drag.prototype.handleDownEvent = function(e){
+    var map = e.map;
+    var feature = map.forEachFeatureAtPixel(e.pixel, function(feature){
+        return feature;
+    });
+    if(feature){
+        this._coordinate = e.coordinate;
+        this._feature = feature;
+    }
+
+    return !! feature;
+};
+
+app.Drag.prototype.handleDragEvent = function(e){
+    var deltaX = e.coordinate[0] - this._coordinate[0];
+    var deltaY = e.coordinate[1] - this._coordinate[1];
+
+    var geometry = (this._feature.getGeometry());
+    geometry.translate(deltaX, deltaY);
+
+    this._coordinate[0] = e.coordinate[0];
+    this._coordinate[1] = e.coordinate[1];
+};
+
+app.Drag.prototype.handleMoveEvent = function(e){
+    if(this._cursor){
+        var map = e.map;
+        var feature = map.forEachFeatureAtPixel(e.pixel, function(f){
+            return f;
+        });
+        var element = e.map.getTargetElement();
+        if(feature){
+            if(element.style.cursor !== this._cursor){
+                this._previousCursor = element.style.cursor;
+                element.style.cursor = this._cursor;
+            }
+        } else if(this._previousCursor !== undefined){
+            element.style.cursor = this._previousCursor;
+            this._previousCursor = undefined;
+        }
+    }
+};
+
+app.Drag.prototype.handleUpEvent = function(e){
+    this.getMap().dispatchEvent({
+        type:'feature:drop',
+        data: this._feature.data,
+        target: this.getMap(),
+        coordinates: this._coordinate
+    });
+
+    this._coordinate = null;
+    this._feature = null;
+    return false;
+};
+
+// Map views always need a projection.  Here we just want to map image
+// coordinates directly to map coordinates, so we create a projection that uses
+// the image extent in pixels.
+var extent = [0, 0, 4800, 3184];
+var projection = new ol.proj.Projection({
+    code: 'floor-image',
+    units: 'pixels',
+    extent: extent
+});
+
+/*
+ * Floorplan image
+ */
+var image = new ol.layer.Image({
+    source: new ol.source.ImageStatic({
+        url: '<%=record.floorplan.uri%>',
+        projection: projection,
+        imageExtent: extent
+    })
+});
+
+/*
+ * Floorplan map
+*/
+var map = new ol.Map({
+    layers: [image],
+    target: 'map',
+    interactions: ol.interaction.defaults().extend([new app.Drag()]),
+    view: new ol.View({
+        projection: projection,
+        center: ol.extent.getCenter(extent),
+        zoom: 3,
+        zoomFactor: 1.5,
+        maxZoom: 4,
+        minZoom: 2.5
+    })
+});
+
+var features = [];
+var devices = <%- JSON.stringify(features) %>;
+var detached = <%- JSON.stringify(detached) %>;
+
+var feature;
+devices.map(function(device){
+
+    feature = new ol.Feature({
+        geometry: new ol.geom.Point(device.coordinates)
+    });
+
+    feature.setStyle(new ol.style.Style({
+        image: new ol.style.Circle({
+            radius: 15,
+            fill: new ol.style.Fill({
+                color: '#0Cabad' //we should get this from state
+            })
+        }),
+        text: new ol.style.Text({
+            text: device.name,
+            font: '14px Ubuntu, Gill Sans, Helvetica, Arial, sans-serif',
+            fill: new ol.style.Fill({ color: '#020202' }),
+            offsetY: 24,
+            stroke: new ol.style.Stroke({
+                color: '#fff',
+                witdh: 4
+            })
+        })
+    }));
+    feature.data = {id: device.id};
+
+    features.push(feature);
+});
+
+var source = new ol.source.Vector({
+    features: features
+});
+
+var vector = new ol.layer.Vector({
+    source: source,
+    style: new ol.style.Style({
+        fill: new ol.style.Fill({
+            color: '#00ff00'
+        }),
+        stroke: new ol.style.Stroke({
+            color: '#ff3366',
+            witdh: 2
+        }),
+        image: new ol.style.Circle({
+            radius: 15,
+            fill: new ol.style.Fill({
+                color: '#ff2288'
+            })
+        })
+    })
+});
+
+map.addLayer(vector);
+
+map.addEventListener('feature:drop', function(e){
+    console.log('Update %s coordinates to %s', e.data.id, e.coordinates);
+    io.socket.post('/device/update/' + e.data.id, {coordinates: e.coordinates}, function(e){
+        console.log('DONE!');
+    });
+});
+
+var draw = new ol.interaction.Draw({
+    source: source,
+    type: 'Point'
+});
+draw.on('drawend', function(e){
+    console.log('Draw end', e);
+    var feature = e.feature;
+    var geometry = feature.getGeometry();
+    var coordinates = geometry.getCoordinates();
+    console.log('coordinates', coordinates);
+    window.ev = e;
+});
+// map.addInteraction(draw);
+
+
+$('.js-device-pos').click(function(e){
+    e.preventDefault();
+    var id = $(this).attr('id');
+    var label = $(this).text();
+    var coordinates = map.getView().getCenter();
+    var feature = new ol.Feature({
+        geometry: new ol.geom.Point(coordinates)
+    });
+    feature.data = {id: id, name: label};
+    feature.setStyle(new ol.style.Style({
+        image: new ol.style.Circle({
+            radius: 15,
+            fill: new ol.style.Fill({
+                color: '#00ffa0' //we should get this from state
+            })
+        }),
+        text: new ol.style.Text({
+            text: label,
+            font: '14px Ubuntu, Gill Sans, Helvetica, Arial, sans-serif',
+            fill: new ol.style.Fill({ color: '#020202' }),
+            offsetY: 24,
+            stroke: new ol.style.Stroke({
+                color: '#fafafa',
+                witdh: 9
+            }),
+            zindex: 2
+        })
+    }));
+    source.addFeature(feature);
+
+});
+</script>
