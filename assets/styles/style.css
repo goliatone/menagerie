@@ -2,6 +2,13 @@ nav.main-header{
     margin-bottom: 30px;
 }
 
+.logo-holder{
+    margin-left: 20px;
+}
+.logo {
+    width: 32px;
+    color:blue;
+}
 
 img.qr-code{
     width: 60px;
@@ -71,4 +78,32 @@ table{
 
 .overflow-ellipsis {
     text-overflow: ellipsis;
+}
+
+.button.disabled{
+    pointer-events: none;
+    cursor: default;
+}
+.floorplan{
+    width: 100%;
+    max-width: 80rem;
+}
+
+/*
+ * foundation text icons
+ * sizes
+ */
+.size-12 { font-size: 12px; }
+.size-14 { font-size: 14px; }
+.size-16 { font-size: 16px; }
+.size-18 { font-size: 18px; }
+.size-21 { font-size: 21px; }
+.size-24 { font-size: 24px; }
+.size-36 { font-size: 36px; }
+.size-48 { font-size: 48px; }
+.size-60 { font-size: 60px; }
+.size-72 { font-size: 72px; }
+
+.row{
+    max-width: 70em;
 }
