@@ -2,7 +2,10 @@
 
 <div class="content row">
     <div class="large-12 large-centered small-11 small-centered columns">
-        <h3>Update Location</h3>
+        <div class="clearfix">
+            <h3 class="left">Location</h3>
+            <a href="/<%= nicename %>/<%= record.id %>/devices" class="button secondary tiny radius right">Location Devices</a>
+        </div>
         <%if(status === "Error") { %>
         <div class="alert alert-danger" role="alert"><%=statusDescription%></div>
         <% } %>

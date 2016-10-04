@@ -6,6 +6,14 @@
             <h3 class="left">Locations</h3>
             <a href="/<%= nicename %>/new" class="button success tiny radius right">Add Record</a>
         </div>
+        <dl class="sub-nav">
+            <dt>Filter:</dt>
+            <dd class="active-implement"><a href="/<%= nicename %>">All</a></dd>
+            <dd><a href='/<%= nicename %>?where={"index":100}'>Buildings</a></dd>
+            <dd><a href='/<%= nicename %>?where={"index":200}'>Floors</a></dd>
+            <dd><a href='/<%= nicename %>?where={"index":300}'>Areas/Spaces</a></dd>
+            <dd><a href='/<%= nicename %>?where={"index":400}'>Other</a></dd>
+        </dl>
         <table>
           <thead>
             <tr>
