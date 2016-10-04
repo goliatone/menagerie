@@ -17,7 +17,7 @@
     </label>
     <div class="row">
         <div class="large-2 small-1 columns">
-            <label>Type
+            <label>Location Type
                 <select name="index"  value="<%= record.index ? record.index : '' %>">
                     <option selected disabled hidden>Set Index</option>
                     <option value="500">Other</option>
@@ -33,7 +33,7 @@
             </label>
         </div>
         <div class="large-10 small-9 columns">
-            <label>Parent
+            <label>Parent Location
                 <select name="parent"  value="<%= record.parent ? record.parent.id : '' %>">
                     <% if (!record.parent) {%>
                     <option value="">Not assigned</option>
