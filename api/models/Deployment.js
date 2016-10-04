@@ -45,13 +45,11 @@ var Model = {
         }
     },
     beforeCreate: function(values, done){
-        console.log('before create');
         values.slug = normalizeName(values.name);
         done();
     },
     beforeUpdate: function(values, done){
-        console.log('before update');
-        values.slug = normalizeName(values.name);
+        if(values.name) values.slug = normalizeName(values.name);
         done();
     }
 };
