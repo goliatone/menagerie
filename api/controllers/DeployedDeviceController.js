@@ -78,7 +78,8 @@ var Controller = {
                 deploymentId: deployment
             }, BaseController.Resource.getViewPath('list'));
          });
-    }
+    },
+    
 };
 
 module.exports = extend({}, BaseController, Controller);

@@ -1,3 +1,4 @@
+
 'use strict';
 
 /**
@@ -13,6 +14,40 @@ var debug = require('debug')('controller:Deployment');
 var extend = require('gextend');
 
 var Controller = {
+    floorplan: function(req, res){
+        console.log('HERE, HERE, HERE');
+        var id = req.param('id');
+
+        Deployment.findOne({id: id}).populateAll().then(function(deployment){
+            var features = [], detached = [];
+            (deployment.devices || []).map(function(device){
+                if(!device.coordinates) return detached.push({id: device.id, name: device.uuid, state: device.state});
+                features.push({
+                    id: device.id,
+                    name: device.uuid,
+                    coordinates: device.coordinates,
+                    status: device.status //we should use DeployedDevice
+                });
+            });
+            console.log('LOCATION', deployment.location.id);
+
+            Location.findOne({id: deployment.location.id}).then(function(location){
+                res.ok({
+                    record: location,
+                    title: 'Deployed Devices',
+                    features: features,
+                    detached: detached
+                }, BaseController.Resource.getViewPath('floorplan'));
+            }).catch(function(err){
+                res.sendError(err);
+            });
+        }).catch(function(err){
+            console.error('ERROR', err.message);
+            console.error(err.stack);
+            res.sendError(err);
+        });
+    },
+
     /*
      * Check in a device with a deployment.
      *
@@ -41,16 +76,18 @@ var Controller = {
             var device = results[0];
             var location = results[1];
             var deployment = results[2];
+
             if(!device){
-                return res.ok({ok: false, err: new Error('No device')});
+                return res.ok({ok: false, err: 'No device'});
             }
 
             if(!device.deployment){
-                return res.ok({ok: false, err: new Error('No deployment')});
+                return res.ok({ok: false, err: 'No deployment'});
             }
 
-            if(device.deployment.uuid !== deploymentId) {
-                return res.ok({ok: false, err: new Error('Deployment does not match')});
+            //deploymentId could be a shortcode of deployment.uuid
+            if(!device.deployment.uuid.match(new RegExp('^' + deploymentId))) {
+                return res.ok({ok: false, err: 'Deployment does not match'});
             }
 
             /*
@@ -59,7 +96,7 @@ var Controller = {
              * know is an error.
              */
             if(location.index < deployment.location.index){
-                return res.ok({ok: false, err: new Error('Location error')});
+                return res.ok({ok: false, err: 'Location error'});
             }
 
             device.state = 'checkin';
