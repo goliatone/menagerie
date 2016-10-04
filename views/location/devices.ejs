@@ -2,17 +2,24 @@
 
 <link rel="stylesheet" href="http://openlayers.org/en/v3.18.2/css/ol.css" type="text/css">
 <script src="http://openlayers.org/en/v3.18.2/build/ol.js"></script>
-<ul>
-<% detached.map(function(device){%>
-    <li>
-        <a class="js-device-pos" id="<%= device.id%>" href="/device/<%= device.id%>" target="_blank"><%= device.name %></a>
-    </li>
-<%})%>
-</ul>
 
-<div class="content row">
-    <div class="large-12 large-centered small-11 small-centered columns">
+
+<div class="floorplan row">
+    <div class="large-12 columns">
+        <h3>Devices at <%= record.name %></h3>
+    </div>
+
+    <div class="large-9 small-11 columns">
         <div id="map" class="map"></div>
+    </div>
+    <div class="large-3 columns">
+        <ul>
+        <% detached.map(function(device){%>
+            <li>
+                <a class="js-device-pos" id="<%= device.id%>" href="/device/<%= device.id%>" target="_blank"><%= device.name %></a>
+            </li>
+        <%})%>
+        </ul>
     </div>
 </div>
 <script>
@@ -107,7 +114,7 @@ var projection = new ol.proj.Projection({
  */
 var image = new ol.layer.Image({
     source: new ol.source.ImageStatic({
-        url: '<%=record.floorplan.uri%>',
+        url: '<%= record.floorplan && record.floorplan.uri%>',
         projection: projection,
         imageExtent: extent
     })
