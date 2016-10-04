@@ -16,12 +16,14 @@ var Controller = {
         Location.findOne({id: id}).populateAll().then(function(location){
 
             var features = [], detached = [];
-
+            function getLabel(device){
+                return device.name || device.assetTag || device.deviceId || device.uuid;
+            }
             (location.devices || []).map(function(device){
-                if(!device.coordinates) return detached.push({id: device.id, name: device.name, status: device.status});
+                if(!device.coordinates) return detached.push({id: device.id, name: getLabel(device), status: device.status});
                 features.push({
                     id: device.id,
-                    name: device.name,
+                    name: getLabel(device),
                     coordinates: device.coordinates,
                     status: device.status //we should use DeployedDevice
                 });
@@ -34,11 +36,10 @@ var Controller = {
                 detached: detached
             }, BaseController.Resource.getViewPath('devices'));
         }).catch(function(err){
+            console.error('ERROR: ', err.message);
+            console.error(err.stack);
             res.sendError(err);
         });
-    },
-    features: function(req, res){
-
     }
 };
 
