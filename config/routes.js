@@ -171,8 +171,10 @@ module.exports.routes = {
      * Deployments
      ******************************************************/
     //TODO: We should be able to include this on blueprints
-    'POST /deployment/check-out': 'DeploymentController.checkOut',
     'POST /deployment/check-in': 'DeploymentController.checkIn',
+    'POST /deployment/check-out': 'DeploymentController.checkOut',
+
+    'GET /deployment/:id/floorplan': 'DeploymentController.floorplan',
 
     'GET /deployment/:id/provision': 'DeploymentController.provision',
     'POST /deployment/:id/provision': 'DeploymentController.addDevices',
