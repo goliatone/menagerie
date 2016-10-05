@@ -34,6 +34,7 @@ module.exports = {
                     {deviceId: id}]
                 }
             }).populateAll().then(function(result){
+                if(!result) return res.ok({success: false, message: 'no record match'});
                 ok('device', result);
             }).catch(ko);
     },
