@@ -8,7 +8,7 @@
             <tr>
                 <th with="20%">Name</th>
                 <th width="40%">UUID</th>
-                <th width="20%">QR Code</th>
+                <th width="20%">Preview</th>
             </tr>
           </thead>
           <tbody>
@@ -20,7 +20,7 @@
                           </a>
                       </td>
                       <td><%= record.uuid %></td>
-                      <td><img class="location qr-code" src="<%=record.uri%>"/></td>
+                      <td><img class="location qr-code" src="<%= record.thumb ? record.thumb : record.uri%>"/></td>
                   </tr>
               <%});%>
           </tbody>
