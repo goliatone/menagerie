@@ -88,9 +88,6 @@ var Device = {
         coordinates:{
             type: 'json'
         },
-        configuration: {
-            model: 'configuration'
-        },
         metadata: {
             type:'json'
         }
