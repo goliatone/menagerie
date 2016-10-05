@@ -92,6 +92,13 @@ table{
     margin-top: 90px;
 }
 /*
+ * hacky :/
+ * configuration button link for device.
+ */
+.bottom-button{
+    margin-top: 22px;
+}
+/*
  * foundation text icons
  * sizes
  */
@@ -106,6 +113,6 @@ table{
 .size-60 { font-size: 60px; }
 .size-72 { font-size: 72px; }
 
-.row{
+.row {
     max-width: 70em;
 }
