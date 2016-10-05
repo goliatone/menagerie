@@ -30,13 +30,24 @@
     <label>Description
         <input name="description" type="text" placeholder="Description" value="<%= record.description ? record.description : '' %>"/>
     </label>
-    <label>Device
-        <select name="device"  value="<%= record.device ? record.device : '' %>">
-            <% if (!record.device) {%>
-            <option value="">Not assigned</option>
-            <% } %>
-        </select>
-    </label>
+
+    <div class="row">
+        <div class="large-10 small-9 columns">
+            <label>Device
+                <select name="device"  value="<%= record.device ? record.device : '' %>">
+                    <% if (!record.device) {%>
+                    <option value="">Not assigned</option>
+                    <% } %>
+                </select>
+            </label>
+        </div>
+        <div class="large-2 small-1 columns">
+                <a href="/device/deployed/<%= record.device.id %>" data-reveal-id="csv-modal"
+                    class="button tiny radius right expand bottom-button <%= record.device ? '' : ' disabled'%>">
+                    <i class="fi-link size-12"></i> Show Device
+                </a>
+        </div>
+    </div>
 
     <label>Metadata
         <textarea id="data" name="data"><%= record.data ? JSON.stringify(record.data, null, 4) : '' %></textarea>
@@ -52,8 +63,8 @@
 
 
 <script type="text/javascript">
-function populateOption(name, selector){
-    io.socket.get('/' + name, function(data, jwres){
+function populateOption(endpoint, selector){
+    io.socket.get(endpoint, function(data, jwres){
         console.log(data);
         data = data || {records:[]};
         var $sel = $('[name="' + selector + '"]'),
@@ -62,14 +73,14 @@ function populateOption(name, selector){
 
         data.records.map(function(record){
             console.log('CREATE OPTION FOR', selector, record.name);
-            $sel.append('<option value="' + record.id + '">' + record.name + '</option>');
+            $sel.append('<option value="' + record.id + '">' + record.nicename + '</option>');
             if(active === ('' + record.id)) $sel.prop('selectedIndex', index);
             index++;
         });
 
     });
 }
-populateOption('device?limit=1000', 'device');
+populateOption('/device/deployed?limit=1000', 'device');
 </script>
 
 <script type="text/javascript">
