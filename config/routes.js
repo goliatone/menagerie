@@ -93,6 +93,21 @@ module.exports.routes = {
     'DELETE /location': 'LocationController.delete',
 
     /******************************************************
+     * DeployedDevice
+     ******************************************************/
+    'GET /device/deployed': 'DeployedDeviceController.findall',
+    'GET /deployment/:deployment/devices': 'DeployedDeviceController.findall',
+    'GET /device/deployed/new': 'DeployedDeviceController.new',
+    'GET /device/deployed/find': 'DeployedDeviceController.showFind',
+    'GET /device/deployed/:id': 'DeployedDeviceController.find',
+    'POST /device/deployed': 'DeployedDeviceController.create',
+    'POST /deployeddevice/update': 'DeployedDeviceController.update',
+    'DELETE /device/deployed': 'DeployedDeviceController.delete',
+
+    'GET /device/deployed/count': 'DeployedDeviceController.count',
+    'GET /deployment/:deployment/devices/count': 'DeployedDeviceController.countDevices',
+
+    /******************************************************
      * Device
      ******************************************************/
     //TODO: We should be able to include this on blueprints
@@ -137,6 +152,7 @@ module.exports.routes = {
     /******************************************************
      * Configuration
      ******************************************************/
+    'GET /device/:term/configuration': 'ConfigurationController.deviceConfig',
     //TODO: We should be able to include this on blueprints
     'GET /configuration/count': 'ConfigurationController.count',
 
@@ -188,18 +204,4 @@ module.exports.routes = {
     'POST /deployment/update': 'DeploymentController.update',
     // 'PUT /devicetype': 'ConfigurationController.update',
     'DELETE /deployment': 'DeploymentController.delete',
-
-    /******************************************************
-     * DeployedDevice
-     ******************************************************/
-    'GET /deployment/:deployment/devices': 'DeployedDeviceController.findall',
-    'GET /device/deployed/new': 'DeployedDeviceController.new',
-    'GET /device/deployed/find': 'DeployedDeviceController.showFind',
-    'GET /device/deployed/:id': 'DeployedDeviceController.find',
-    'POST /device/deployed': 'DeployedDeviceController.create',
-    'POST /deployeddevice/update': 'DeployedDeviceController.update',
-    'DELETE /device/deployed': 'DeployedDeviceController.delete',
-
-    'GET /device/deployed/count': 'DeployedDeviceController.count',
-    'GET /deployment/:deployment/devices/count': 'DeployedDeviceController.countDevices',
 };
