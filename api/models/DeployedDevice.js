@@ -7,6 +7,7 @@
  */
  var extend = require('gextend');
  var BaseModel = require('../../lib/BaseModel');
+ var nicename = require('../../lib/nicenameGenerator').init();
 
 var Model = {
 
@@ -16,6 +17,12 @@ var Model = {
             // primaryKey: true,
             required: true
         },
+        nicename: {
+            type: 'string',
+            defaultsTo: function(){
+                return nicename.generate();
+            }
+        },
         deployment: {
             model: 'deployment'
         },
@@ -24,6 +31,9 @@ var Model = {
         },
         coordinates:{
             type: 'json'
+        },
+        configuration: {
+            model: 'configuration'
         },
         state:{
             type: 'string',
@@ -38,7 +48,8 @@ var Model = {
     },
     afterUpdate: function(record, next){
         var update = {
-            location: record.location
+            location: record.location,
+            coordinates: null
         };
 
         if(record.state === 'checkin') update.status = 'deployed';
@@ -53,8 +64,8 @@ var Model = {
 
         var deployed = records.map(function(record){
             return {
-                deployment: deployment,
-                uuid: record.uuid
+                uuid: record.uuid,
+                deployment: deployment
             };
         });
         console.log('- createFromDevice: ', deployed);
