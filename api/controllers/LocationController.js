@@ -33,7 +33,8 @@ var Controller = {
                 record: location,
                 title: 'Location Devices',
                 features: features,
-                detached: detached
+                detached: detached,
+                nicename: 'location',
             }, BaseController.Resource.getViewPath('devices'));
         }).catch(function(err){
             console.error('ERROR: ', err.message);
