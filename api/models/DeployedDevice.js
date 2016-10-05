@@ -49,7 +49,7 @@ var Model = {
     afterUpdate: function(record, next){
         var update = {
             location: record.location,
-            coordinates: null
+            // coordinates: null
         };
 
         if(record.state === 'checkin') update.status = 'deployed';
@@ -72,7 +72,8 @@ var Model = {
         return DeployedDevice.create(deployed).then(function(devices){
             return devices;
         });
-    }
+    },
+
 };
 
 
