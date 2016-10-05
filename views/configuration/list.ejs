@@ -11,10 +11,10 @@
         <table>
             <thead>
                 <tr>
-                    <th width="40%">Name</th>
+                    <th width="30%">Name</th>
                     <th width="20%">Version</th>
                     <th width="20%">Description</th>
-                    <th width="15%">Device</th>
+                    <th width="30%">Device</th>
                     <th width="25%">Actions</th>
                 </tr>
             </thead>
@@ -35,16 +35,20 @@
                         </td>
                         <td>
                             <% if(record.device){ %>
-                                <a class="device" href="/location/<%= record.device.id %>">
-                                    <%= record.device.name %>: <%= record.device.description %>
+                                <a class="device" href="/device/deployed/<%= record.device.id %>">
+                                    <%= record.device.nicename %>
                                 </a>
                             <% } else { %>
                                 ---
                             <%}%>
                         </td>
                         <td>
-                            <a href="/<%= nicename %>/<%= record.id %>" class="">Edit</a>
-                            <a href="/<%= nicename %>/delete/<%= record.id %>" class="">Delete</a>
+                            <a href="/<%= nicename %>/<%= record.id %>" class="">
+                                <i class="fi-page-edit"></i>
+                            </a>
+                            <a href="#" class="">
+                                <i class="fi-page-delete"  style="color:#ff4499;"></i>
+                            </a>
                         </td>
                     </tr>
                     <%});%>
