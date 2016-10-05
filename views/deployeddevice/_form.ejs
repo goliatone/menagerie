@@ -9,6 +9,10 @@
             <%}%>
         />
 
+    <label>Nice Name
+        <input name="nicename" type="text" placeholder="Nice Name" value="<%= record.nicename ? record.nicename : '' %>"/>
+    </label>
+
     <label>State
         <select name="state"  value="<%= record.state ? record.state : 'unseen' %>">
             <option value="unseen">Unseen</option>
