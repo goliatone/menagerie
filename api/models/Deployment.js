@@ -8,6 +8,7 @@
  */
  var extend = require('gextend');
  var BaseModel = require('../../lib/BaseModel');
+var normalizeName = require('../../lib/normalizeName');
 
 var Model = {
 
@@ -55,8 +56,3 @@ var Model = {
 };
 
 module.exports = extend({}, BaseModel, Model);
-
-function normalizeName(name){
-    var slug = require('slug');
-    return slug(name, {lower:true});
-}
