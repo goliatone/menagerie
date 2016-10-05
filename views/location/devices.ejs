@@ -6,7 +6,14 @@
 
 <div class="floorplan row">
     <div class="large-12 columns">
-        <h3>Devices at <%= record.name %></h3>
+        <div class="clearfix">
+            <h3 class="left">Devices at <%= record.name %></h3>
+
+            <a href="/<%= nicename %>/<%= record.id %>"
+                class="button secondary tiny radius right">
+                Location
+            </a>
+        </div>
     </div>
 
     <div class="floorplan-content">
