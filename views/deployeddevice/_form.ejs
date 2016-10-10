@@ -21,41 +21,74 @@
             <option value="offline">Offline</option>
         </select>
     </label>
-    <label>Location
-        <select name="location"  value="<%= record.location ? record.location.id : '' %>">
-            <% if (!record.location) {%>
-            <option value="">Not assigned</option>
-            <% } %>
-        </select>
-    </label>
+    <div class="row">
+        <div class="large-2 small-1 columns">
+            <label>Type
+                <select id="index">
+                    <option value="100" selected>Building</option>
+                    <option value="200">Floor</option>
+                    <option value="300">Area/Space</option>
+                    <option value="400">Room</option>
+                    <option value="500">Other</option>
+                </select>
+            </label>
+        </div>
+        <div class="large-10 small-9 columns">
+            <label>Location
+                <select name="location"  value="<%= record.location ? record.location.id : '' %>">
+                    <% if (!record.location) {%>
+                    <option value="">Not assigned</option>
+                    <% } %>
+                </select>
+            </label>
+        </div>
+    </div>
     <br/>
 
 <% if(record.id){%>
 <input hidden="true" name="id" value="<%= record.id %>" />
 <%}%>
+
 <button id="submit" class="success expand radius">Send</button>
 </form>
         <!--code>
             < % = JSON.stringify(record) % >
         </code-->
 <script type="text/javascript">
-function populateOption(name, selector){
-    io.socket.get('/' + name, function(data, jwres){
-        console.log(data);
+var $sel = $('#index');
+function populateOption(endpoint, selector){
+    console.log('populateOption', endpoint, selector);
+    io.socket.get('/' + endpoint, function(data, jwres){
+        console.log('selector %s :: %o',selector, data);
+
         data = data || {records:[]};
         var $sel = $('[name="' + selector + '"]'),
             index = 0,
             active = $sel.attr('value');
+
+        console.log('ACTIVE', active);
+
+        $sel.empty();
+        if(!active) $sel.append('<option selected disabled hidden>Select</option>');
         data.records.map(function(record){
             $sel.append('<option value="' + record.id + '">' + record.name + '</option>');
             if(active === ('' + record.id)) $sel.prop('selectedIndex', index);
             index++;
         });
-
     });
 }
 
-populateOption('location?limit=1000', 'location');
+populateOptionWithIndex(100);
+
+$sel.on('change', function(){
+    var index = $sel.val();
+    populateOptionWithIndex(index);
+});
+
+function populateOptionWithIndex(index){
+    //we want to pull same level
+    populateOption('location?limit=1000&where={"index":' + index + '}', 'location');
+}
 
 $('[name="state"]').val("<%= record.state%>");
 </script>
