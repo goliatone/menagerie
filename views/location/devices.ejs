@@ -23,11 +23,20 @@
         <div class="large-3 columns">
             <h4>Deployed Devices</h4>
             <ul>
-            <% detached.map(function(device){%>
-                <li>
-                    <a class="js-device-pos" id="<%= device.id%>" href="/device/<%= device.id%>" target="_blank"><%= device.name %></a>
-                </li>
-            <%})%>
+                <% detached.map(function(device){%>
+                    <li>
+                        <a class="js-device-pos" id="<%= device.id%>" href="/device/<%= device.id%>" target="_blank">
+                            <i class="fi-plus size-13"></i> <%= device.name %>
+                        </a>
+                    </li>
+                <%})%>
+                <% features.map(function(device){%>
+                    <li>
+                        <a class="" id="<%= device.id%>" href="/device/<%= device.id%>" target="_blank">
+                            <i class="fi-check size-13"></i> <%= device.name %>
+                        </a>
+                    </li>
+                <%})%>
             </ul>
         </div>
     </div>
