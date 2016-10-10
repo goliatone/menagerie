@@ -1,6 +1,9 @@
 if(process.env.NODE_ENV === 'production'){
     console.log('Initializing NewRelic agent');
-    if(!process.env.NODE_NEWRELIC_KEY) console.error('NewRelic license key not found. Set NODE_NEWRELIC_KEY');
+    if(!process.env.NODE_NEWRELIC_KEY){
+        console.warn('NewRelic license key not found. Set NODE_NEWRELIC_KEY');
+        return;
+    }
 
     //TODO: should we resolve path
     var resolve = require('path').resolve;
