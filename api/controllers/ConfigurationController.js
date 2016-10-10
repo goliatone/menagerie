@@ -21,11 +21,11 @@
                     {uuid: term},
                 ]
             }
-        }).populate('configuration').then(function(record){
+        }).populateAll().then(function(record){
             res.ok({
                 type: 'configuration',
                 success: true,
-                result: record.configuration || {}
+                result: (record.configuration && record.configuration.data) || {}
             });
         }).catch(function(err){
             sails.log.error('ConfigurationController:deviceConfig');
