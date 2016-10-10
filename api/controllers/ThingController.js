@@ -7,36 +7,17 @@ module.exports = {
     find: function(req, res){
         var id = req.param('term');
 
-        function ok(type, result){
-            res.ok({success: true, type: type, result: result});
-        }
-        function ko(err){
-            res.sendError(err);
-        }
-        //check if it is an uuid
-        if(isUUID(id)){
-            //if so, we assume it's a device
-            return Device.findOne({uuid: id}).populateAll().then(function(result){
-                //if nothing found, try locations
-                if(!result){
-                    return Location.findOne({uuid: id}).populateAll().then(function(result){
-                        ok('location', result);
-                    }).catch(ko);
-                }
-                ok('device', result);
-            }).catch(ko);
-        }
-        //if its not, then try location by
-        Device.findOne({
-            where:{
-                or:[
-                    {assetTag: id},
-                    {deviceId: id}]
-                }
-            }).populateAll().then(function(result){
-                if(!result) return res.ok({success: false, message: 'no record match'});
-                ok('device', result);
-            }).catch(ko);
+        return Device.findOne(_getCriteria(id)).populateAll().then(function(result){
+
+            if(!result){
+                return Location.findOne({uuid:{like: id + '%'}}).populateAll().then(function(result){
+                    if(!result) return res.ok({success: false, message: 'no record match'});
+                    res.ok({success: true, type: 'location', result: result});
+                }).catch(res.sendError);
+            }
+
+            res.ok({success: true, type: 'device', result: result});
+        }).catch(res.sendError);
     },
     register: function(req, res){
         //Get the thing type
@@ -156,4 +137,18 @@ function _getAttributes(src){
     });
 
     return out;
+}
+
+function _getCriteria(id){
+    return {
+        where:{
+            or:
+                [
+                    { id: id},
+                    { uuid:{ like: id + '%' }},
+                    { assetTag: id},
+                    { deviceId: id}
+                ]
+            }
+        };
 }
