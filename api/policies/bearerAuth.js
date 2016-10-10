@@ -13,11 +13,16 @@
  * @param {Function} next
  */
 module.exports = function (req, res, next) {
+
     /*goliatone GENERATED CODE...*/
     //TODO: Move to socketAuth.js
     if(req.isSocket && req.isAuthenticated()){
         next();
-    } else if(req.wantsJSON){ //TODO: we should/could add isSocket here?
+    } else if(req.wantsJSON){
+        //in development we bypass bearer authentication if our req/sess auth
+        if(sails.config.environment === 'development' && req.isAuthenticated()){
+            return next();
+        }
         return passport.authenticate('bearer', { session: false })(req, res, next);
     } else next();
     /*goliatone GENERATED CODE...*/
