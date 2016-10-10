@@ -15,6 +15,54 @@ var path = require('path'),
   pkgJSON = require(path.resolve('package.json')),
   df = require('date-formatter');
 
+var transports = [{
+  module: require('winston-daily-rotate-file'),
+  name: 'DailyRotateFile',
+  enabled: Boolean((process.env.NODE_ENV || '').match(/production|staging/)),
+  config: {
+    dirname: path.resolve('logs'),
+    datePattern: 'yyyy-MM-dd.log',
+    filename: pkgJSON.name,
+    timestamp: true,
+    colorize: false,
+    maxsize: 1024 * 1024 * 10,
+    json: false,
+    prettyPrint: true,
+    depth: 10,
+    tailable: true,
+    zippedArchive: true,
+    level: 'silly'
+  }
+}];
+
+if(process.env.NODE_HONEYBADGER_KEY){
+    transports.push({
+        module: require('winston-honeybadger'),
+        name: 'Honeybadger',
+        enabled: process.env.NODE_ENV === 'production',
+        config: {
+            apiKey: process.env.NODE_HONEYBADGER_KEY
+        }
+    });
+}
+
+if(process.env.NODE_AWS_SECRET_ACCESS_KEY || process.env.NODE_AWS_ACCESS_KEY_ID){
+    transports.push({
+        //TODO: For now, this is goliatone's fork
+        module: require('winston-cloudwatch'),
+        name: 'CloudWatchLogs',
+        enabled: process.env.NODE_ENV === 'production',
+        config: {
+          logGroupName: pkgJSON.name + '-' +process.env.NODE_ENV,
+            logStreamName: makeLogStreamName(),
+            awsAccessKeyId: process.env.NODE_AWS_ACCESS_KEY_ID,
+            awsSecretKey: process.env.NODE_AWS_SECRET_ACCESS_KEY,
+            awsRegion: process.env.NODE_AWS_REGION || 'us-east-1'
+        }
+    });
+}
+
+
 module.exports.log = {
 
   /***************************************************************************
@@ -34,48 +82,7 @@ module.exports.log = {
   timestamp: true,
   colorize: false,
   prettyPrint: true,
-  transports: [
-    {
-      module: require('winston-daily-rotate-file'),
-      name: 'DailyRotateFile',
-      enabled: Boolean((process.env.NODE_ENV || '').match(/production|staging/)),
-      config: {
-        dirname: path.resolve('logs'),
-        datePattern: 'yyyy-MM-dd.log',
-        filename: pkgJSON.name,
-        timestamp: true,
-        colorize: false,
-        maxsize: 1024 * 1024 * 10,
-        json: false,
-        prettyPrint: true,
-        depth: 10,
-        tailable: true,
-        zippedArchive: true,
-        level: 'silly'
-      }
-    },
-    {
-      //TODO: For now, this is goliatone's fork
-      module: require('winston-cloudwatch'),
-      name: 'CloudWatchLogs',
-      enabled: process.env.NODE_ENV === 'production',
-      config: {
-        logGroupName: pkgJSON.name + '-' +process.env.NODE_ENV,
-        logStreamName: makeLogStreamName(),
-        awsAccessKeyId: process.env.NODE_AWS_ACCESS_KEY_ID,
-        awsSecretKey: process.env.NODE_AWS_SECRET_ACCESS_KEY,
-        awsRegion: process.env.NODE_AWS_REGION || 'us-east-1'
-      }
-    },
-    {
-      module: require('winston-honeybadger'),
-      name: 'Honeybadger',
-      enabled: process.env.NODE_ENV === 'production',
-      config: {
-        apiKey: process.env.NODE_HONEYBADGER_KEY
-      }
-    }
-  ]
+  transports: transports
 };
 
 function makeLogStreamName() {
