@@ -111,6 +111,10 @@ var Device = {
         BarcodeService.createQRCode(url, filename).finally(function(){
             done();
         });
+    },
+    beforeUpdate: function(values, done){
+        if(values.location) values.coordinates = null;
+        done();
     }
 };
 
