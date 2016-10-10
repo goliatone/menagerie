@@ -7,14 +7,19 @@ module.exports = function treehugger(sails){
     return {
         ready: false,
         initialize: function(done){
-            
-            var envCheck = sails.config.environment === 'production';
+            if(!process.env.NODE_NEWRELIC_KEY) return done();
 
+            var envCheck = sails.config.environment === 'production';
+            if(!envCheck) return done();
+
+            /*
+             * we are supposed to use this on the header of
+             * our layout. This should be a locals function
+             * or available for EJS.
+             */
             sails.newRelicBrowserHeader = function(){
                 if(envCheck) sails.newrelic.getBrowserTimingHeader();
             };
-
-            if(!envCheck) return done();
 
             sails.newrelic = global.newrelic;
             delete global.newrelic;
