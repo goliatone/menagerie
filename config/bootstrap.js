@@ -51,7 +51,7 @@ ngrok http port -subdomain=subdomain
             deviceStateLabel: function(state){
                 var classes = {
                     'unseen': 'warning', //not seen yet
-                    'checkin': 'secondary', //checked in
+                    'added': 'secondary', //checked in
                     'online': 'succes', //online health checkin
                     'offline': 'alert', //it was onli
                 };
