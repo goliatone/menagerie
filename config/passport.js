@@ -35,8 +35,8 @@ module.exports.passport = {
     protocol: 'oauth2',
     strategy: require('passport-google-oauth').OAuth2Strategy,
     options: {
-      clientID: process.env.GOOGLE_CLIENT_ID || 'none',
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'none',
+      clientID: process.env.NODE_GOOGLE_CLIENT_ID || 'none',
+      clientSecret: process.env.NODE_GOOGLE_CLIENT_SECRET || 'none',
       scope: ['profile', 'email'],
       //display:'popup',
       //hostedDomain: This is also duplicated on sails.config.auth.passport
