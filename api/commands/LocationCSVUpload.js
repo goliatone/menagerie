@@ -1,59 +1,50 @@
 'use strict';
-
+var Keypath = require('gkeypath');
 var AsyncTask = require('async-task');
 
 
-function backgroundTask(data){
-    var out = [],
-        uuid = require('random-uuid-v4');
-    if(Array.isArray(data)){
-        data.map(function(record){
-            // { Type: 'R710',
-            // Level: 27,
-            // 'Room Name / Type': 'CORRIDOR',
-            // 'Room Number': 2700,
-            // 'Port 1 ID': '27-010-W',
-            // 'Port 2 ID': '27-011-W',
-            // 'Natural Key': 'NY13-027-2700' }
-            var obj = {};
-            obj.uuid = uuid();
-            obj.name = record['Natural Key'];
-            obj.description = record['Room Name / Type'] + ' ' + record['Room Number'];
-            if(obj.name && obj.name.length) out.push(obj);
-        });
-    }
-    console.log('UPLOADING CSV DATA', out);
-    return out;
-}
+function noopTx(data){return data;}
 
 function handleLocationCSVUpload(f){
     console.log('- csv upload: FILE UPLOADED', f);
+    if(!f || !f.files || f.files.length === 0) return;
     var file = f.files[0];
 
     if(file.type !== 'text/csv') return;
 
     var filepath = file.fd;
 
-    var task = new AsyncTask({
-        doInBackground: backgroundTask
-    });
+    var tx = Keypath.get(sails, 'config.uploads.csv.location', {transformation: noopTx});
 
+    var task = new AsyncTask({
+        doInBackground: tx.transformation
+    });
 
     CSVService.toJSON(filepath).then(function(dataset){
         task.execute(dataset)
         .then(function( result ) {
-            console.log('- csv upload: RESULT', result);
+            sails.log.info('- csv upload: RESULT after transformation', result);
             LocationService.preloadData(result, function(err, result){
-                console.log('- csv upload: DONE!');
+                if(err) return notifyError('LocationService', err);
+                sails.log.info('- csv upload: DONE!', err, result);
             });
-        })
-        .catch( function(){
-            console.log('error');
+        }).catch( function(err){
+            notifyError('AsyncTask', err);
         });
+    }).catch(function(err){
+        notifyError('CSVService', err);
     });
 }
 
 module.exports =  {
-    eventType: 'file:upload',
+    eventType: 'file:upload:location',
     handler: handleLocationCSVUpload
 };
+
+function notifyError(label, err){
+    sails.io.emit('/files/upload/error', {entity: 'location', err: err});
+
+    sails.log.error('%s: error uploading CSV file', label);
+    sails.log.error(err.message);
+    sails.log.error(err.stack);
+}
