@@ -3,19 +3,29 @@
 
 <div class="content row">
     <div class="large-12 large-centered small-11 small-centered columns">
-        <div class="clearfix">
-            <div class="row">
-                <div class="large-9 columns">
-                    <h3 class="left">Devices</h3>
-                </div>
-                <div class="large-2 columns">
-                    <a href="/<%= nicename %>/new" class="button success tiny radius right">Add Record</a>
-                </div>
-                <div class="large-1 columns">
-                    <a href="#" data-reveal-id="csv-modal" class="button tiny radius right">CSV</a>
+        <% if(records.length === 0){%>
+            <h3>Devices</h3>
+            <p>
+            It seems that you don't have any records to show.
+            </p>
+        <%}else{%>
+            <div class="clearfix">
+                <div class="row">
+                    <div class="large-9 columns">
+                        <h3 class="left">Devices</h3>
+                    </div>
+                    <div class="large-2 columns">
+                        <a href="/<%= nicename %>/new" class="button success tiny radius right">
+                            Add Record
+                        </a>
+                    </div>
+                    <div class="large-1 columns">
+                        <a href="#" data-reveal-id="csv-modal" class="button tiny radius right">
+                            CSV
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
         <dl class="sub-nav">
             <dt>Filter:</dt>
             <dd class="active-implement"><a href="/<%= nicename %>">All</a></dd>
@@ -23,8 +33,7 @@
         <table>
             <thead>
                 <tr>
-                    <th width="350">UUID</th>
-                    <!--th width="150">Name</th-->
+                    <th width="350">Name</th>
                     <th width="150">Model</th>
                     <th width="150">Asset Tag</th>
                     <th width="150">Device Id</th>
@@ -41,7 +50,7 @@
                     <tr id="record-<%= record.id %>">
                         <td>
                             <a href="/<%= nicename %>/<%= record.id %>">
-                                <%= record.uuid %>
+                                <%= record.name %>
                             </a>
                         </td>
                         <!--td>
@@ -89,8 +98,13 @@
         </table>
         <ul id="table-pagination" class="pagination" role="menubar">
         </ul>
-        <a href="/<%= nicename %>/new" class="button success">Add Record</a>
-        <a href="#" data-reveal-id="csv-modal" class="button">CSV</a>
+        <%}%>
+        <a href="/<%= nicename %>/new" class="button success">
+            <i class="fi-plus size-16"></i> Add Record
+        </a>
+        <a href="#" data-reveal-id="csv-modal" class="button">
+            <i class="fi-upload size-16"></i> CSV
+        </a>
     </div>
 </div>
 <script type="text/javascript">
