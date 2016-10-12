@@ -8,10 +8,11 @@
 var pkg = require('../../package.json');
 module.exports = {
 	homepage: function(req, res){
-        res.ok({
-            title: 'Menagerie'
-        }, 'homepage');
-
+		// if(req.user) 
+		res.redirect('/dashboard');
+        // res.ok({
+        //     title: 'Menagerie'
+        // }, 'homepage');
     },
     dashboard: function(req, res){
         res.ok({
