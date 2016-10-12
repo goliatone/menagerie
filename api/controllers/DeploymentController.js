@@ -105,7 +105,7 @@ var Controller = {
                 return res.ok({ok: false, err: 'Location error'});
             }
 
-            device.state = 'checkin';
+            device.state = 'added';
             device.location = location.id;
 
             device.save(function(err){
