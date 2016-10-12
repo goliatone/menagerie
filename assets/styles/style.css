@@ -45,7 +45,6 @@ footer .development {
     color: red;
 }
 
-
 footer .staging {
     color: orange;
 }
@@ -54,12 +53,31 @@ footer .production {
     color: green;
 }
 
-
+input.invalid,
 input:required:invalid, input:focus:invalid {
     border: 1px solid red;
 }
+input.valid,
 input:required:valid {
     border: 1px solid green;
+}
+@-webkit-keyframes pulseBorder {
+  from {
+    border:solid 1px #cccccc;
+  }
+  to {
+    border: 1px solid orange;
+
+  }
+}
+input.validating {
+    -webkit-animation-name: pulseBorder;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: ease;
+    -webkit-animation-direction: alternate;
+    -webkit-animation-duration: 0.5s;
+    text-align:center;
+    border: solid 1px #cccccc;
 }
 
 
