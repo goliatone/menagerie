@@ -118,6 +118,20 @@ var Controller = {
             res.serverError(err);
         });
     },
+    checkOutForm: function(req, res){
+        return res.ok({
+            form:{
+                action: '/' + BaseController.Resource.nicename + '/update',
+                method: 'POST',
+                intent: 'edit'
+                //  method: 'PUT'
+            },
+            status: 'OK',
+            title: 'Details',
+            nicename: BaseController.Resource.nicename,
+            metadata: BaseController.getMetadata('checkOutForm')
+        }, BaseController.Resource.getViewPath('check-out'));
+    },
     checkIn: function(req, res){
         res.send({ok: false, err: new Error('Not implemented')});
     },
