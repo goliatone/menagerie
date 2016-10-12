@@ -66,10 +66,16 @@ var Controller = {
             deviceId = req.body.device;
 
         var promises = [
-            DeployedDevice.findOne({uuid:deviceId}).populateAll(),
-            Location.findOne({uuid: locationId}),
+            DeployedDevice.findOne(uuidShortCode(deviceId)).populateAll(),
+            Location.findOne(uuidShortCode(locationId)),
             Deployment.findOne(deploymentCriteria(deploymentId)).populateAll(),
         ];
+
+        function uuidShortCode(uuid, enabled){
+            if(enabled === undefined ) enabled = sails.config.menagerie.enableUUIDShortCodes;
+            if(enabled) return { uuid:{ like: uuid + '%' }};
+            return {uuid: uuid};
+        }
 
         Promise.all(promises).then(function(results){
 
