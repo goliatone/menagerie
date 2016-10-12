@@ -30,6 +30,16 @@ module.exports.menagerie = {
                     'offline': 'alert', //it was onli
                 };
                 return classes[state];
+            },
+            deviceStatusLabel: function(state){
+                var classes = {
+                    'unknown': 'warning', //not seen yet
+                    'available': 'succes', //online health checkin
+                    'reserved': 'secondary', //checked in
+                    'deployed': 'info', //checked in
+                    'broken': 'alert', //it was onli
+                };
+                return classes[state];
             }
         }
     },
