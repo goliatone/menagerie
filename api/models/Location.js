@@ -15,7 +15,7 @@ var Location = {
         uuid : {
             type: 'string',
             // primaryKey: true,
-            required: true
+            // required: true
         },
         name : {
             type: 'string'
@@ -75,6 +75,12 @@ var Location = {
             ];
             return Promise.all(updates);
         }
+    },
+    beforeCreate: function(record, done){
+        if(!record || !record.uuid){
+            record.uuid = BaseModel.generateUUID();
+        }
+        done();
     },
     afterCreate: function(record, done){
 

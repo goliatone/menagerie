@@ -1,3 +1,5 @@
+'use strict';
+
 var Converter = require('csvtojson').Converter;
 var converter = new Converter({});
 var Promise = require('bluebird');
