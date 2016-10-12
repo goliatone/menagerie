@@ -10,6 +10,7 @@
  * For more information on bootstrapping your app, check out:
  * http://sailsjs.org/#!/documentation/reference/sails.config/sails.config.bootstrap.html
  */
+var Keypath = require('gkeypath');
 
 module.exports.bootstrap = function(cb) {
 /*
@@ -41,24 +42,9 @@ ngrok http port -subdomain=subdomain
     sails.services.passport.loadStrategies();
 
     /*
-     * TODO: we should be bringing this from config.menagerie.frontEnd
+     * extend express locals 
      */
-    var locals = {
-        filters: {
-            formatDate: function(date){
-                return require('moment')(date).format('DD-MMM-YYYY');
-            },
-            deviceStateLabel: function(state){
-                var classes = {
-                    'unseen': 'warning', //not seen yet
-                    'added': 'secondary', //checked in
-                    'online': 'succes', //online health checkin
-                    'offline': 'alert', //it was onli
-                };
-                return classes[state];
-            }
-        }
-    };
+    var locals = Keypath.get(sails, 'config.menagerie.locals', {});
     sails.util._extend(sails.hooks.http.app.locals, locals);
 
     console.log('=============================');
