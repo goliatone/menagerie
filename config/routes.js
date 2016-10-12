@@ -189,6 +189,7 @@ module.exports.routes = {
     //TODO: We should be able to include this on blueprints
     'POST /deployment/check-in': 'DeploymentController.checkIn',
     'POST /deployment/check-out': 'DeploymentController.checkOut',
+    'GET /deployment/check-out': 'DeploymentController.checkOutForm',
 
     'GET /deployment/:id/floorplan': 'DeploymentController.floorplan',
 
