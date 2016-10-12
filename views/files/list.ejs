@@ -3,6 +3,11 @@
 <div class="content row">
     <div class="large-12 large-centered small-11 small-centered columns">
         <h3>Files</h3>
+        <% if(records.length === 0){%>
+            <p>
+            It seems that you don't have any records to show.
+            </p>
+        <%}else{%>
         <table>
           <thead>
             <tr>
@@ -27,9 +32,13 @@
         </table>
         <ul id="table-pagination" class="pagination" role="menubar">
         </ul>
-        <a href="/<%= nicename %>/new" class="button success">Add Record</a>
+        <%}%>
+        <a href="/<%= nicename %>/new" class="button success">
+            <i class="fi-plus size-16"></i> Add Record
+        </a>
     </div>
 </div>
+
 <script type="text/javascript">
 function buildPagination(){
     io.socket.get('/files/count', function(data, jwr){
