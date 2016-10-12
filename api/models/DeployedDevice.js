@@ -39,8 +39,8 @@ var Model = {
             type: 'string',
             defaultsTo:'unseen',
             enum: [
-                'unseen', //not seen yet
-                'checkin', //checked in
+                'unseen', //Was provisioned, and device is in "Reserved" status but not seen yet
+                'added', //Device "Deployed"
                 'online', //online health checkin
                 'offline', //it was online, now it's missing
             ]
