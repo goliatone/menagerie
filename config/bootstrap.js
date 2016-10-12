@@ -66,20 +66,25 @@ ngrok http port -subdomain=subdomain
     console.log('| ENV STUFF:');
     console.log('| RUNTIME_ENVIRONMENT:', process.env.NODE_ENV);
     console.log('|');
-    console.log('| POGSTRESS STUFF:');
-    console.log('| POSTGRES_PORT_5432_TCP_ADDR:', process.env.POSTGRES_PORT_5432_TCP_ADDR);
-    console.log('| POSTGRES_PORT_5432_TCP_PORT:', process.env.POSTGRES_PORT_5432_TCP_PORT);
-    console.log('| POSTGRES_USER:', process.env.POSTGRES_USER);
-    console.log('| POSTGRES_PASSWORD:', process.env.POSTGRES_PASSWORD);
+    Object.keys(process.env).map(function(key){
+        if(key.indexOf('NODE_') !== -1) console.log('| %s: %s', key, process.env[key]);
+    });
     console.log('|');
     console.log('=============================');
 
     /*
      * Intercept all file uploads, we care about csv files.
-     * We are triggering a custom event "file:upload" in FileController.
+     * We are triggering a custom event "file:upload:location" in FileController.
      */
     var locationCSVUpload = require('../api/commands/LocationCSVUpload');
     sails.on(locationCSVUpload.eventType, locationCSVUpload.handler);
+
+    /*
+     * Intercept all file uploads, we care about csv files.
+     * We are triggering a custom event "file:upload:device" in FileController.
+     */
+    var deviceCSVUpload = require('../api/commands/DeviceCSVUpload');
+    sails.on(deviceCSVUpload.eventType, deviceCSVUpload.handler);
 
     /*
      * After files have been uploaded, we create a new Files record.
