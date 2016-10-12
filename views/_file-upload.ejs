@@ -1,11 +1,26 @@
 <div id="csv-modal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
-  <h2 id="modalTitle">Upload CSV file</h2>
+    <a class="close-reveal-modal" aria-label="Close">&#215;</a>
   <div>
-      <form action="http://localhost:1337/files/upload" enctype="multipart/form-data" method="post">
-          <input type="text" name="title"><br>
+      <h3>Select a file to upload</h3>
+      <form action="/files/upload" enctype="multipart/form-data" method="post">
+          <input type="text" name="title" placeholder="File Title"><br>
           <input type="file" name="uploaded-file" multiple="multiple" accept=".csv"><br>
           <input type="submit" class="button" value="Upload">
+          <input type="hidden" name="entity" value="<%= nicename %>">
       </form>
   </div>
-  <a class="close-reveal-modal" aria-label="Close">&#215;</a>
 </div>
+
+<script>
+    io.socket.on('/files/upload', function(e){
+        console.info('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
+        console.info('- File upload "%s" progress: %s', e.name, e.progress);
+        console.info('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
+    });
+
+    io.socket.on('/files/upload/error', function(e){
+        console.error('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
+        console.error('- File upload "%s" progress: %s', e.entity, JSON.stringify(e.err));
+        console.error('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
+    });
+</script>
