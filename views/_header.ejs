@@ -14,8 +14,13 @@
 
     <section class="top-bar-section">
         <ul class="right">
-            <li class="divider"></li>
-            <li><a href="/deployment">Deployments</a></li>
+            <li class="has-dropdown">
+                <a href="#">Deployment</a>
+                <ul class="dropdown">
+                    <li><a href="/deployment">Deployments</a></li>
+                    <li><a href="/deployment/check-out">Check Out Device</a></li>
+                </ul>
+            </li>
             <li class="has-dropdown">
                 <a href="#">Device</a>
                 <ul class="dropdown">
@@ -31,7 +36,7 @@
         <!-- Left Nav Section -->
         <ul class="left">
             <li class="has-dropdown">
-                <a href="#"><%= user.username ? user.username : 'User' %></a>
+                <a href="#"><%= req.user.username ? req.user.username : 'User' %></a>
             <ul class="dropdown">
               <li><a href="/logout">Log out</a></li>
               <li><a href="/profile">Profile</a></li>
