@@ -64,18 +64,7 @@ var Device = {
                 //auto:√ Phone app process | Web panel
                 'deployed',
                 //manually set to broken
-                'broken',
-
-                //TODO: Remove!!
-                'inuse', //'deployed'
-                'not_inuse', //available
-
-                //Functional status, move to
-                //DeployedDevice
-                'online',
-                'offline',
-                'unavailable',
-                'operative'
+                'broken'
             ]
         },
         type: {
