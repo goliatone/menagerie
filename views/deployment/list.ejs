@@ -6,6 +6,11 @@
         <%if(status === "Error") { %>
         <div class="alert alert-danger" role="alert"><%=statusDescription%></div>
         <% } %>
+        <% if(records.length === 0){%>
+            <p>
+            It seems that you don't have any records to show.
+            </p>
+        <%}else{%>
         <table>
           <thead>
             <tr>
@@ -44,7 +49,10 @@
               <%});%>
           </tbody>
         </table>
-        <a href="/<%= nicename %>/new" class="button success">Add Record</a>
+        <%}%>
+        <a href="/<%= nicename %>/new" class="button success">
+            <i class="fi-plus size-16"></i> Add Record
+        </a>
     </div>
 </div>
 
@@ -54,7 +62,8 @@
         console.log('count devices', url);
         io.socket.get(url, function(re, jwt){
             re && $el.html(
-                '<a href="/deployment/'+typeId+'/devices">'+re.count+'</a>'
+                '<a href="/deployment/'+typeId+'/devices">'+re.count+'</a>' +
+                '  <a href="/deployment/'+typeId+'/provision"><i class="fi-page-add"  style="color:#ff4499;"></i></a>'
             );
         });
     }
