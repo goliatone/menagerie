@@ -3,29 +3,45 @@
 <div class="content row">
     <div class="large-12 large-centered columns">
         <div class="row">
-            <div class="large-12 centered columns">
+            <div class="large-6 columns">
                 <h3>Check Out a Device</h3>
                 <form id="menagerie" action="/deployment/check-out" method="POST">
+                    <label>Deployment
+                        <input id="deployment" name="deployment" type="text" placeholder="Full UUID or Shortcode"/>
+                    </label>
+                    <label>Location
+                        <input id="location" name="location" type="text" placeholder="Full UUID or Shortcode" />
+                    </label>
+                    <label>Device Id or UUID
+                        <input id="device" name="device" type="text" placeholder="Full UUID or Shortcode" />
+                    </label>
                     <div class="row">
-                        <div class="large-6 centered columns">
-                            <label>Deployment
-                                <input id="deployment" name="deployment" type="text" placeholder="Full UUID or Shortcode"/>
-                            </label>
-                            <label>Location
-                                <input id="location" name="location" type="text" placeholder="Full UUID or Shortcode" />
-                            </label>
-                            <label>Device Id or UUID
-                                <input id="device" name="device" type="text" placeholder="Full UUID or Shortcode" />
-                            </label>
+                        <div class="large-6 columns">
+                            <button id="submit" class="small expand secondary radius">Cancel</button>
                         </div>
-                        <!-- <div class="large-6 columns">
-                            <label>Info</label>
-                            <div class="panel console-info"></div>
-                        </div>-->
+                        <div class="large-6 columns">
+                            <button id="submit" class="small expand success  radius">Send</button>
+                        </div>
                     </div>
-
-                    <button id="submit" class="alert radius">Cancel</button>
-                    <button id="submit" class="success  radius">Send</button>
+                </form>
+            </div>
+            <div class="large-6 columns">
+                <h3>Check In a Device</h3>
+                <form id="menagerie" action="/deployment/check-out" method="POST">
+                    <label>Device Id or UUID
+                        <input id="device" name="device" type="text" placeholder="Full UUID or Shortcode" />
+                    </label>
+                    <label>Location
+                        <input id="location" name="location" type="text" placeholder="Full UUID or Shortcode" />
+                    </label>
+                    <div class="row">
+                        <div class="large-6 columns">
+                            <button id="submit" class="small expand secondary radius">Cancel</button>
+                        </div>
+                        <div class="large-6 columns">
+                            <button id="submit" class="small expand success  radius">Send</button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
@@ -39,9 +55,8 @@ function populateInfo(name, uuid){
         console.log(data);
         var record = data.records[0];
         $('#' + name).removeClass('validating').addClass(record ? 'valid': 'invalid');
-
-        $('.console-info').append('<h5>' + record.name + '</h5>');
-        $('.console-info').append('<p>' + record.description + '</p>');
+        // $('.console-info').append('<h5>' + record.name + '</h5>');
+        // $('.console-info').append('<p>' + record.description + '</p>');
     });
 }
 $('#device').change(function(e){
