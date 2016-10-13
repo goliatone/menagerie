@@ -81,7 +81,9 @@
                             <%= record.type ? record.type.name : '---' %>
                         </td>
                         <td>
-                            <%= record.status %>
+                            <span class="label <%=: record.status | deviceStatusLabel %> radius">
+                                <%= record.status %>
+                            </span>
                         </td>
                         <td><img class="device qr-code" src="/images/qrs/<%=record.uuid%>.png" /></td>
                         <td>
