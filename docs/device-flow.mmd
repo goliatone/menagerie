@@ -1,0 +1,12 @@
+%% To build:
+%% mermaid  docs/device-flow.mmd -o docs/
+graph TB
+    A{"Add Device"} -->B["Check In"]
+    B-->C("Available")
+    C-->D["Provision Deployment"]
+    D-->E["Reserved"]
+    E-->X{"Deployment Starts"}
+    X-->F["Check Out"]
+    F-->G("Deployed")
+    G-->H{"Deployment End"}
+    H-->A
