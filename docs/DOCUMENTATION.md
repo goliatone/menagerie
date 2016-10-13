@@ -4,7 +4,8 @@ Menagerie is a prototype of a Device Management System for IoT devices.
 
 With Menagerie you keep an inventory of your (hardware) devices, as well as help you in keeping track of their location and status over time as well as having a centralized repository for their configurations.
 
-It can be used with it's companion iOs [scanner application][ios-app] to simplify
+It can be used with it's companion iOs [scanner application][ios-app] to simplify the workflow.
+
 ## Table Of Contents
 <!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
@@ -31,8 +32,6 @@ It can be used with it's companion iOs [scanner application][ios-app] to simplif
 			- [Services](#services)
 			- [export-tables-to-csv](#export-tables-to-csv)
 			- [import-csvs-to-table](#import-csvs-to-table)
-	- [Legacy Grunt Tasks](#legacy-grunt-tasks)
-			- [db:manage:*](#dbmanage)
 - [User Manual](#user-manual)
 	- [Basic Concepts](#basic-concepts)
 	- [Entities](#entities)
@@ -64,6 +63,8 @@ It can be used with it's companion iOs [scanner application][ios-app] to simplif
 			- [Check Out Devices](#check-out-devices)
 			- [Check In Devices](#check-in-devices)
 			- [Location Devices](#location-devices)
+	- [Legacy Grunt Tasks](#legacy-grunt-tasks)
+			- [db:manage:*](#dbmanage)
 
 <!-- /TOC -->
 
@@ -319,7 +320,7 @@ sails>
 
 There are several custom grunt tasks:
 * [menagerie:*][#menagerie]
-* [db:manage:*][#db-manage] (legacy)
+* [db:manage:*][#dbmanage] (legacy)
 
 Under the hood both tasks load Sails configuration, so we can reuse the same _connection_ options without having to duplicate them in the _tasks/config_ directory.
 
@@ -487,87 +488,6 @@ Quick fix:
 sed -n 's/,,,,/,,,0,/gpw data/postgres/data/location.csv' data/postgres/data/location.csv
 ```
 
-
-[njs]:https://nodejs.org/en/
-[sjs]:http://sailsjs.org/
-[mongo]:https://www.mongodb.com/
-[psql]:https://www.postgresql.org/
-[grunt]:https://grunt.io/
-
-[docker]:https://www.docker.com/
-[dmachine]:https://docs.docker.com/machine/
-[docker-compose]:https://www.docker.com/products/docker-compose
-[dmachine-install]:https://docs.docker.com/machine/install-machine/
-[docker-install]:https://www.docker.com/products/overview/
-[docker-compose-install]:https://docs.docker.com/compose/install/
-[docker-mac-get-started]:https://docs.docker.com/docker-for-mac/
-[docker-machine-get-started]:https://docs.docker.com/machine/get-started/
-[docker-compose-get-started]:https://docs.docker.com/compose/gettingstarted/
-[docker-machine-new]:https://docs.docker.com/machine/get-started/#/create-a-machine
-[docker-tutorial]:http://prakhar.me/docker-curriculum/
-
-[menagerie-link]:https://github.com/goliatone/menagerie/archive/master.zip
-[dockerfile]:https://github.com/goliatone/menagerie/blob/master/Dockerfile
-[docker-compose-template]:https://github.com/goliatone/menagerie/blob/master/docker-compose.tpl.yml
-[tplenvset]: https://github.com/goliatone/envset/blob/master/example/tpl.envset
-[envset]: https://github.com/goliatone/envset
-[slv]: https://github.com/goliatone/slv
-[mongodb-connection]:https://github.com/goliatone/menagerie/blob/deployments/config/connections.js#L43-L49
-[envset-tpl]:https://github.com/goliatone/menagerie/blob/deployments/envset.tpl
-
-
-[sails-tasks]:http://sailsjs.org/documentation/concepts/assets/default-tasks
-[node-repl]:http://nodejs.org/api/repl.html
-[sails-console]:http://sailsjs.org/documentation/reference/command-line-interface/sails-console
-
-[gdc]: https://console.developers.google.com
-[eapi]: https://console.developers.google.com/apis/library
-
-
-
--------
-## Legacy Grunt Tasks
-#### db:manage:*
-
-`db:manage` handles common **postgres** operations like creating a database user, dropping a database, or executing a custom `sql` file. You can run any of the commands with the `--dry-run` to see the generated `sql` but without executing the query against the database.
-
-The available commands are:
-* db:manage:create-user: --roles, --user, --password, --superuser
-* db:manage:create-db: --database, --owner, --encoding
-* db:manage:assign-owner: --database, --owner
-* db:manage:drop-db: --database
-* db:manage:drop-user: --user
-* db:manage:sql-file: --database, --host, --port, --user, --filename
-
-You can get more information about the commands by running the task without a subcommand: `$ grunt db:manage`.
-
-Example
-```
-grunt db:manage:sql-file --connection.password=pepe --connection.name=something \
-    --connection.host=things.menagerie.dev --connection.port=5432 --connection.user=menagerie \
-    --filename=migration_file.sql
-```
-
-----
-* [How to create an API token (CLI)](#using-cli-to-create-a-user-and-api-token)
-* [How to create a bash session in docker](#docker-compose)
-* How to bulk upload Device records using CSV (Web Admin)
-* How to bulk upload Location records using CSV (Web Admin)
-* How to bulk upload Device records using JSON (REPL)
-* How to bulk upload Location records using JSON (REPL)
-
-
-Snippet:
-
-Checkout item using sockets
-
-```
-io.socket.post('/deployment/check-out',{
-    location: '895E3355', //895E3355-92C3-41B6-BE87-6C96541E14FB
-    device:'24730E62',  //24730E62-5382-4DE5-B253-EC924B45568C
-    deployment:'F6373554'//F6373554-BD1C-4669-B52F-D206D54D963B
-}, console.log);
-```
 # User Manual
 
 This manual will help you start using with Menagerie.
@@ -680,7 +600,11 @@ What follows is a simple step by step guide to get you up and running with the M
 A Device Type provides a way to collect multiple device instances of the same class. In this example we are going to create a type of **ESP Humidity Sensor**.  
 
 ![menagerie](./screenshots/device-type-list-empty.png)
+
 ![menagerie](./screenshots/device-type-add.png)
+
+We can see that the device type has been created successfully.
+
 ![menagerie](./screenshots/device-type-list-added.png)
 
 ### Create Locations
@@ -689,8 +613,11 @@ We are now going to create a Location to represent a building, which will have t
 You can create records individually or import them using `CSV` files.
 
 ![menagerie](./screenshots/location-add.png)
+
 ![menagerie](./screenshots/locations-list-after-manual-create.png)
+
 ![menagerie](./screenshots/locations-upload-csv.png)
+
 ![menagerie](./screenshots/locations-list-after-csv.png)
 
 Locations have a _weight_ index property which more or less maps to:
@@ -704,15 +631,44 @@ We are going to create a second Location to represent a floor, **NY15-2FL** and 
 ![locations-list-sublocation](http://i.imgur.com/Znl43ed.png)
 
 ### Create Devices
-You can create records individually or import them using `CSV` files.
+
+When we visit the Devices section, we see it's empty.
 
 ![device-list-empty](http://i.imgur.com/nF58f1P.png)
 
-![device-upload-csv](http://i.imgur.com/X9MRkVS.png)
+We are going to create a device manually.
 
 ![device-add](http://i.imgur.com/PwNk8bl.png)
-![device-list-after-csv-upload-1](http://i.imgur.com/zp8lYSQ.png)
+
+You can also create records by importing a `CSV` file. The fields provided in this example are the following:
+
+* type: ID to Device Type
+* uuid: Not if not present one will be auto-generated
+* name
+* assetTag
+* deviceId
+* description
+* status: If not present it will be set to `unknown`
+
+
+The file is also available [here][csv-sample]. Here we can see the contents:
+```csv
+"type","uuid","assetTag","deviceId","name","description","status"
+"57fcfa035351cee4e3a75da4","3611214D-4B0D-4007-893D-514E95804AB1","x192844f9","375484","ESP Humidity 02","ESP8266 Battery Powered Humidity Sensor ","available"
+"57fcfa035351cee4e3a75da4","76E9CCB9-55ED-4ECB-AE10-274DC1B0C178","x192845ca","325485","ESP Humidity 03","ESP8266 Battery Powered Humidity Sensor ","available"
+"57fcfa035351cee4e3a75da4",,"x192846cc","355983","ESP Humidity 04","ESP8266 Battery Powered Humidity Sensor ","available"
+"57fcfa035351cee4e3a75da4",,"x192847ca","345142","ESP Humidity 05","ESP8266 Battery Powered Humidity Sensor ","available"
+"57fcfa035351cee4e3a75da4",,"x192848ba","395411","ESP Humidity 06","ESP8266 Battery Powered Humidity Sensor ","available"
+```
+
+Upload the CSV file.
+
+![device-upload-csv](http://i.imgur.com/X9MRkVS.png)
+
+List of created devices:
+
 ![device-list-after-csv-upload](http://i.imgur.com/57F39WW.png)
+
 ![device-list-after-manual-create](http://i.imgur.com/H6bB6SZ.png)
 
 
@@ -755,6 +711,105 @@ After we complete a check out for a device, we can see that it's state has been 
 
 
 #### Location Devices
-We can position our devices in the device's location floorplan.
+A Location has the ability to display Devices placed on the location's floor-plan (if it has one).
+
+We can position our devices in the device's location floor plan.
 
 ![location-devices-map](http://i.imgur.com/1yMp0Ua.png)
+
+If we click in one of the listed devices it will be positioned in the floor plan. Once there we can drag it and place it where we want in the floor plan.
+
+![location-device-map-place](./screenshots/location-device-map-place.png)
+
+
+![location-device-map-placed](./screenshots/location-device-map-placed.png)
+
+If we change the location or a device, or if we check-in a deployed device then the device will not be shown in the map.
+
+
+
+
+-------
+## Legacy Grunt Tasks
+#### db:manage:*
+
+`db:manage` handles common **postgres** operations like creating a database user, dropping a database, or executing a custom `sql` file. You can run any of the commands with the `--dry-run` to see the generated `sql` but without executing the query against the database.
+
+The available commands are:
+* db:manage:create-user: --roles, --user, --password, --superuser
+* db:manage:create-db: --database, --owner, --encoding
+* db:manage:assign-owner: --database, --owner
+* db:manage:drop-db: --database
+* db:manage:drop-user: --user
+* db:manage:sql-file: --database, --host, --port, --user, --filename
+
+You can get more information about the commands by running the task without a subcommand: `$ grunt db:manage`.
+
+Example
+```
+grunt db:manage:sql-file --connection.password=pepe --connection.name=something \
+    --connection.host=things.menagerie.dev --connection.port=5432 --connection.user=menagerie \
+    --filename=migration_file.sql
+```
+
+----
+* [How to create an API token (CLI)](#using-cli-to-create-a-user-and-api-token)
+* [How to create a bash session in docker](#docker-compose)
+* How to bulk upload Device records using CSV (Web Admin)
+* How to bulk upload Location records using CSV (Web Admin)
+* How to bulk upload Device records using JSON (REPL)
+* How to bulk upload Location records using JSON (REPL)
+
+
+Snippet:
+
+Checkout item using sockets
+
+```
+io.socket.post('/deployment/check-out',{
+    location: '895E3355', //895E3355-92C3-41B6-BE87-6C96541E14FB
+    device:'24730E62',  //24730E62-5382-4DE5-B253-EC924B45568C
+    deployment:'F6373554'//F6373554-BD1C-4669-B52F-D206D54D963B
+}, console.log);
+```
+
+
+
+
+[njs]:https://nodejs.org/en/
+[sjs]:http://sailsjs.org/
+[mongo]:https://www.mongodb.com/
+[psql]:https://www.postgresql.org/
+[grunt]:https://grunt.io/
+
+[docker]:https://www.docker.com/
+[dmachine]:https://docs.docker.com/machine/
+[docker-compose]:https://www.docker.com/products/docker-compose
+[dmachine-install]:https://docs.docker.com/machine/install-machine/
+[docker-install]:https://www.docker.com/products/overview/
+[docker-compose-install]:https://docs.docker.com/compose/install/
+[docker-mac-get-started]:https://docs.docker.com/docker-for-mac/
+[docker-machine-get-started]:https://docs.docker.com/machine/get-started/
+[docker-compose-get-started]:https://docs.docker.com/compose/gettingstarted/
+[docker-machine-new]:https://docs.docker.com/machine/get-started/#/create-a-machine
+[docker-tutorial]:http://prakhar.me/docker-curriculum/
+
+[menagerie-link]:https://github.com/goliatone/menagerie/archive/master.zip
+[dockerfile]:https://github.com/goliatone/menagerie/blob/master/Dockerfile
+[docker-compose-template]:https://github.com/goliatone/menagerie/blob/master/docker-compose.tpl.yml
+[tplenvset]: https://github.com/goliatone/envset/blob/master/example/tpl.envset
+[envset]: https://github.com/goliatone/envset
+[slv]: https://github.com/goliatone/slv
+[mongodb-connection]:https://github.com/goliatone/menagerie/blob/deployments/config/connections.js#L43-L49
+[envset-tpl]:https://github.com/goliatone/menagerie/blob/deployments/envset.tpl
+
+
+[sails-tasks]:http://sailsjs.org/documentation/concepts/assets/default-tasks
+[node-repl]:http://nodejs.org/api/repl.html
+[sails-console]:http://sailsjs.org/documentation/reference/command-line-interface/sails-console
+
+[gdc]: https://console.developers.google.com
+[eapi]: https://console.developers.google.com/apis/library
+
+[csv-sample]:./device_import.csv
+[ios-app]:https://github.com/jkachmar/menagerie-v2-mobile
