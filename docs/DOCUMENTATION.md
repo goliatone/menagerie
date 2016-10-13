@@ -58,10 +58,12 @@ It can be used with it's companion iOs [scanner application][ios-app] to simplif
 		- [Create Device Types](#create-device-types)
 		- [Create Locations](#create-locations)
 		- [Create Devices](#create-devices)
+		- [Create Floorplan](#create-floorplan)
 		- [Create Deployment](#create-deployment)
 			- [Provision Devices](#provision-devices)
 			- [Check Out Devices](#check-out-devices)
 			- [Check In Devices](#check-in-devices)
+			- [Location Devices](#location-devices)
 
 <!-- /TOC -->
 
@@ -672,30 +674,87 @@ A deployed device that stopped working as expected. We can set this manually or 
 What follows is a simple step by step guide to get you up and running with the Menagerie's Web panel.
 
 
-![wee](./docs/device-flow.png)
+![wee](./device-flow.png)
 
 ### Create Device Types
-A Device Type provides a way to collect multiple device instances of the same class. In this example we are going to create a type of **ESP Humidity and Temperature Sensor**.  
+A Device Type provides a way to collect multiple device instances of the same class. In this example we are going to create a type of **ESP Humidity Sensor**.  
 
-![menagerie](./docs/screenshots/deice-type-list-empty.png)
-![menagerie](./docs/screenshots/deice-type-list-add.png)
-![menagerie](./docs/screenshots/deice-type-list-added.png)
+![menagerie](./screenshots/device-type-list-empty.png)
+![menagerie](./screenshots/device-type-add.png)
+![menagerie](./screenshots/device-type-list-added.png)
 
 ### Create Locations
+We are now going to create a Location to represent a building, which will have the code name **NY15**.
+
 You can create records individually or import them using `CSV` files.
 
-![menagerie](./docs/screenshots/location-list-empty.png)
-![menagerie](./docs/screenshots/location-list-add.png)
-![menagerie](./docs/screenshots/location-list-added.png)
+![menagerie](./screenshots/location-add.png)
+![menagerie](./screenshots/locations-list-after-manual-create.png)
+![menagerie](./screenshots/locations-upload-csv.png)
+![menagerie](./screenshots/locations-list-after-csv.png)
+
+Locations have a _weight_ index property which more or less maps to:
+* `100`: Building
+* `200`: Floor
+* `300`: Area/Space
+* `400`: Room
+
+We are going to create a second Location to represent a floor, **NY15-2FL** and assign it's parent property to **NY15**. This second location is maps to the 2nd floor or our sample building.
+
+![locations-list-sublocation](http://i.imgur.com/Znl43ed.png)
 
 ### Create Devices
 You can create records individually or import them using `CSV` files.
 
+![device-list-empty](http://i.imgur.com/nF58f1P.png)
+
+![device-upload-csv](http://i.imgur.com/X9MRkVS.png)
+
+![device-add](http://i.imgur.com/PwNk8bl.png)
+![device-list-after-csv-upload-1](http://i.imgur.com/zp8lYSQ.png)
+![device-list-after-csv-upload](http://i.imgur.com/57F39WW.png)
+![device-list-after-manual-create](http://i.imgur.com/H6bB6SZ.png)
+
+
+### Create Floorplan
+We are going to create a Floorplan, by uploading an image.
+
+
+Add the floorplan to our **NY15-2FL** location.
+
+![location-add-floorplan](http://i.imgur.com/Y70Bifl.png)
+
 ### Create Deployment
-A deployment tacks a group of devices over a period of time and a location.
+A deployment tacks a group of devices over a period of time and a location. We will name this deployment **NY15 Fridge Study**
+
+![deployment-add](./screenshots/deployment-add.png)
+
+We can see that de Deployment has been successfully created.
+
+![deployment-list-created](./screenshots/deployment-list-created.png)
 
 #### Provision Devices
 You need to add devices to a deployment. Note that only devices with a status of `available` will be show up during the provisioning step.
 
+![provisioning-devices](http://i.imgur.com/VVyyksw.png)
+
 #### Check Out Devices
+
+If you list the devices that have been added to the deployment.
+
+
+![deployed-devices-list](./screenshots/deployed-devices-list.png)
+
+
+After we complete a check out for a device, we can see that it's state has been updated. It went from `unseen` to `seen`.
+
+
+![deployed-devices-checked-in](./screenshots/deployed-devices-checked-in.png)
+
 #### Check In Devices
+
+
+#### Location Devices
+We can position our devices in the device's location floorplan.
+
+![location-devices-map](http://i.imgur.com/1yMp0Ua.png)
