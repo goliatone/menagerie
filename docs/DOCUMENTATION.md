@@ -548,11 +548,11 @@ Checking in a device means that you are adding a device back to the pool of avai
 ### Device status
 A device can be in on of 5 different status:
 
-* [unknown][#unknown]
-* [available][#available]
-* [reserved][#reserved]
-* [deployed][#deployed]
-* [broken][#broken]
+* [unknown](#unknown)
+* [available](#available)
+* [reserved](#reserved)
+* [deployed](#deployed)
+* [broken](#broken)
 
 #### unknown
 initial state, as entered into the system auto: default
@@ -572,10 +572,10 @@ We have to manually set a device's status to broken, this will make it unavailab
 
 ### Deployed Device state
 Once a device has been deployed, it can have different states:
-* [unseen][#unseen]
-* [added][#added]
-* [online][#online]
-* [offline][#offline]
+* [unseen](#unseen)
+* [added](#added)
+* [online](#online)
+* [offline](#offline)
 
 #### unseen
 Default state of a device after being added to a Deployment.
