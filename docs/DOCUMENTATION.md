@@ -53,6 +53,7 @@ It can be used with it's companion iOs [scanner application][ios-app] to simplif
 			- [added](#added)
 			- [online](#online)
 			- [offline](#offline)
+		- [QR Codes](#qr-codes)
 	- [Workflow](#workflow)
 		- [Create Device Types](#create-device-types)
 		- [Create Locations](#create-locations)
@@ -81,7 +82,7 @@ Menagerie uses Google OAuth for user authentication, and this guide also [covers
 
 The installation instructions provided here are for a development environment of Menagerie.
 
-You could run the application on "bare metal"- maybe during development?- but this guide uses [Docker][docker], [Docker Machine][dmachine] and [Docker Compose][docker-compose].
+You could run the application on "bare metal"- maybe during development?- but this guide uses [Docker][docker], [Docker Machine][dmachine] and [Docker Compose][dockercompose].
 
 You should have Docker [installed][docker-install], [Docker Machine][dmachine-install] as well as [Docker Compose][docker-compose-install]. All other dependencies are taken care by Docker!
 
@@ -319,7 +320,7 @@ sails>
 ### Grunt Tasks
 
 There are several custom grunt tasks:
-* [menagerie:*][#menagerie]
+* [menagerie:*][#menagerie-1]
 * [db:manage:*][#dbmanage] (legacy)
 
 Under the hood both tasks load Sails configuration, so we can reuse the same _connection_ options without having to duplicate them in the _tasks/config_ directory.
@@ -523,7 +524,6 @@ Locations have a _weight_ index property which more or less maps to:
 ### Device Type
 A device type represents a type or class of device you want to track in Menagerie, like an iBeacon or Raspberry Pi.
 
-
 ### Deployment
 A deployment is a group of devices in a location for a period of time.
 
@@ -589,6 +589,14 @@ This signifies that the device is working as expected. We can set this manually 
 #### offline
 A deployed device that stopped working as expected. We can set this manually or depending on the type of device there are different strategies to use this property to monitor the health of the device.
 
+### QR Codes
+Menagerie generates QR codes for both Devices and Locations. You can generate an HTML page with a list of UUIDs and QR codes for both Devices and locations enabling you to save to PDF.
+
+Another approach is to use an online service like [this one][my-ass-et-tag] which will take a list of UUIDs and send you a sheet with all the QR codes.
+
+You could send a list of UUIDs of entities which you already have created or do the inverse, create any amount of UUIDs using something like [uuidgen][uuidgen], print the tags, and then every time you create a Location or a Device you use one of the UUIDs from the sheet.
+
+![asset-tag-pies](./asset-tag-pies.jpeg)
 
 ## Workflow
 What follows is a simple step by step guide to get you up and running with the Menagerie's Web panel.
@@ -685,7 +693,7 @@ A deployment tacks a group of devices over a period of time and a location. We w
 
 ![deployment-add](./screenshots/deployment-add.png)
 
-We can see that de Deployment has been successfully created.
+We can see that the Deployment has been successfully created.
 
 ![deployment-list-created](./screenshots/deployment-list-created.png)
 
@@ -784,7 +792,7 @@ io.socket.post('/deployment/check-out',{
 
 [docker]:https://www.docker.com/
 [dmachine]:https://docs.docker.com/machine/
-[docker-compose]:https://www.docker.com/products/docker-compose
+[dockercompose]:https://www.docker.com/products/docker-compose
 [dmachine-install]:https://docs.docker.com/machine/install-machine/
 [docker-install]:https://www.docker.com/products/overview/
 [docker-compose-install]:https://docs.docker.com/compose/install/
@@ -813,3 +821,5 @@ io.socket.post('/deployment/check-out',{
 
 [csv-sample]:./device_import.csv
 [ios-app]:https://github.com/jkachmar/menagerie-v2-mobile
+[my-ass-et-tag]:http://www.myassettag.com/
+[uuidgen]:https://linux.die.net/man/1/uuidgen
