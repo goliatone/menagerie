@@ -26,7 +26,7 @@ It can be used with it's companion iOs [scanner application][ios-app] to simplif
 	- [CLI Tools](#cli-tools)
 		- [REPL](#repl)
 		- [Grunt Tasks](#grunt-tasks)
-			- [menagerie:*](#menagerie)
+			- [menagerie:* task](#menagerie-task)
 				- [Using CLI to create a user and API token](#using-cli-to-create-a-user-and-api-token)
 		- [Data Import/Export](#data-importexport)
 			- [Services](#services)
@@ -34,14 +34,14 @@ It can be used with it's companion iOs [scanner application][ios-app] to simplif
 			- [import-csvs-to-table](#import-csvs-to-table)
 - [User Manual](#user-manual)
 	- [Basic Concepts](#basic-concepts)
-	- [Entities](#entities)
-		- [Device](#device)
-		- [Location](#location)
-		- [Device Type](#device-type)
-		- [Deployment](#deployment)
 		- [UUID](#uuid)
 		- [UUID Short-codes](#uuid-short-codes)
 		- [Check In and Check Out](#check-in-and-check-out)
+	- [Entities](#entities)
+		- [Device](#device)
+		- [Device Type](#device-type)
+		- [Location](#location)
+		- [Deployment](#deployment)
 		- [Device status](#device-status)
 			- [unknown](#unknown)
 			- [available](#available)
@@ -65,7 +65,7 @@ It can be used with it's companion iOs [scanner application][ios-app] to simplif
 			- [Check In Devices](#check-in-devices)
 			- [Location Devices](#location-devices)
 	- [Legacy Grunt Tasks](#legacy-grunt-tasks)
-			- [db:manage:*](#dbmanage)
+			- [db:manage:* task](#dbmanage-task)
 
 <!-- /TOC -->
 
@@ -320,7 +320,7 @@ sails>
 ### Grunt Tasks
 
 There are several custom grunt tasks:
-* [menagerie:*][#menagerie-1]
+* [menagerie:*][#menagerie-task]
 * [db:manage:*][#dbmanage] (legacy)
 
 Under the hood both tasks load Sails configuration, so we can reuse the same _connection_ options without having to duplicate them in the _tasks/config_ directory.
@@ -337,7 +337,7 @@ To create a token:
 envset development -- grunt menagerie:token:create --userid=3
 ```
 
-#### menagerie:*
+#### menagerie:* task
 
 `menagerie:*` provides the following tasks:
 
@@ -495,38 +495,6 @@ This manual will help you start using with Menagerie.
 
 ## Basic Concepts
 
-## Entities
-
-Entities have an universally unique identifier UUID. Menagerie creates a QR code for Devices and Locations upon record creation.
-
-The main entities in Menagerie are:
-
-* Device
-* DeviceType
-* Location
-* Deployment
-
-### Device
-
-A Device represents any instance of a device that you want to track using Menagerie. It could be an instance of a iBeacon.
-
-Devices have an universally unique identifier UUID.
-
-### Location
-A Location is any physical space in which we want to deploy or store devices.
-
-Locations have a _weight_ index property which more or less maps to:
-* `100` -> Building
-* `200` -> Floor
-* `300` -> Area/Space
-* `400` -> Room
-
-### Device Type
-A device type represents a type or class of device you want to track in Menagerie, like an iBeacon or Raspberry Pi.
-
-### Deployment
-A deployment is a group of devices in a location for a period of time.
-
 ### UUID
 Most entities in Menagerie have a universally unique identifier or UUID. This is true for Devices, Locations, and Deployments.
 An UUID looks like this `064BED24-886D-4BCA-B734-053DE72C57F7`.
@@ -544,6 +512,68 @@ There are two main actions you will do over and over in Menagerie: checking out 
 Checking out a device means that we are removing the device from the pool of available devices. You would do this after provisioning a device to a Deployment and once it's actually deployed in the field.
 
 Checking in a device means that you are adding a device back to the pool of available devices, it will be available by default however the device might be broken so you might want to check it in with a state of `broken`.
+
+## Entities
+
+Entities have an universally unique identifier UUID. Menagerie creates a QR code for Devices and Locations upon record creation.
+
+The main entities in Menagerie are:
+
+* Device
+* DeviceType
+* Location
+* Deployment
+
+### Device
+
+A Device represents any instance of a device that you want to track using Menagerie. It could be an instance of a iBeacon.
+
+Device entities have the following attributes:
+
+* UUID
+* Name
+* Description
+* Device ID
+* Asset Tag
+* Status
+* Type
+* Location
+* Metadata
+
+### Device Type
+A device type represents a type or class of device you want to track in Menagerie, like an iBeacon or Raspberry Pi.
+
+Device Type entities have the following attributes:
+
+* Name
+* Description
+* Label
+* Manufacturer
+* Model
+* Metadata
+
+The metadata attribute stores any JSON data we want. Note it should be valid JSON.
+
+### Location
+A Location is any physical space in which we want to deploy or store devices.
+
+Location entities have the following attributes:
+
+* UUID
+* Name
+* Description
+* Location Type
+* Parent Location
+* Floor plan
+
+Locations have a _weight_ index property which more or less maps to:
+* `100` -> Building
+* `200` -> Floor
+* `300` -> Area/Space
+* `400` -> Room
+
+### Deployment
+A deployment is a group of devices in a location for a period of time.
 
 ### Device status
 A device can be in on of 5 different status:
@@ -618,17 +648,13 @@ We can see that the device type has been created successfully.
 ### Create Locations
 We are now going to create a Location to represent a building, which will have the code name **NY15**.
 
-You can create records individually or import them using `CSV` files.
-
 ![menagerie](./screenshots/location-add.png)
+
+We can see the record after it was created:
 
 ![menagerie](./screenshots/locations-list-after-manual-create.png)
 
-![menagerie](./screenshots/locations-upload-csv.png)
-
-![menagerie](./screenshots/locations-list-after-csv.png)
-
-Locations have a _weight_ index property which more or less maps to:
+Locations have an _index_ property which more or less maps to:
 * `100`: Building
 * `200`: Floor
 * `300`: Area/Space
@@ -637,6 +663,31 @@ Locations have a _weight_ index property which more or less maps to:
 We are going to create a second Location to represent a floor, **NY15-2FL** and assign it's parent property to **NY15**. This second location is maps to the 2nd floor or our sample building.
 
 ![locations-list-sublocation](http://i.imgur.com/Znl43ed.png)
+
+You can also create Location records by importing a `CSV` file.
+
+There is a file with sample data available [here][csv-sample-location]. Here we can see the contents:
+```csv
+"uuid","name","description","index","floorplan","parent"
+"932476A7-D3E0-4336-AB2F-03204606EE9F","DC01","DC Gramercy","100","",""
+"B1205714-E664-4FBC-8D5C-0759A16663B8","NY15-3FL","NYC Chelsea 3rd Floor","200","","57fcfa755351cee4e3a75da5"
+"","NY15-4FL","NYC Chelsea 4th Floor","200","","57fcfa755351cee4e3a75da5"
+"","NY15-5FL","NYC Chelsea 5th Floor","200","57fd388e5f519d3a045621e7","57fcfa755351cee4e3a75da5"
+```
+
+The fields provided in this example are the following:
+
+* uuid: Not if not present one will be auto-generated
+* name
+* description
+* index
+* parent: ID of parent Location
+
+Simply upload the file:
+![menagerie](./screenshots/locations-upload-csv.png)
+
+The records will be created. Note that the records which had a parent ID have been correctly populated.
+![menagerie](./screenshots/locations-list-after-csv.png)
 
 ### Create Devices
 
@@ -739,7 +790,7 @@ If we change the location or a device, or if we check-in a deployed device then 
 
 -------
 ## Legacy Grunt Tasks
-#### db:manage:*
+#### db:manage:* task
 
 `db:manage` handles common **postgres** operations like creating a database user, dropping a database, or executing a custom `sql` file. You can run any of the commands with the `--dry-run` to see the generated `sql` but without executing the query against the database.
 
@@ -820,6 +871,7 @@ io.socket.post('/deployment/check-out',{
 [eapi]: https://console.developers.google.com/apis/library
 
 [csv-sample]:./device_import.csv
+[csv-sample-location]:./location_import.csv
 [ios-app]:https://github.com/jkachmar/menagerie-v2-mobile
 [my-ass-et-tag]:http://www.myassettag.com/
 [uuidgen]:https://linux.die.net/man/1/uuidgen
