@@ -115,7 +115,7 @@ When the git clone is complete- or when the archive is unzipped- you should see 
 We use docker and docker-machine and a basic work-flow of `build` and `up`. You can take a look at the [Dockerfile][dockerfile].
 There is a rule in `.gitignore` to not track under source control the `docker-compose.yml` file, instead there is a [template file][docker-compose-template] from which you need to generate a working `docker-compose.yml`.
 
-Read more about the [template][#docker-compose].
+Read more about the [docker-compose template][#docker-compose].
 
 #### Docker Machine
 
@@ -237,11 +237,15 @@ Go to the [google developer console][gdc], and create a new project.
 
 Configure OAuth consent screen- configure Domain Verification if needed.
 
+![google-creds](./google-creds.png)
+
 Create client [ID credentials][credentials]. Select OAuth 2.0 client IDs option. I created three clients, one for each `docker` environment:
 
 - Web Local
 - Web Staging
 - Web Production
+
+![google-oauth-credentials](./google-oauth-credentials.png)
 
 For each environment, we need to create the following environment variables:
 - NODE_GOOGLE_CLIENT_ID:Credentials screen.
@@ -249,6 +253,8 @@ For each environment, we need to create the following environment variables:
 - NODE_CLIENT_BASE_URL
 
 The first two you get from the Credentials screen, by clicking on the specific client.
+
+![google-oauth-credentials-details](./google-oauth-credentials-details.png)
 
 The third is the base URL the OAuth callbacks should redirect to. IPs are not valid callbacks, `localhost` is a valid domain.
 
@@ -861,7 +867,7 @@ io.socket.post('/deployment/check-out',{
 [slv]: https://github.com/goliatone/slv
 [mongodb-connection]:https://github.com/goliatone/menagerie/blob/deployments/config/connections.js#L43-L49
 [envset-tpl]:https://github.com/goliatone/menagerie/blob/deployments/envset.tpl
-
+[credentials]: https://console.developers.google.com/apis/credentials
 
 [sails-tasks]:http://sailsjs.org/documentation/concepts/assets/default-tasks
 [node-repl]:http://nodejs.org/api/repl.html
