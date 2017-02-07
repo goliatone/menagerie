@@ -1,0 +1,78 @@
+<% include ../_header.ejs %>
+
+<div class="row">
+    <div class="large-12 large-centered small-11 small-centered columns">
+        <h3>Deployments</h3>
+        <%if(status === "Error") { %>
+        <div class="alert alert-danger" role="alert"><%=statusDescription%></div>
+        <% } %>
+        <% if(records.length === 0){%>
+            <p>
+            It seems that you don't have any records to show.
+            </p>
+        <%}else{%>
+        <table>
+          <thead>
+            <tr>
+              <th with="40%">Name</th>
+              <!--th>Description</th-->
+              <th with="20%">Start Date</th>
+              <th with="20%">End Date</th>
+              <th with="40%">Location</th>
+              <th># Devices</th>
+            </tr>
+          </thead>
+          <tbody>
+              <% records.map(function(record){%>
+                  <tr>
+                      <td>
+                          <a href="/<%= nicename %>/<%= record.id %>">
+                              <%= record.name %>
+                          </a>
+                      </td>
+                      <!--td><%= record.description %></td-->
+                      <td><%=: record.startDate | formatDate %></td>
+                      <td><%=: record.endDate | formatDate %></td>
+                      <td>
+                          <% if(record.location){ %>
+                              <a class="location" href="/location/<%= record.location.id %>">
+                                  <%= record.location.name %>
+                              </a>
+                          <% } else { %>
+                              ---
+                          <%}%>
+                      </td>
+                      <td class="device-count" data-typeid="<%= record.id%>">
+                        --
+                      </td>
+                  </tr>
+              <%});%>
+          </tbody>
+        </table>
+        <%}%>
+        <a href="/<%= nicename %>/new" class="button success">
+            <i class="fi-plus size-16"></i> Add Record
+        </a>
+    </div>
+</div>
+
+<script>
+    function countDevicesForType($el, typeId){
+        var url = '/deployment/' + typeId + '/devices/count';
+        console.log('count devices', url);
+        io.socket.get(url, function(re, jwt){
+            re && $el.html(
+                '<a href="/deployment/'+typeId+'/devices">'+re.count+'</a>' +
+                '  <a href="/deployment/'+typeId+'/provision"><i class="fi-page-add"  style="color:#ff4499;"></i></a>'
+            );
+        });
+    }
+    function countDevices(){
+        $('.device-count').each(function(){
+            var id = $(this).data('typeid');
+            countDevicesForType($(this), id);
+        });
+    }
+
+    countDevices()
+</script>

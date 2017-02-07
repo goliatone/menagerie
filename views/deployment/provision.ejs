@@ -1,0 +1,197 @@
+<% include ../_header.ejs %>
+
+<div class="row">
+    <div class="large-12 large-centered small-11 small-centered columns">
+
+        <div class="clearfix">
+            <h3 class="left">Provisioning Devices</h3>
+            <a id="provision-btn" href="/deployment/<%= record.id %>/provision" class="button success tiny radius right">
+                Add Selected Devices
+            </a>
+        </div>
+        <dl class="sub-nav">
+            <dt>Filter:</dt>
+            <dd class="active-implement"><a href="<%= req.fullUrl %>">All</a></dd>
+        </dl>
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th width="20%">UUID</th>
+                    <!--th width="150">Name</th-->
+                    <!--th>Model</th-->
+                    <th width="12%">Asset Tag</th>
+                    <th width="12%">Device Id</th>
+                    <!--th>Description</th-->
+                    <th width="30%">Location</th>
+                    <th width="15%">Type</th>
+                    <th width="15%">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% records.map(function(record){%>
+                    <tr id="record-<%= record.id %>">
+                        <td>
+                            <input class="selected-record" type="checkbox">
+                        </td>
+                        <td class="overflow overflow-ellipsis">
+                            <a href="/device/<%= record.id %>">
+                                <%= record.uuid %>
+                            </a>
+                        </td>
+                        <!--td>
+                            <%= record.name %>
+                        </td-->
+                        <!--td>
+                            <%= record.type ? record.type.model : '---' %>
+                        </td-->
+                        <td>
+                            <%= record.assetTag %>
+                        </td>
+                        <td>
+                            <%= record.deviceId ? record.deviceId : '---' %>
+                        </td>
+                        <!--td>
+                            <%= record.description %>
+                        </td-->
+                        <td>
+                            <% if(record.location){ %>
+                                <a class="location" href="/location/<%= record.location.id %>">
+                                    <%= record.location.name %>
+                                </a>
+                            <% } else { %>
+                                ---
+                            <%}%>
+                        </td>
+                        <td>
+                            <%= record.type ? record.type.name : '---' %>
+                        </td>
+                        <td>
+                            <%= record.status %>
+                        </td>
+                    </tr>
+                    <%});%>
+            </tbody>
+        </table>
+        <ul id="table-pagination" class="pagination" role="menubar">
+        </ul>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+
+$('#provision-btn').click(function(e){
+    e.preventDefault();
+    //TODO: Change!!!
+    var endpoint = 'http://localhost:9090/deployment/57e16acb1743d1083ee8bab8/provision';
+    var payload = {ids: getIDS()};
+    io.socket.post(location.href, payload, function(res, jwt){
+        updateUI();
+        console.log('res', res);
+        console.log('jwt', jwt);
+    });
+});
+
+function getIDS(){
+    var ids = [], id;
+    var records = $('input:checked').parent().closest('tr');
+    records.map(function(i, record){
+        var id = $(record).attr('id');
+        id = (id || '').replace('record-', '');
+        ids.push(id);
+    });
+    return ids;
+}
+
+function updateUI(){
+    location.href = location.href;
+}
+
+function populateFilters(name, selector){
+    io.socket.get('/' + name, function(data, jwres){
+        console.log(data)
+        function getId(id){
+            if(typeof id === 'string') return '"' + id + '"';
+            return id;
+        }
+        data = data || {records:[]};
+        data.records.map(function(record){
+            var value = '<dd><a href=\'<%= req.fullUrl %>?where={"type":' + getId(record.id);
+            value += '}\'>'+ record.name+'</a></dd>'
+            $(selector).append(value);
+        });
+    });
+}
+populateFilters('devicetype', '.sub-nav');
+
+/*
+ * Pagination
+*/
+
+function buildPagination(resource, criteria){
+
+    if(typeof criteria === 'object') criteria = JSON.stringify(criteria.where);
+    var url = ('/' + resource + '/count') + (criteria ? '?where=' + criteria : '');
+    console.log('CRITERIA', url);
+    io.socket.get(url, function(data){
+        console.log('Pagination count', data);
+
+        var previous = '<li class="arrow"><a href="#LINK#">&laquo; Previous</a></li>',
+            next = '<li class="arrow"><a href="#LINK#">Next &raquo;</a></li>'
+
+        if(data.count){
+            var query = getQueryString(),
+                cursor = parseInt(query.skip) || 0,
+                step = data.step,
+                total = data.count / step,
+                buffer = [],
+                index = 0,
+                pages = '';
+
+            if(data.count < step) return;
+
+            for(var i = 0; i < total; i++){
+                index = i * step;
+                buffer.push('<li' + (index === cursor ? ' class="current"' : '') + '><a href="?skip=' + index + '">' + (i + 1) + '</a></li>');
+            }
+
+            //TODO: we should have a window around the current item.
+            if(buffer.length > 20){
+                buffer = (buffer.slice(0, 5)).concat(buffer.slice(-5));
+                buffer.splice(5, 0, '<li class="unavailable" aria-disabled="true"><a href="">&hellip;</a></li>');
+            }
+
+            pages = buffer.join('');
+
+
+            if(cursor > 0){
+                //TODO: need to include criteria here
+                previous = previous.replace('#LINK#', '?skip=' + (cursor - step));
+                pages = previous + pages;
+            }
+            if(cursor < data.count){
+                //TODO: need to include criteria here
+                next = next.replace('#LINK#', '?skip=' + (cursor + step));
+                pages += next;
+            }
+
+
+            $('#table-pagination').html(pages);
+        }
+    });
+}
+
+buildPagination('device', <%- JSON.stringify(criteria) %>);
+
+function getQueryString() {
+    var result = {}, queryString = location.search.slice(1),
+        re = /([^&=]+)=([^&]*)/g, m;
+
+    while (m = re.exec(queryString)) {
+        result[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+    }
+
+   return result;
+}
+</script>

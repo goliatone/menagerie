@@ -1,0 +1,157 @@
+<% include ../_header.ejs %>
+<% include ../_file-upload.ejs %>
+
+<div class="content row">
+    <div class="large-12 large-centered small-11 small-centered columns">
+        <div class="clearfix">
+            <h3 class="left">Deployed Devices</h3>
+            <a href="/deployment/<%= deploymentId %>" class="button info tiny radius right">Back To Deployment</a>
+        </div>
+        <dl class="sub-nav">
+            <dt>Filter:</dt>
+            <dd class="active-implement"><a href="/<%= nicename %>">All</a></dd>
+        </dl>
+        <table>
+            <thead>
+                <tr>
+                    <th width="350">UUID</th>
+                    <th width="150">Location</th>
+                    <th width="150">State</th>
+                    <th width="150">QR Code</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% records.map(function(record){%>
+                    <tr id="record-<%= record.id %>">
+                        <td>
+                            <a href="/device/deployed/<%= record.id %>">
+                                <%= record.uuid %>
+                            </a>
+                        </td>
+                        <td>
+                            <% if(record.location){ %>
+                                <a class="location" href="/location/<%= record.location.id %>">
+                                    <%= record.location.name %>
+                                </a>
+                            <% } else { %>
+                                ---
+                            <%}%>
+                        </td>
+
+                        <td>
+                            <span class="label <%=: record.state | deviceStateLabel %> radius">
+                                <%= record.state %>
+                            </span>
+                        </td>
+                        <td><img class="device qr-code" src="/images/qrs/<%=record.uuid%>.png" /></td>
+                    </tr>
+                    <%});%>
+            </tbody>
+        </table>
+        <ul id="table-pagination" class="pagination" role="menubar">
+        </ul>
+    </div>
+</div>
+<script type="text/javascript">
+function populateFilters(name, selector){
+    io.socket.get('/' + name, function(data, jwres){
+        console.log(data)
+        function getId(id){
+            if(typeof id === 'string') return '"' + id + '"';
+            return id;
+        }
+        data = data || {records:[]};
+        data.records.map(function(record){
+            var value = '<dd><a href=\'/<%= nicename %>?where={"type":' + getId(record.id);
+            value += '}\'>'+ record.name+'</a></dd>'
+            $(selector).append(value);
+        });
+    });
+}
+populateFilters('devicetype', '.sub-nav');
+
+io.socket.on('/things/pair/true', function(payload){
+    var context = '#record-' + payload.device.id;
+    var selector = 'a.location';
+    var href = '/location/' + payload.location.id;
+
+    console.log('THINGS UPDATED!', payload);
+    console.log('THINGS UPDATED!', selector, context, href);
+
+    $(selector, context).attr('href', href);
+    $(selector, context).html(payload.location.name + ': ' + payload.location.description);
+});
+
+function buildPagination(resource, criteria){
+
+    if(typeof criteria === 'object'){
+        criteria = JSON.stringify(criteria.where);
+    }
+    var query = getQueryString();
+
+    //TODO: INCLUDE limit!!
+    var url = ('/' + resource + '/count') + (criteria ? '?where=' + criteria : '');
+    if(query.limit) url += '&limit=' + query.limit;
+
+    console.log('CRITERIA %s URL %s', criteria, url);
+
+    io.socket.get(url, function(data, jwt){
+        console.log('HERE', data, jwt);
+
+        var previous = '<li class="arrow"><a href="#LINK#">&laquo; Previous</a></li>',
+            next = '<li class="arrow"><a href="#LINK#">Next &raquo;</a></li>'
+
+        if(data.count){
+            var cursor = parseInt(query.skip) || 0,
+                step = data.step,
+                total = data.count / step,
+                buffer = [],
+                index = 0,
+                pages = '';
+
+            if(data.count < step) return;
+
+            for(var i = 0; i < total; i++){
+                index = i * step;
+                buffer.push('<li' + (index === cursor ? ' class="current"' : '') + '><a href="?skip=' + index + '">' + (i + 1) + '</a></li>');
+            }
+
+            //TODO: we should have a window around the current item.
+            if(buffer.length > 20){
+                buffer = (buffer.slice(0, 5)).concat(buffer.slice(-5));
+                buffer.splice(5, 0, '<li class="unavailable" aria-disabled="true"><a href="">&hellip;</a></li>');
+            }
+
+            pages = buffer.join('');
+
+
+            if(cursor > 0){
+                //TODO: need to include criteria here
+                previous = previous.replace('#LINK#', '?skip=' + (cursor - step));
+                pages = previous + pages;
+            }
+            if(cursor < data.count){
+                //TODO: need to include criteria here
+                next = next.replace('#LINK#', '?skip=' + (cursor + step));
+                pages += next;
+            }
+
+
+            $('#table-pagination').html(pages);
+        }
+    });
+}
+
+buildPagination('deployment/<%= deploymentId %>/devices', <%- JSON.stringify(criteria) %>);
+
+function getQueryString() {
+  var result = {}, queryString = location.search.slice(1),
+      re = /([^&=]+)=([^&]*)/g, m;
+
+  while (m = re.exec(queryString)) {
+    result[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+  }
+
+  return result;
+}
+</script>

@@ -4,21 +4,20 @@ menagerie:
   command: /opt/menagerie/node_modules/.bin/pm2 start app.js --name "menagerie" --no-daemon
 {% if NODE_ENV === 'development' %}
   links:
-     - postgres
+     - mongo
 {% endif %}
   environment:
     - DEBUG={{NODE_DEBUG}}
     - NODE_ENV={{NODE_ENV}}
     - NODE_CLIENT_BASE_URL={{NODE_CLIENT_BASE_URL}}
-    - GOOGLE_CLIENT_ID={{GOOGLE_CLIENT_ID}}
-    - GOOGLE_CLIENT_SECRET={{GOOGLE_CLIENT_SECRET}}
-    - POSTGRES_USER={{NODE_POSTGRES_USER}}
-    - POSTGRES_PASSWORD={{NODE_POSTGRES_PSWD}}
+    - NODE_GOOGLE_CLIENT_ID={{NODE_GOOGLE_CLIENT_ID}}
+    - NODE_GOOGLE_CLIENT_SECRET={{NODE_GOOGLE_CLIENT_SECRET}}
+    - NODE_MONGO_PORT={{NODE_MONGO_PORT}}
+    - NODE_MONGO_ENDPOINT={{NODE_MONGO_ENDPOINT}}
+    - NODE_MONGO_USERNAME={{NODE_MONGO_USERNAME}}
+    - NODE_MONGO_PASSWORD={{NODE_MONGO_PASSWORD}}
+    - NODE_MONGO_DATABASE={{NODE_MONGO_DATABASE}}
     - NODE_NEWRELIC_KEY={{NODE_NEWRELIC_KEY}}
-    - NODE_POSTGRES_USER={{NODE_POSTGRES_USER}}
-    - NODE_POSTGRES_PSWD={{NODE_POSTGRES_PSWD}}
-    - NODE_POSTGRES_DATABASE={{NODE_POSTGRES_DATABASE}}
-    - NODE_POSTGRES_ENDPOINT={{NODE_POSTGRES_ENDPOINT}}
     - NODE_HONEYBADGER_KEY={{NODE_HONEYBADGER_KEY}}
     - NODE_AWS_ACCESS_KEY_ID={{NODE_AWS_ACCESS_KEY_ID}}
     - NODE_AWS_SECRET_ACCESS_KEY={{NODE_AWS_SECRET_ACCESS_KEY}}
@@ -26,13 +25,18 @@ menagerie:
   log_opt:
       max-size: "1g"
       max-file: "4"
+{% if NODE_ENV === 'development' %}
   ports:
     - "80:1337"
+{% else %}
+  ports:
+    - "9090:9090"
+{% endif %}
 {% if NODE_ENV === 'development' %}
-postgres:
-    image: postgres
+mongo:
+    image: mongo
     ports:
-        - "5432:5432"
+        - "27017:27017"
     log_opt:
         max-size: "1g"
         max-file: "4"

@@ -52,6 +52,8 @@ module.exports.routes = {
     'GET /logout': 'AuthController.logout',
     'GET /register': 'AuthController.register',
 
+    'GET /health': 'SiteController.health',
+
     'POST /auth/local': 'AuthController.callback',
     'POST /auth/local/:action': 'AuthController.callback',
 
@@ -69,20 +71,45 @@ module.exports.routes = {
     'POST /thing/register/:id': 'ThingController.register',
     'POST /thing/:typeName/:id': 'ThingController.register',
     'POST /thing/:typeName/:id/status': 'ThingController.status',
+    'GET /thing/find/:term': 'ThingController.find',
 
+    /******************************************************
+     * Location
+     ******************************************************/
     //TODO: We should be able to include this on blueprints
     'GET /location/count': 'LocationController.count',
 
     'GET /location': 'LocationController.findall',
     'GET /location/new': 'LocationController.new',
     'GET /location/find': 'LocationController.showFind',
-    'GET /location/reset': 'LocationController.resetData',
+    // 'GET /location/reset': 'LocationController.resetData',
     'GET /location/:id': 'LocationController.find',
+
+    'GET /location/:id/devices': 'LocationController.devices',
+
     'POST /location': 'LocationController.create',
     'POST /location/update': 'LocationController.update',
     // 'PUT /location': 'LocationController.update',
     'DELETE /location': 'LocationController.delete',
 
+    /******************************************************
+     * DeployedDevice
+     ******************************************************/
+    'GET /device/deployed': 'DeployedDeviceController.findall',
+    'GET /deployment/:deployment/devices': 'DeployedDeviceController.findall',
+    'GET /device/deployed/new': 'DeployedDeviceController.new',
+    'GET /device/deployed/find': 'DeployedDeviceController.showFind',
+    'GET /device/deployed/:id': 'DeployedDeviceController.find',
+    'POST /device/deployed': 'DeployedDeviceController.create',
+    'POST /deployeddevice/update': 'DeployedDeviceController.update',
+    'DELETE /device/deployed': 'DeployedDeviceController.delete',
+
+    'GET /device/deployed/count': 'DeployedDeviceController.count',
+    'GET /deployment/:deployment/devices/count': 'DeployedDeviceController.countDevices',
+
+    /******************************************************
+     * Device
+     ******************************************************/
     //TODO: We should be able to include this on blueprints
     'GET /device/count': 'DeviceController.count',
 
@@ -93,32 +120,89 @@ module.exports.routes = {
     'GET /device/:id': 'DeviceController.find',
     'POST /device': 'DeviceController.create',
     'PUT /device': 'DeviceController.update',
+
+    //Currently we have two
     'POST /device/update': 'DeviceController.update',
+    'POST /device/:id': 'DeviceController.update',
+
     'DELETE /device': 'DeviceController.delete',
 
+    /******************************************************
+     * DeviceType
+     * TODO: should it be relative to device?
+     *  /device/type/count
+     *  /device/type/new
+     *  /device/type/find
+     *  /device/type/:id
+     *  /device/type/update
+     ******************************************************/
     //TODO: We should be able to include this on blueprints
     'GET /devicetype/count': 'DeviceTypeController.count',
 
     'GET /devicetype': 'DeviceTypeController.findall',
     'GET /devicetype/new': 'DeviceTypeController.new',
     'GET /devicetype/find': 'DeviceTypeController.showFind',
-    'GET /devicetype/reset': 'DeviceTypeController.resetData',
+    // 'GET /devicetype/reset': 'DeviceTypeController.resetData',
     'GET /devicetype/:id': 'DeviceTypeController.find',
     'POST /devicetype': 'DeviceTypeController.create',
     'POST /devicetype/update': 'DeviceTypeController.update',
     // 'PUT /devicetype': 'DeviceTypeController.update',
     'DELETE /devicetype': 'DeviceTypeController.delete',
 
+    /******************************************************
+     * Configuration
+     ******************************************************/
+    'GET /device/:term/configuration': 'ConfigurationController.deviceConfig',
     //TODO: We should be able to include this on blueprints
     'GET /configuration/count': 'ConfigurationController.count',
 
     'GET /configuration': 'ConfigurationController.findall',
     'GET /configuration/new': 'ConfigurationController.new',
     'GET /configuration/find': 'ConfigurationController.showFind',
-    'GET /configuration/reset': 'ConfigurationController.resetData',
+    // 'GET /configuration/reset': 'ConfigurationController.resetData',
     'GET /configuration/:id': 'ConfigurationController.find',
     'POST /configuration': 'ConfigurationController.create',
     'POST /configuration/update': 'ConfigurationController.update',
     // 'PUT /devicetype': 'ConfigurationController.update',
     'DELETE /configuration': 'ConfigurationController.delete',
+
+    /******************************************************
+     * Files
+     ******************************************************/
+    //TODO: We should be able to include this on blueprints
+    'GET /files/count': 'FilesController.count',
+
+    'GET /files': 'FilesController.findall',
+    'GET /files/new': 'FilesController.new',
+    'GET /files/find': 'FilesController.showFind',
+    // 'GET /files/reset': 'FilesController.resetData',
+    'GET /files/:id': 'FilesController.find',
+    'POST /files': 'FilesController.create',
+    'POST /files/update': 'FilesController.update',
+    'POST /files/upload': 'FilesController.upload',
+    // 'PUT /devicetype': 'ConfigurationController.update',
+    'DELETE /files': 'FilesController.delete',
+
+    /******************************************************
+     * Deployments
+     ******************************************************/
+    //TODO: We should be able to include this on blueprints
+    'POST /deployment/check-in': 'DeploymentController.checkIn',
+    'POST /deployment/check-out': 'DeploymentController.checkOut',
+    'GET /deployment/check-out': 'DeploymentController.checkOutForm',
+
+    'GET /deployment/:id/floorplan': 'DeploymentController.floorplan',
+
+    'GET /deployment/:id/provision': 'DeploymentController.provision',
+    'POST /deployment/:id/provision': 'DeploymentController.addDevices',
+
+    'GET /deployment/count': 'DeploymentController.count',
+    'GET /deployment': 'DeploymentController.findall',
+    'GET /deployment/new': 'DeploymentController.new',
+    'GET /deployment/find': 'DeploymentController.showFind',
+    'GET /deployment/:id': 'DeploymentController.find',
+    'POST /deployment': 'DeploymentController.create',
+    'POST /deployment/update': 'DeploymentController.update',
+    // 'PUT /devicetype': 'ConfigurationController.update',
+    'DELETE /deployment': 'DeploymentController.delete',
 };

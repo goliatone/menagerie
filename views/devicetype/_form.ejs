@@ -9,6 +9,12 @@
     <label>Label
         <input name="label" type="text" placeholder="Label"  value="<%= record.label ? record.label : '' %>"/>
     </label>
+    <label>Manufacturer
+        <input name="manufacturer" type="text" placeholder="Manufacturer"  value="<%= record.manufacturer ? record.manufacturer : '' %>"/>
+    </label>
+    <label>Model
+        <input name="model" type="text" placeholder="Model"  value="<%= record.model ? record.model : '' %>"/>
+    </label>
     <label>Metadata
         <textarea name="metadata"><%= record.metadata ? JSON.stringify(record.metadata) : '' %></textarea>
     </label>

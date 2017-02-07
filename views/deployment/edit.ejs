@@ -1,0 +1,16 @@
+<% include ../_header.ejs %>
+
+<div class="content row">
+    <div class="large-12 large-centered small-11 small-centered columns">
+        <div class="clearfix">
+            <h3 class="left">Update Deployment</h3>
+            <a href="/<%= nicename %>/<%= record.id %>/provision" class="button tiny radius right">Provision</a>
+        </div>
+
+
+        <%if(status === "Error") { %>
+        <div class="alert alert-danger" role="alert"><%=statusDescription%></div>
+        <% } %>
+        <% include _form.ejs %>
+    </div>
+</div>

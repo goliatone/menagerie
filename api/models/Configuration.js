@@ -31,7 +31,7 @@ var Configuration = {
             type: 'string'
         },
         device: {
-            model: 'device'
+            model: 'deployeddevice'
         },
         data: {
             type: 'json'

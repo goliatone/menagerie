@@ -20,7 +20,7 @@ var Device = {
         uuid: {
             type: 'string',
             // primaryKey: true,
-            required: true
+            // required: true
         },
         /**
          * All devices carry an asset tag
@@ -36,13 +36,8 @@ var Device = {
         * It should be unique within a device type
         * but not necessarily within a device instance.
         */
-        alias: {
-            type: 'string'
-        },
-        manufacturer: {
-            type: 'string'
-        },
-        model: {
+       //alias
+        deviceId: {
             type: 'string'
         },
         name: {
@@ -54,7 +49,23 @@ var Device = {
         status: {
             type: 'string',
             defaultsTo:'unknown',
-            enum: ['unknown', 'not_inuse', 'inuse', 'online', 'offline', 'unavailable', 'operative']
+            enum: [
+                //initial state, as entered into the system
+                //auto: default
+                'unknown',
+                //We make it available when we register the
+                //device into a warehousing location
+                //manual:√ Phone app ingestion | Web panel
+                'available',
+                //when it get's assigned to a deployment
+                //auto:Deployment Process
+                'reserved',
+                //when it gets deployed, UPDATE LOCATION
+                //auto:√ Phone app process | Web panel
+                'deployed',
+                //manually set to broken
+                'broken'
+            ]
         },
         type: {
             model:'deviceType'
@@ -62,12 +73,19 @@ var Device = {
         location: {
             model: 'location'
         },
-        configuration: {
-            model: 'configuration'
+        //TODO: we might want to move this to DeployedDevice
+        coordinates:{
+            type: 'json'
         },
         metadata: {
             type:'json'
         }
+    },
+    beforeCreate: function(record, done){
+        if(!record || !record.uuid){
+            record.uuid = BaseModel.generateUUID();
+        }
+        done();
     },
     afterCreate: function(record, done){
 
@@ -75,13 +93,17 @@ var Device = {
             console.error('THIS SHOULD NEVER HAPPEN. We cannot have a Location instance without an UUID');
             return done();
         }
-        
+
         var url = record.uuid,
             filename = record.uuid;
 
         BarcodeService.createQRCode(url, filename).finally(function(){
             done();
         });
+    },
+    beforeUpdate: function(values, done){
+        if(values.location) values.coordinates = null;
+        done();
     }
 };
 

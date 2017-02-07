@@ -3,7 +3,29 @@
 
 <div class="content row">
     <div class="large-12 large-centered small-11 small-centered columns">
-        <h3>Devices</h3>
+        <% if(records.length === 0){%>
+            <h3>Devices</h3>
+            <p>
+            It seems that you don't have any records to show.
+            </p>
+        <%}else{%>
+            <div class="clearfix">
+                <div class="row">
+                    <div class="large-9 columns">
+                        <h3 class="left">Devices</h3>
+                    </div>
+                    <div class="large-2 columns">
+                        <a href="/<%= nicename %>/new" class="button success tiny radius right">
+                            Add Record
+                        </a>
+                    </div>
+                    <div class="large-1 columns">
+                        <a href="#" data-reveal-id="csv-modal" class="button tiny radius right">
+                            CSV
+                        </a>
+                    </div>
+                </div>
+            </div>
         <dl class="sub-nav">
             <dt>Filter:</dt>
             <dd class="active-implement"><a href="/<%= nicename %>">All</a></dd>
@@ -11,14 +33,14 @@
         <table>
             <thead>
                 <tr>
-                    <th width="350">UUID</th>
-                    <!--th width="150">Name</th-->
+                    <th width="350">Name</th>
                     <th width="150">Model</th>
                     <th width="150">Asset Tag</th>
-                    <th width="150">Alias</th>
+                    <th width="150">Device Id</th>
                     <th width="250">Description</th>
                     <th width="150">Location</th>
                     <th width="150">Type</th>
+                    <th width="150">Status</th>
                     <th width="150">QR Code</th>
                     <th width="150"></th>
                 </tr>
@@ -28,20 +50,20 @@
                     <tr id="record-<%= record.id %>">
                         <td>
                             <a href="/<%= nicename %>/<%= record.id %>">
-                                <%= record.uuid %>
+                                <%= record.name %>
                             </a>
                         </td>
                         <!--td>
                             <%= record.name %>
                         </td-->
                         <td>
-                            <%= record.model %>
+                            <%= record.type ? record.type.model : '---' %>
                         </td>
                         <td>
-                            <%= record.assetTag %>
+                            <%= record.assetTag ? record.assetTag : '---' %>
                         </td>
                         <td>
-                            <%= record.alias ? record.alias : '---' %>
+                            <%= record.deviceId ? record.deviceId : '---' %>
                         </td>
                         <td>
                             <%= record.description %>
@@ -58,10 +80,19 @@
                         <td>
                             <%= record.type ? record.type.name : '---' %>
                         </td>
+                        <td>
+                            <span class="label <%=: record.status | deviceStatusLabel %> radius">
+                                <%= record.status %>
+                            </span>
+                        </td>
                         <td><img class="device qr-code" src="/images/qrs/<%=record.uuid%>.png" /></td>
                         <td>
-                            <a href="#" class="">Edit</a>
-                            <a href="#" class="">Delete</a>
+                            <a href="/<%= nicename %>/<%= record.id %>" class="">
+                                <i class="fi-page-edit"></i>
+                            </a>
+                            <a href="#" class="">
+                                <i class="fi-page-delete"  style="color:#ff4499;"></i>
+                            </a>
                         </td>
                     </tr>
                     <%});%>
@@ -69,23 +100,32 @@
         </table>
         <ul id="table-pagination" class="pagination" role="menubar">
         </ul>
-        <a href="/<%= nicename %>/new" class="button success">Add Record</a>
-        <a href="#" data-reveal-id="csv-modal" class="button">CSV</a>
+        <%}%>
+        <a href="/<%= nicename %>/new" class="button success">
+            <i class="fi-plus size-16"></i> Add Record
+        </a>
+        <a href="#" data-reveal-id="csv-modal" class="button">
+            <i class="fi-upload size-16"></i> CSV
+        </a>
     </div>
 </div>
 <script type="text/javascript">
-function populateOption(name, selector){
+function populateFilters(name, selector){
     io.socket.get('/' + name, function(data, jwres){
         console.log(data)
+        function getId(id){
+            if(typeof id === 'string') return '"' + id + '"';
+            return id;
+        }
         data = data || {records:[]};
         data.records.map(function(record){
-            var value = '<dd><a href=\'/<%= nicename %>?where={"type":' + record.id;
+            var value = '<dd><a href=\'/<%= nicename %>?where={"type":' + getId(record.id);
             value += '}\'>'+ record.name+'</a></dd>'
             $(selector).append(value);
         });
     });
 }
-populateOption('devicetype', '.sub-nav');
+populateFilters('devicetype', '.sub-nav');
 
 io.socket.on('/things/pair/true', function(payload){
     var context = '#record-' + payload.device.id;
@@ -99,8 +139,11 @@ io.socket.on('/things/pair/true', function(payload){
     $(selector, context).html(payload.location.name + ': ' + payload.location.description);
 });
 
-function buildPagination(){
-    io.socket.get('/device/count', function(data){
+function buildPagination(resource, criteria){
+    console.log('criteria', criteria);
+    if(typeof criteria === 'object') criteria = JSON.stringify(criteria);
+    var url = ('/' + resource + '/count') + (criteria ? '?' + criteria : '');
+    io.socket.get(url, function(data){
         console.log('HERE', data);
         var previous = '<li class="arrow"><a href="#LINK#">&laquo; Previous</a></li>',
             next = '<li class="arrow"><a href="#LINK#">Next &raquo;</a></li>'
@@ -131,11 +174,13 @@ function buildPagination(){
 
 
             if(cursor > 0){
-                previous = previous.replace('#LINK#', '/device?skip=' + (cursor - step));
+                //TODO: need to include criteria here
+                previous = previous.replace('#LINK#', '?skip=' + (cursor - step));
                 pages = previous + pages;
             }
             if(cursor < data.count){
-                next = next.replace('#LINK#', '/device?skip=' + (cursor + step));
+                //TODO: need to include criteria here
+                next = next.replace('#LINK#', '?skip=' + (cursor + step));
                 pages += next;
             }
 
@@ -144,7 +189,7 @@ function buildPagination(){
         }
     });
 }
-buildPagination();
+buildPagination('device', <%= locals.criteria %>);
 
 function getQueryString() {
   var result = {}, queryString = location.search.slice(1),

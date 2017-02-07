@@ -1,3 +1,4 @@
+'use strict';
 /**
  * HTTP Server Settings
  * (sails.config.http)
@@ -21,8 +22,8 @@ module.exports.http = {
   *                                                                           *
   ****************************************************************************/
 
-  // middleware: {
-
+  middleware: {
+    custom: true
   /***************************************************************************
   *                                                                          *
   * The order in which middleware should be run for HTTP request. (the Sails *
@@ -71,8 +72,27 @@ module.exports.http = {
 
     // bodyParser: require('skipper')
 
-  // },
+  },
+    customMiddleware: function(app){
+        /*
+        * Serve custom static directory.
+        */
+        var express = require('express');
+        var staticpath = require('path').join(sails.config.paths.tmp, 'uploads');
+        app.use('/uploads', express.static(staticpath));
 
+        /*
+         *
+         */
+        app.use(function(req, res, next){
+            if(!res.locals) res.locals = {};
+            
+            var requestedUrl = req.protocol + '://' + req.get('Host') + req.originalUrl;
+            req.requestedUrl = res.requestedUrl = requestedUrl;
+            req.fullUrl = res.fullUrl = req.protocol + '://' + req.get('Host') + req.url;
+            next();
+        });
+    }
   /***************************************************************************
   *                                                                          *
   * The number of seconds to cache flat files on disk being served by        *

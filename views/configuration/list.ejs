@@ -4,6 +4,11 @@
 <div class="content row">
     <div class="large-12 large-centered small-11 small-centered columns">
         <h3>Configurations</h3>
+        <% if(records.length === 0){%>
+            <p>
+            It seems that you don't have any records to show.
+            </p>
+        <%}else{%>
         <dl class="sub-nav">
             <dt>Filter:</dt>
             <dd class="active-implement"><a href="/<%= nicename %>">All</a></dd>
@@ -11,11 +16,11 @@
         <table>
             <thead>
                 <tr>
-                    <th width="150">Name</th>
-                    <th width="150">Version</th>
-                    <th width="150">Description</th>
-                    <th width="250">Device</th>
-                    <th width="250">Actions</th>
+                    <th width="30%">Name</th>
+                    <th width="20%">Version</th>
+                    <th width="20%">Description</th>
+                    <th width="30%">Device</th>
+                    <th width="25%">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,21 +40,28 @@
                         </td>
                         <td>
                             <% if(record.device){ %>
-                                <a class="device" href="/location/<%= record.device.id %>">
-                                    <%= record.device.name %>: <%= record.device.description %>
+                                <a class="device" href="/device/deployed/<%= record.device.id %>">
+                                    <%= record.device.nicename %>
                                 </a>
                             <% } else { %>
                                 ---
                             <%}%>
                         </td>
                         <td>
-                            <a href="/<%= nicename %>/<%= record.id %>" class="">Edit</a>
-                            <a href="/<%= nicename %>/delete/<%= record.id %>" class="">Delete</a>
+                            <a href="/<%= nicename %>/<%= record.id %>" class="">
+                                <i class="fi-page-edit"></i>
+                            </a>
+                            <a href="#" class="">
+                                <i class="fi-page-delete"  style="color:#ff4499;"></i>
+                            </a>
                         </td>
                     </tr>
                     <%});%>
             </tbody>
         </table>
-        <a href="/<%= nicename %>/new" class="button success">Add Record</a>
+        <%}%>
+        <a href="/<%= nicename %>/new" class="button success">
+            <i class="fi-plus size-16"></i> Add Record
+        </a>
     </div>
 </div>

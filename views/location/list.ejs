@@ -1,15 +1,47 @@
 <% include ../_header.ejs %>
+<% include ../_file-upload.ejs %>
 
 <div class="content row">
     <div class="large-12 large-centered small-11 small-centered columns">
-        <h3>Locations</h3>
+
+        <% if(records.length === 0){%>
+            <h3>Locations</h3>
+            <p>
+            It seems that you don't have any records to show.
+            </p>
+        <%}else{%>
+        <div class="clearfix">
+            <div class="row">
+                <div class="large-9 columns">
+                    <h3 class="left">Locations</h3>
+                </div>
+                <div class="large-2 columns">
+                    <a href="/<%= nicename %>/new" class="button success tiny radius right">
+                        Add Record
+                    </a>
+                </div>
+                <div class="large-1 columns">
+                    <a href="#" data-reveal-id="csv-modal" class="button tiny radius right">
+                        CSV
+                    </a>
+                </div>
+            </div>
+        </div>
+        <dl class="sub-nav">
+            <dt>Filter:</dt>
+            <dd class="active-implement"><a href="/<%= nicename %>">All</a></dd>
+            <dd><a href='/<%= nicename %>?where={"index":100}'>Buildings</a></dd>
+            <dd><a href='/<%= nicename %>?where={"index":200}'>Floors</a></dd>
+            <dd><a href='/<%= nicename %>?where={"index":300}'>Areas/Spaces</a></dd>
+            <dd><a href='/<%= nicename %>?where={"index":400}'>Other</a></dd>
+        </dl>
         <table>
           <thead>
             <tr>
-              <th width="400">UUID</th>
-              <th>Name</th>
-              <th width="250">Description</th>
-              <th width="150">QR Code</th>
+              <th width="25%">Name</th>
+              <th width="25%">Parent</th>
+              <th width="40%">Description</th>
+              <th width="20%">QR Code</th>
             </tr>
           </thead>
           <tbody>
@@ -17,10 +49,16 @@
                   <tr>
                       <td>
                           <a href="/<%= nicename %>/<%= record.id %>">
-                              <%= record.uuid %>
+                              <%= record.name %>
                           </a>
                       </td>
-                      <td><%= record.name %></td>
+                      <td>
+                          <% if(record.parent){%>
+                                <a href="/<%= nicename %>/<%= record.parent.id %>">
+                                    <%= record.parent.name %>
+                                </a>
+                          <%}else{%> --- <%}%>
+                      </td>
                       <td><%= record.description %></td>
                       <td><img class="location qr-code" src="/images/qrs/<%=record.uuid%>.png"/></td>
                   </tr>
@@ -29,13 +67,18 @@
         </table>
         <ul id="table-pagination" class="pagination" role="menubar">
         </ul>
-        <a href="/<%= nicename %>/new" class="button success">Add Record</a>
+        <%}%>
+        <a href="/<%= nicename %>/new" class="button success">
+            <i class="fi-plus size-16"></i> Add Record
+        </a>
+        <a href="#" data-reveal-id="csv-modal" class="button">
+            <i class="fi-upload size-16"></i> CSV
+        </a>
     </div>
 </div>
 <script type="text/javascript">
-function buildPagination(){
-    io.socket.get('/location/count', function(data, jwr){
-        console.log('HERE', data, jwr);
+function buildPagination(endpoint){
+    io.socket.get(endpoint, function(data, jwr){
 
         if(jwr.statusCode > 300){
             console.error(jwr);
@@ -86,7 +129,7 @@ function buildPagination(){
         }
     });
 }
-buildPagination();
+buildPagination('/location/count');
 
 function getQueryString() {
   var result = {}, queryString = location.search.slice(1),

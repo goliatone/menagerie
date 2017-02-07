@@ -15,7 +15,7 @@ var Location = {
         uuid : {
             type: 'string',
             // primaryKey: true,
-            required: true
+            // required: true
         },
         name : {
             type: 'string'
@@ -23,19 +23,64 @@ var Location = {
         description : {
             type: 'string'
         },
+        //Does this make sense here?
         geolocation_lng : {
             type: 'number',
         },
         geolocation_lat : {
             type: 'number',
         },
+        floorplan: {
+            //eventually this will be an image/file
+            model: 'files',
+        },
         devices: {
             collection: 'device',
             via: 'location'
         },
-        sublocation: {
-            model: 'location'
+        deployments: {
+            collection: 'deployment',
+            via: 'location'
+        },
+        sublocations: {
+            collection: 'location',
+            via: 'parent'
+        },
+        //Should we map index to a label?
+        //i.e => 100 building
+        //       200 floor
+        //       300 area/space
+        //       400 room
+        index: {
+            type: 'integer',
+            defaultsTo: 400
+        },
+        parent: {
+            model: 'location',
+            via: 'sublocations'
+        },
+        assignParentLocation: function(parent){
+            var L = sails.models.location;
+            var updates = [
+                L.update({id:this.id}, {parent: parent}),
+                L.update({id: parent}, {sublocation: this.id})
+            ];
+            return Promise.all(updates);
+        },
+        assignSublocation: function(sub){
+            var L = sails.models.location;
+            var updates = [
+                L.update({id: sub}, {parent: this.id}),
+                L.update({id:this.id}, {sublocation: sub}),
+            ];
+            return Promise.all(updates);
         }
+    },
+    beforeCreate: function(record, done){
+        if(!record || !record.uuid){
+            record.uuid = BaseModel.generateUUID();
+        }
+        done();
     },
     afterCreate: function(record, done){
 

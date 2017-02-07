@@ -1,0 +1,15 @@
+<% include ../_header.ejs %>
+
+<div class="content row">
+    <div class="large-12 large-centered small-11 small-centered columns">
+        <div class="clearfix">
+            <h3 class="left">Update Deployed Device</h3>
+            <a href="/deployment/<%= record.deployment.id %>/devices" class="button info tiny radius right">Deployment</a>
+        </div>
+
+        <%if(status === "Error") { %>
+        <div class="alert alert-danger" role="alert"><%=statusDescription%></div>
+        <% } %>
+        <% include _form.ejs%>
+    </div>
+</div>

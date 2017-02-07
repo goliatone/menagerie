@@ -1,8 +1,23 @@
 'use strict';
-
+var isUUID = require('../../lib/isUUID');
 module.exports = {
     status: function(req, res){
         res.send(200);
+    },
+    find: function(req, res){
+        var id = req.param('term');
+
+        return Device.findOne(_getCriteria(id)).populateAll().then(function(result){
+
+            if(!result){
+                return Location.findOne({uuid:{like: id + '%'}}).populateAll().then(function(result){
+                    if(!result) return res.ok({success: false, message: 'no record match'});
+                    res.ok({success: true, type: 'location', result: result});
+                }).catch(res.sendError);
+            }
+
+            res.ok({success: true, type: 'device', result: result});
+        }).catch(res.sendError);
     },
     register: function(req, res){
         //Get the thing type
@@ -68,7 +83,14 @@ module.exports = {
         // }
         var locationUuid = req.param('location'),
             assetTag = req.param('assetTag'),
-            alias = req.param('alias');
+            /*
+             * We renamed the attribute from
+             * "alias" to "deviceId". Some
+             * clients might be sending the old
+             * name.
+             */
+            deviceId = req.param('deviceId');
+            if(!deviceId) deviceId = req.param('alias');
 
         //A) Let's find a location with the given uuid.
         Location.findOne({where:{uuid:locationUuid}}).then(function(location){
@@ -77,7 +99,7 @@ module.exports = {
 
             Device.update({assetTag: assetTag}, {
                 location: location.id,
-                alias: alias
+                deviceId: deviceId
             }).then(function(devices){
                 //TODO: Send valid KO
                 if(!devices || !devices.length) return res.ok({success: false, message: 'assetTag did not match any records'});
@@ -115,4 +137,18 @@ function _getAttributes(src){
     });
 
     return out;
+}
+
+function _getCriteria(id){
+    return {
+        where:{
+            or:
+                [
+                    { id: id},
+                    { uuid:{ like: id + '%' }},
+                    { assetTag: id},
+                    { deviceId: id}
+                ]
+            }
+        };
 }

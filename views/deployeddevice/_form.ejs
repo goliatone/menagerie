@@ -1,0 +1,94 @@
+<form id="menagerie" action="<%= form.action %>" method="<%= form.method %>">
+    <label>UUID
+        <input name="uuid" type="text" placeholder="UUID"
+            value="<%= record.uuid ? record.uuid : 'UUID' %>"
+            required
+            pattern="^[0-9a-fA-F]{8}-?[0-9a-fA-F]{4}-?[0-9a-fA-F]{4}-?[0-9a-fA-F]{4}-?[0-9a-fA-F]{12}$"
+            <% if(form.intent !== 'create'){ %>
+            disabled="disabled"
+            <%}%>
+        />
+
+    <label>Nice Name
+        <input name="nicename" type="text" placeholder="Nice Name" value="<%= record.nicename ? record.nicename : '' %>"/>
+    </label>
+
+    <label>State
+        <select name="state"  value="<%= record.state ? record.state : 'unseen' %>">
+            <option value="unseen">Unseen</option>
+            <option value="added">Added</option>
+            <option value="online">Online</option>
+            <option value="offline">Offline</option>
+        </select>
+    </label>
+    <div class="row">
+        <div class="large-2 small-1 columns">
+            <label>Type
+                <select id="index">
+                    <option value="100" selected>Building</option>
+                    <option value="200">Floor</option>
+                    <option value="300">Area/Space</option>
+                    <option value="400">Room</option>
+                    <option value="500">Other</option>
+                </select>
+            </label>
+        </div>
+        <div class="large-10 small-9 columns">
+            <label>Location
+                <select name="location"  value="<%= record.location ? record.location.id : '' %>">
+                    <% if (!record.location) {%>
+                    <option value="">Not assigned</option>
+                    <% } %>
+                </select>
+            </label>
+        </div>
+    </div>
+    <br/>
+
+<% if(record.id){%>
+<input hidden="true" name="id" value="<%= record.id %>" />
+<%}%>
+
+<button id="submit" class="success expand radius">Send</button>
+</form>
+        <!--code>
+            < % = JSON.stringify(record) % >
+        </code-->
+<script type="text/javascript">
+var $sel = $('#index');
+function populateOption(endpoint, selector){
+    console.log('populateOption', endpoint, selector);
+    io.socket.get('/' + endpoint, function(data, jwres){
+        console.log('selector %s :: %o',selector, data);
+
+        data = data || {records:[]};
+        var $sel = $('[name="' + selector + '"]'),
+            index = 0,
+            active = $sel.attr('value');
+
+        console.log('ACTIVE', active);
+
+        $sel.empty();
+        if(!active) $sel.append('<option selected disabled hidden>Select</option>');
+        data.records.map(function(record){
+            $sel.append('<option value="' + record.id + '">' + record.name + '</option>');
+            if(active === ('' + record.id)) $sel.prop('selectedIndex', index);
+            index++;
+        });
+    });
+}
+
+populateOptionWithIndex(100);
+
+$sel.on('change', function(){
+    var index = $sel.val();
+    populateOptionWithIndex(index);
+});
+
+function populateOptionWithIndex(index){
+    //we want to pull same level
+    populateOption('location?limit=1000&where={"index":' + index + '}', 'location');
+}
+
+$('[name="state"]').val("<%= record.state%>");
+</script>

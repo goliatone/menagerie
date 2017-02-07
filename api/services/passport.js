@@ -147,13 +147,14 @@ passport.connect = function(req, query, profile, next) {
                 }
 
                 // Save any updates to the Passport before moving on
-                passport.save(function(err, passport) {
+                passport.save(function(err) {
                     if (err) {
                         return next(err);
                     }
 
                     // Fetch the user associated with the Passport
-                    User.findOne(passport.user.id, next);
+                    var userid = typeof passport.user === 'object' ? passport.user.id : passport.user;
+                    User.findOne({id: userid}, next);
                 });
             }
         } else {

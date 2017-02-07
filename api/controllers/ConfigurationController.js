@@ -1,3 +1,4 @@
+'use strict';
 /**
  * ConfigurationController
  *
@@ -8,6 +9,32 @@
  var debug = require('debug')('controller:Configuration');
  var extend = require('gextend');
 
- var Controller = {};
+ var Controller = {
+    deviceConfig: function(req, res){
+
+        var term = req.param('term');
+
+        DeployedDevice.findOne({
+            where:{
+                or:[
+                    {id: term},
+                    {uuid: term},
+                ]
+            }
+        }).populateAll().then(function(record){
+            res.ok({
+                type: 'configuration',
+                success: true,
+                result: (record.configuration && record.configuration.data) || {}
+            });
+        }).catch(function(err){
+            sails.log.error('ConfigurationController:deviceConfig');
+            sails.log.error(err.message);
+            sails.log.error(err.stack);
+
+            res.sendError(err);
+        });
+     }
+ };
 
  module.exports = extend({}, BaseController, Controller);

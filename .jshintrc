@@ -33,6 +33,8 @@
     "sails": true,
     "passport": true,
     "Device": true,
+    "Deployment": true,
+    "DeployedDevice": true,
     "Passport": true,
     "User": true,
     "Location": true,

@@ -2,6 +2,13 @@ nav.main-header{
     margin-bottom: 30px;
 }
 
+.logo-holder{
+    margin-left: 20px;
+}
+.logo {
+    width: 32px;
+    color:blue;
+}
 
 img.qr-code{
     width: 60px;
@@ -30,13 +37,13 @@ footer {
     text-align: left;
     margin-left: 20px;
     width: 100%;
+    z-index: -10;
 }
 
 footer .local,
 footer .development {
     color: red;
 }
-
 
 footer .staging {
     color: orange;
@@ -46,10 +53,84 @@ footer .production {
     color: green;
 }
 
-
+input.invalid,
 input:required:invalid, input:focus:invalid {
     border: 1px solid red;
 }
+input.valid,
 input:required:valid {
     border: 1px solid green;
+}
+@-webkit-keyframes pulseBorder {
+  from {
+    border:solid 1px #cccccc;
+  }
+  to {
+    border: 1px solid orange;
+
+  }
+}
+input.validating {
+    -webkit-animation-name: pulseBorder;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: ease;
+    -webkit-animation-direction: alternate;
+    -webkit-animation-duration: 0.5s;
+    text-align:center;
+    border: solid 1px #cccccc;
+}
+
+
+table{
+    width: 100% !important;
+}
+
+.overflow {
+    width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.overflow .clip {
+    text-overflow: clip;
+}
+
+.overflow-ellipsis {
+    text-overflow: ellipsis;
+}
+
+.button.disabled{
+    pointer-events: none;
+    cursor: default;
+}
+.floorplan{
+    width: 100%;
+    max-width: 80rem;
+}
+.floorplan-content {
+    margin-top: 90px;
+}
+/*
+ * hacky :/
+ * configuration button link for device.
+ */
+.bottom-button{
+    margin-top: 22px;
+}
+/*
+ * foundation text icons
+ * sizes
+ */
+.size-12 { font-size: 12px; }
+.size-14 { font-size: 14px; }
+.size-16 { font-size: 16px; }
+.size-18 { font-size: 18px; }
+.size-21 { font-size: 21px; }
+.size-24 { font-size: 24px; }
+.size-36 { font-size: 36px; }
+.size-48 { font-size: 48px; }
+.size-60 { font-size: 60px; }
+.size-72 { font-size: 72px; }
+
+.row {
+    max-width: 70em;
 }

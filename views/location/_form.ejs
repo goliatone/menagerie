@@ -15,8 +15,84 @@
     <label>Description
         <input name="description" type="text" placeholder="Description"  value="<%= record.description ? record.description : '' %>"/>
     </label>
+    <div class="row">
+        <div class="large-2 small-1 columns">
+            <label>Location Type
+                <select name="index"  value="<%= record.index ? record.index : '' %>">
+                    <option selected disabled hidden>Set Index</option>
+                    <option value="500">Other</option>
+                    <% if (!record.location) {%>
+                    <option value="400" selected>Room</option>
+                    <% } else {%>
+                        <option value="400">Room</option>
+                    <%}%>
+                    <option value="300">Area/Space</option>
+                    <option value="200">Floor</option>
+                    <option value="100">Building</option>
+                </select>
+            </label>
+        </div>
+        <div class="large-10 small-9 columns">
+            <label>Parent Location
+                <select name="parent"  value="<%= record.parent ? record.parent.id : '' %>">
+                    <% if (!record.parent) {%>
+                    <option value="">Not assigned</option>
+                    <% } %>
+                </select>
+            </label>
+        </div>
+    </div>
+    <label>Floor plan
+        <select name="floorplan"  value="<%= record.floorplan ? record.floorplan.id : '' %>">
+            <% if (!record.floorplan) {%>
+            <option value="">Not assigned</option>
+            <% } %>
+        </select>
+    </label>
+
     <% if(record.id){%>
         <input hidden="true" name="id" value="<%= record.id %>" required/>
     <%}%>
     <button id="submit" class="success expand radius">Send</button>
 </form>
+
+<script type="text/javascript">
+var $sel = $('[name="index"]');
+/*
+ *
+ */
+<% if(record.index) {%>
+$sel.val(<%= record.index%>);
+<%}%>
+
+function populateOption(endpoint, selector){
+    console.log('populateOption', endpoint, selector);
+    io.socket.get('/' + endpoint, function(data, jwres){
+        console.log('selector %s :: %o',selector, data);
+
+        data = data || {records:[]};
+        var $sel = $('[name="' + selector + '"]'),
+            index = 0,
+            active = $sel.attr('value');
+
+        $sel.empty();
+        if(!active) $sel.append('<option selected disabled hidden>Select</option>');
+        data.records.map(function(record){
+            $sel.append('<option value="' + record.id + '">' + record.name + '</option>');
+            if(active === ('' + record.id)) $sel.prop('selectedIndex', index);
+            index++;
+        });
+    });
+}
+populateOption('files?limit=1000', 'floorplan');
+populateOptionWithIndex(<%= record.index || 400 %>);
+
+$sel.on('change', function(){
+    var index = $sel.val();
+    populateOptionWithIndex(index);
+});
+
+function populateOptionWithIndex(index){
+    populateOption('location?limit=1000&where={"index":{"<":' + index + '}}', 'parent');
+}
+</script>
